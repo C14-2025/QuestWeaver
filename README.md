@@ -1,4 +1,4 @@
-# C14-QuestWeaver
+# C14 - QuestWeaver
 
 Sistema de RPG avançado com geração procedural de quests
 
