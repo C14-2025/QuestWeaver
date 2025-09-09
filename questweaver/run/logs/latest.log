@@ -1,0 +1,79 @@
+[23:43:13] [ServerMain/INFO]: [bootstrap] Running Java 21 (OpenJDK 64-Bit Server VM 21.0.8+9-LTS; Microsoft Microsoft-11933218) on Windows 11 10.0 (amd64)
+[23:43:13] [ServerMain/INFO]: [bootstrap] Loading Paper 1.21-130-master@b1b5d4c (2024-08-10T10:02:42Z) for Minecraft 1.21
+[23:43:14] [ServerMain/INFO]: [PluginInitializerManager] Initializing plugins...
+[23:43:14] [Paper Plugin Remapper Thread - 2/INFO]: [PluginRemapper] Remapping plugin 'C:\Users\teus\Desktop\C14-QuestWeaver\questweaver\build\libs\questweaver-1.0.0.jar'...
+[23:43:14] [Paper Plugin Remapper Thread - 2/INFO]: [PluginRemapper] Done remapping plugin 'C:\Users\teus\Desktop\C14-QuestWeaver\questweaver\build\libs\questweaver-1.0.0.jar' in 319ms.
+[23:43:15] [ServerMain/INFO]: [PluginInitializerManager] Initialized 1 plugin
+[23:43:15] [ServerMain/INFO]: [PluginInitializerManager] Bukkit plugins (1):
+ - QuestWeaver (1.0.0)
+[23:43:18] [ServerMain/INFO]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[23:43:19] [ServerMain/INFO]: Loaded 1290 recipes
+[23:43:19] [ServerMain/INFO]: Loaded 1399 advancements
+[23:43:20] [Server thread/INFO]: Starting minecraft server version 1.21
+[23:43:20] [Server thread/INFO]: Loading properties
+[23:43:20] [Server thread/INFO]: This server is running Paper version 1.21-130-master@b1b5d4c (2024-08-10T10:02:42Z) (Implementing API version 1.21-R0.1-SNAPSHOT)
+[23:43:20] [Server thread/INFO]: [spark] This server bundles the spark profiler. For more information please visit https://docs.papermc.io/paper/profiling
+[23:43:21] [Server thread/INFO]: Server Ping Player Sample Count: 12
+[23:43:21] [Server thread/INFO]: Using 4 threads for Netty based IO
+[23:43:21] [Server thread/INFO]: [ChunkTaskScheduler] Chunk system is using 1 I/O threads, 3 worker threads, and population gen parallelism of 3 threads
+[23:43:21] [Server thread/INFO]: Default game type: SURVIVAL
+[23:43:21] [Server thread/INFO]: Generating keypair
+[23:43:21] [Server thread/INFO]: Starting Minecraft server on *:25565
+[23:43:21] [Server thread/INFO]: Using default channel type
+[23:43:21] [Server thread/INFO]: Paper: Using Java compression from Velocity.
+[23:43:21] [Server thread/INFO]: Paper: Using Java cipher from Velocity.
+[23:43:21] [Server thread/INFO]: [QuestWeaver] Loading server plugin QuestWeaver v1.0.0
+[23:43:21] [Server thread/INFO]: Server permissions file permissions.yml is empty, ignoring it
+[23:43:21] [Server thread/INFO]: Preparing level "world"
+[23:43:22] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
+[23:43:23] [Server thread/INFO]: Time elapsed: 767 ms
+[23:43:23] [Server thread/INFO]: Preparing start region for dimension minecraft:the_nether
+[23:43:23] [Server thread/INFO]: Time elapsed: 77 ms
+[23:43:23] [Server thread/INFO]: Preparing start region for dimension minecraft:the_end
+[23:43:23] [Server thread/INFO]: Time elapsed: 71 ms
+[23:43:23] [Server thread/INFO]: [QuestWeaver] Enabling QuestWeaver v1.0.0
+[23:43:23] [Server thread/INFO]: 
+       ,o888888o.      8 8888      88 8 8888888888      d888888o.   8888888 8888888888 `8.`888b                 ,8' 8 8888888888            .8.          `8.`888b           ,8' 8 8888888888   8 888888888o.
+    . 8888     `88.    8 8888      88 8 8888          .`8888:' `88.       8 8888        `8.`888b               ,8'  8 8888                 .888.          `8.`888b         ,8'  8 8888         8 8888    `88.
+   ,8 8888       `8b   8 8888      88 8 8888          8.`8888.   Y8       8 8888         `8.`888b             ,8'   8 8888                :88888.          `8.`888b       ,8'   8 8888         8 8888     `88
+   88 8888        `8b  8 8888      88 8 8888          `8.`8888.           8 8888          `8.`888b     .b    ,8'    8 8888               . `88888.          `8.`888b     ,8'    8 8888         8 8888     ,88
+   88 8888         88  8 8888      88 8 888888888888   `8.`8888.          8 8888           `8.`888b    88b  ,8'     8 888888888888      .8. `88888.          `8.`888b   ,8'     8 888888888888 8 8888.   ,88'
+   88 8888     `8. 88  8 8888      88 8 8888            `8.`8888.         8 8888            `8.`888b .`888b,8'      8 8888             .8`8. `88888.          `8.`888b ,8'      8 8888         8 888888888P'
+   88 8888      `8,8P  8 8888      88 8 8888             `8.`8888.        8 8888             `8.`888b8.`8888'       8 8888            .8' `8. `88888.          `8.`888b8'       8 8888         8 8888`8b
+   `8 8888       ;8P   ` 8888     ,8P 8 8888         8b   `8.`8888.       8 8888              `8.`888`8.`88'        8 8888           .8'   `8. `88888.          `8.`888'        8 8888         8 8888 `8b.
+    ` 8888     ,88'8.    8888   ,d8P  8 8888         `8b.  ;8.`8888       8 8888               `8.`8' `8,`'         8 8888          .888888888. `88888.          `8.`8'         8 8888         8 8888   `8b.
+       `8888888P'  `8.    `Y88888P'   8 888888888888  `Y8888P ,88P'       8 8888                `8.`   `8'          8 888888888888 .8'       `8. `88888.          `8.`          8 888888888888 8 8888     `88.
+
+[23:43:23] [Server thread/INFO]: [spark] Starting background profiler...
+[23:43:23] [Server thread/INFO]: [spark] The async-profiler engine is not supported for your os/arch (windows11/amd64), so the built-in Java engine will be used instead.
+[23:43:23] [Server thread/INFO]: Done preparing level "world" (1.356s)
+[23:43:23] [Server thread/INFO]: Running delayed init tasks
+[23:43:23] [Server thread/INFO]: Done (10.537s)! For help, type "help"
+[23:43:23] [Server thread/INFO]: Timings Reset
+[23:43:45] [Server thread/INFO]: Mensagem indo para o console!!!!
+[23:43:48] [Server thread/INFO]: [Not Secure] [Server] a
+[23:43:54] [Server thread/INFO]: Stopping the server
+[23:43:54] [Server thread/INFO]: Stopping server
+[23:43:54] [Server thread/INFO]: [QuestWeaver] Disabling QuestWeaver v1.0.0
+[23:43:54] [Server thread/INFO]: Plugin finalizado!
+[23:43:54] [Server thread/INFO]: Saving players
+[23:43:54] [Server thread/INFO]: Saving worlds
+[23:43:54] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+[23:43:54] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'world'
+[23:43:54] [Server thread/INFO]: [ChunkHolderManager] Halted chunk system for world 'world'
+[23:43:54] [Server thread/INFO]: [ChunkHolderManager] Saving all chunkholders for world 'world'
+[23:43:55] [Server thread/INFO]: [ChunkHolderManager] Saved 49 block chunks, 49 entity chunks, 0 poi chunks in world 'world' in 0,14s
+[23:43:55] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world_nether]'/minecraft:the_nether
+[23:43:55] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'world_nether'
+[23:43:55] [Server thread/INFO]: [ChunkHolderManager] Halted chunk system for world 'world_nether'
+[23:43:55] [Server thread/INFO]: [ChunkHolderManager] Saving all chunkholders for world 'world_nether'
+[23:43:55] [Server thread/INFO]: [ChunkHolderManager] Saved 49 block chunks, 49 entity chunks, 0 poi chunks in world 'world_nether' in 0,07s
+[23:43:55] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world_the_end]'/minecraft:the_end
+[23:43:55] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'world_the_end'
+[23:43:55] [Server thread/INFO]: [ChunkHolderManager] Halted chunk system for world 'world_the_end'
+[23:43:55] [Server thread/INFO]: [ChunkHolderManager] Saving all chunkholders for world 'world_the_end'
+[23:43:55] [Server thread/INFO]: [ChunkHolderManager] Saved 49 block chunks, 49 entity chunks, 0 poi chunks in world 'world_the_end' in 0,04s
+[23:43:55] [Server thread/INFO]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[23:43:55] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[23:43:55] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[23:43:55] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved

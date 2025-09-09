@@ -1,0 +1,9 @@
+name: QuestWeaver
+version: '1.0.0'
+main: br.dev.projetoc14.QuestWeaver
+api-version: '1.21'
+
+# Especificando comandos
+commands:
+  help:
+    description: "Comandos básicos do plugin QuestWeaver"
