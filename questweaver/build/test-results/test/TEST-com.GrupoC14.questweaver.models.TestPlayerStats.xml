@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.GrupoC14.questweaver.models.TestPlayerStats" tests="4" skipped="0" failures="0" errors="0" timestamp="2025-09-11T15:48:33" hostname="KYONOTE" time="0.03">
+  <properties/>
+  <testcase name="testHealthManagement()" classname="com.GrupoC14.questweaver.models.TestPlayerStats" time="0.021"/>
+  <testcase name="testDefaultStats()" classname="com.GrupoC14.questweaver.models.TestPlayerStats" time="0.001"/>
+  <testcase name="testPlayerConstructor()" classname="com.GrupoC14.questweaver.models.TestPlayerStats" time="0.002"/>
+  <testcase name="testIsAlive()" classname="com.GrupoC14.questweaver.models.TestPlayerStats" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

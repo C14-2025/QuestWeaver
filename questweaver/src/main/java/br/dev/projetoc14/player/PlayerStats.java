@@ -1,5 +1,5 @@
 // PlayerStats.java
-package com.GrupoC14.questweaver.models.player;
+package br.dev.projetoc14.player;
 
 public class PlayerStats {
     private int strength;      // Força - afeta dano físico

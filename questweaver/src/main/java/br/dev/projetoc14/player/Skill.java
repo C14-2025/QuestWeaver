@@ -1,4 +1,4 @@
-package com.GrupoC14.questweaver.models.player;
+package br.dev.projetoc14.player;
 
 public class Skill {
 }
