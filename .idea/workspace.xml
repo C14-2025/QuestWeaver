@@ -4,7 +4,30 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="79c5942b-f104-4453-a2e1-e10349216c97" name="Changes" comment="" />
+    <list default="true" id="79c5942b-f104-4453-a2e1-e10349216c97" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/questweaver.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/questweaver.main.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/.gradle/8.8/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/questweaver/.gradle/8.8/checksums/checksums.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/.gradle/8.8/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/questweaver/.gradle/8.8/checksums/md5-checksums.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/.gradle/8.8/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/questweaver/.gradle/8.8/checksums/sha1-checksums.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/.gradle/8.8/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/questweaver/.gradle/8.8/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/.gradle/8.8/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/questweaver/.gradle/8.8/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/questweaver/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/build/classes/java/main/br/dev/projetoc14/ExperienceSystem/Texts.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/build/classes/java/main/br/dev/projetoc14/QuestWeaver.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/build/classes/java/main/com/GrupoC14/questweaver/models/player/ArcherPlayer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/build/classes/java/main/com/GrupoC14/questweaver/models/player/ClassManager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/build/classes/java/main/com/GrupoC14/questweaver/models/player/MagePlayer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/build/classes/java/main/com/GrupoC14/questweaver/models/player/PlayerClass.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/build/classes/java/main/com/GrupoC14/questweaver/models/player/PlayerStats.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/build/classes/java/main/com/GrupoC14/questweaver/models/player/RPGPlayer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/build/classes/java/main/com/GrupoC14/questweaver/models/player/Skill.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/build/classes/java/main/com/GrupoC14/questweaver/models/player/WarriorPlayer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/build/classes/java/main/com/GrupoC14/questweaver/models/quest/Quest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/build/classes/java/main/com/GrupoC14/questweaver/models/quest/QuestReward.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -18,12 +41,26 @@
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
+        <task path="$PROJECT_DIR$/questweaver">
+          <activation />
+        </task>
         <projects_view>
           <tree_state>
             <expand>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="questweaver" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="questweaver" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="questweaver" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
               </path>
             </expand>
             <select />
@@ -35,6 +72,23 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;biacobral&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/C14-2025/QuestWeaver.git&quot;,
+    &quot;accountId&quot;: &quot;72bbafe8-1669-4e44-8c24-cd246cf5d36b&quot;
+  }
+}</component>
+  <component name="InvalidFacetManager">
+    <ignored-facets>
+      <facet id="questweaver.main/invalid/Minecraft" />
+    </ignored-facets>
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
 }</component>
@@ -45,19 +99,24 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Gradle.TestPlayerStats.testDefaultStats.executor": "Run",
+    "Gradle.questweaver [build].executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "XPsystem",
+    "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/teus/Desktop/C14-QuestWeaver",
+    "last_opened_file_path": "C:/Users/beatr/OneDrive/Área de Trabalho/Inatel/P6/C14/C14-ProjetoMine/QuestWeaver",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "project.structure.last.edited": "SDKs",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -70,14 +129,69 @@
       <recent name="C:\Users\teus\Desktop\C14-QuestWeaver\questweaver\src\main\java\br\dev\projetoc14" />
     </key>
   </component>
+  <component name="RunManager" selected="Gradle.TestPlayerStats.testDefaultStats">
+    <configuration name="TestPlayerStats.testDefaultStats" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/questweaver" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;com.GrupoC14.questweaver.models.TestPlayerStats.testDefaultStats&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="questweaver [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/questweaver" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.TestPlayerStats.testDefaultStats" />
+        <item itemvalue="Gradle.questweaver [build]" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.23892.409" />
-        <option value="bundled-js-predefined-d6986cc7102b-e03c56caf84a-JavaScript-IU-252.23892.409" />
+        <option value="bundled-jdk-9823dce3aa75-125ca727e0f0-intellij.indexing.shared.core-IU-243.23654.189" />
+        <option value="bundled-js-predefined-d6986cc7102b-822845ee3bb5-JavaScript-IU-243.23654.189" />
       </set>
     </attachedChunks>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="79c5942b-f104-4453-a2e1-e10349216c97" name="Changes" comment="" />
@@ -87,10 +201,23 @@
       <updated>1757383139460</updated>
       <workItem from="1757383140799" duration="304000" />
       <workItem from="1757436128133" duration="586000" />
+      <workItem from="1757625625911" duration="814000" />
+      <workItem from="1757629801273" duration="1630000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
