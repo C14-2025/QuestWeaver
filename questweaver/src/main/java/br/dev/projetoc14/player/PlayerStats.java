@@ -154,12 +154,11 @@ public class PlayerStats {
     }
 
     public int calculatePhysicalDamage() {
-        return strength * 2; // Fórmula simples: força x2
+        return strength * 2;
     }
 
     public int calculateMagicalDamage() {
-        return intelligence * 3; // Fórmula simples: inteligência x3
-    }
+        return intelligence * 3;}
 
     public int calculateDamageReduction(int incomingDamage) {
         int reduction = defense / 2; // Defesa reduz dano pela metade do valor
