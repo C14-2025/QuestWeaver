@@ -95,5 +95,4 @@ public class TestPlayerStats {
         int reducedDAMAGE = stats.calculateDamageReduction(15);
         assertEquals(10, reducedDAMAGE);
     }
-
 }
