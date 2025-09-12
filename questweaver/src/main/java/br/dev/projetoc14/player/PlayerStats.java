@@ -154,6 +154,11 @@ public class PlayerStats {
     }
 
     public int calculatePhysicalDamage() {
+        return strength * 2;
+    }
+
+    public int calculateMagicalDamage() {
+        return intelligence * 3;}
         return strength * 2; // Fórmula simples: força x2
     }
 

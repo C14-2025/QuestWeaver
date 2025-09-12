@@ -62,6 +62,8 @@ public class TestPlayerStats {
         assertEquals(140, stats.getCurrentHealth());
     }
 
+    // Teste de player vivo
+
     @Test
     public void testIsAlive() {
         // Testa se está vivo
@@ -72,5 +74,25 @@ public class TestPlayerStats {
 
         stats.heal(1); // Recupera 1 de vida
         assertTrue(stats.isAlive());
+    }
+
+    // Teste de mana do player stats
+
+    @Test
+    public void testManaManagement() {
+        stats.setMana(100); // Mana máxima
+        stats.fullRestore();
+        stats.useMana(80);
+        assertEquals(20, stats.getCurrentMana());
+    }
+
+    // Testes para cálculo de dano físico
+
+    @Test
+    public void testCalculateDamage() {
+        assertEquals(20, stats.calculatePhysicalDamage());
+        assertEquals(30, stats.calculateMagicalDamage());
+        int reducedDAMAGE = stats.calculateDamageReduction(15);
+        assertEquals(10, reducedDAMAGE);
     }
 }
