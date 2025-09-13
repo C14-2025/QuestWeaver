@@ -158,11 +158,6 @@ public class PlayerStats {
     }
 
     public int calculateMagicalDamage() {
-        return intelligence * 3;}
-        return strength * 2; // Fórmula simples: força x2
-    }
-
-    public int calculateMagicalDamage() {
         return intelligence * 3; // Fórmula simples: inteligência x3
     }
 
