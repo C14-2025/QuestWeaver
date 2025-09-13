@@ -1,0 +1,20 @@
+# Gradle
+.gradle/
+build/
+
+# IDE
+.idea/
+
+# Minecraft Runtime
+run/
+world/
+world_nether/
+world_the_end/
+*.log
+*.log.gz
+
+# Minecraft config
+server.properties
+bukkit.yml
+spigot.yml
+usercache.json
