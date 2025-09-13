@@ -1,6 +1,8 @@
 package br.dev.projetoc14;
 
 import br.dev.projetoc14.ExperienceSystem.Texts;
+import br.dev.projetoc14.player.PlayerListener;
+import br.dev.projetoc14.player.PlayerStatsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -13,6 +15,10 @@ public final class QuestWeaver extends JavaPlugin {
     public void onEnable() {
         // setup inicial do plugin
         Texts.StartupPlugin(); /* fazendo a mensagem inicial do plugin */
+        PlayerStatsManager statsManager = new PlayerStatsManager();
+        PlayerListener listener = new PlayerListener(statsManager, this);
+
+        getServer().getPluginManager().registerEvents(listener, this);
 
     }
 
