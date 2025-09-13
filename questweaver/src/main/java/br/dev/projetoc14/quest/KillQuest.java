@@ -5,7 +5,7 @@ package br.dev.projetoc14.quest;
     Missão de matar uma certa quantidade de um certo mob
 
  */
-public class KillQuest extends Quest{
+public class KillQuest extends Quest {
     private String targetMob;
     private int targetCount;
     private int currentCount;
@@ -37,4 +37,9 @@ public class KillQuest extends Quest{
         }
     }
 
+    //Getters e Setters
+
+    public int getCurrentCount() {
+        return currentCount;
+    }
 }

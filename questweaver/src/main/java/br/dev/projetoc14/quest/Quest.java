@@ -33,4 +33,17 @@ public abstract class Quest {
 
     //Getters e Setters criados serão criados conforme necessidade
 
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
 }
