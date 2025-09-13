@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/QuestWeaver.iml" filepath="$PROJECT_DIR$/QuestWeaver.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/questweaver.main.iml" filepath="$PROJECT_DIR$/.idea/modules/questweaver.main.iml" />
     </modules>
   </component>
