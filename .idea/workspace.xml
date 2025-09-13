@@ -4,7 +4,29 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="79c5942b-f104-4453-a2e1-e10349216c97" name="Changes" comment="" />
+    <list default="true" id="79c5942b-f104-4453-a2e1-e10349216c97" name="Changes" comment="Feat: Criando quest de landmark e as classes necessárias para seu funcionamento">
+      <change afterPath="$PROJECT_DIR$/questweaver/src/test/java/com/GrupoC14/questweaver/models/KillQuestTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/.gradle/8.8/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/questweaver/.gradle/8.8/checksums/checksums.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/.gradle/8.8/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/questweaver/.gradle/8.8/checksums/sha1-checksums.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/.gradle/8.8/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/questweaver/.gradle/8.8/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/.gradle/8.8/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/questweaver/.gradle/8.8/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/questweaver/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/build/classes/java/main/com/GrupoC14/questweaver/models/player/ArcherPlayer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/build/classes/java/main/com/GrupoC14/questweaver/models/player/ClassManager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/build/classes/java/main/com/GrupoC14/questweaver/models/player/MagePlayer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/build/classes/java/main/com/GrupoC14/questweaver/models/player/PlayerClass.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/build/classes/java/main/com/GrupoC14/questweaver/models/player/PlayerStats.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/build/classes/java/main/com/GrupoC14/questweaver/models/player/RPGPlayer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/build/classes/java/main/com/GrupoC14/questweaver/models/player/Skill.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/build/classes/java/main/com/GrupoC14/questweaver/models/player/WarriorPlayer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/build/classes/java/main/com/GrupoC14/questweaver/models/quest/Quest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/build/classes/java/main/com/GrupoC14/questweaver/models/quest/QuestReward.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/src/main/java/br/dev/projetoc14/quest/KillQuest.java" beforeDir="false" afterPath="$PROJECT_DIR$/questweaver/src/main/java/br/dev/projetoc14/quest/KillQuest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/questweaver/src/main/java/br/dev/projetoc14/quest/Quest.java" beforeDir="false" afterPath="$PROJECT_DIR$/questweaver/src/main/java/br/dev/projetoc14/quest/Quest.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -32,8 +54,35 @@
       </state>
     </system>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;F-Loschi&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/C14-2025/QuestWeaver.git&quot;,
+    &quot;accountId&quot;: &quot;3e45c71d-c3c4-4932-9596-73bcdfb5077b&quot;
+  }
+}</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
@@ -45,10 +94,14 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Gradle.Download Sources.executor": "Run",
+    "Gradle.KillQuestTest.executor": "Run",
+    "Gradle.KillQuestTest.testQuestInitialization.executor": "Run",
+    "Gradle.TestPlayerStats.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "XPsystem",
+    "git-widget-placeholder": "QuestDev",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/teus/Desktop/C14-QuestWeaver",
@@ -57,7 +110,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -70,11 +123,92 @@
       <recent name="C:\Users\teus\Desktop\C14-QuestWeaver\questweaver\src\main\java\br\dev\projetoc14" />
     </key>
   </component>
+  <component name="RunManager" selected="Gradle.TestPlayerStats">
+    <configuration name="KillQuestTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/questweaver" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;com.GrupoC14.questweaver.models.KillQuestTest&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="KillQuestTest.testQuestInitialization" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/questweaver" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;com.GrupoC14.questweaver.models.KillQuestTest.testQuestInitialization&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="TestPlayerStats" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/questweaver" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;com.GrupoC14.questweaver.models.TestPlayerStats&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.TestPlayerStats" />
+        <item itemvalue="Gradle.KillQuestTest.testQuestInitialization" />
+        <item itemvalue="Gradle.KillQuestTest" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.23892.409" />
-        <option value="bundled-js-predefined-d6986cc7102b-e03c56caf84a-JavaScript-IU-252.23892.409" />
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.27812.49" />
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-IU-251.27812.49" />
       </set>
     </attachedChunks>
   </component>
@@ -87,10 +221,52 @@
       <updated>1757383139460</updated>
       <workItem from="1757383140799" duration="304000" />
       <workItem from="1757436128133" duration="586000" />
+      <workItem from="1757711140562" duration="7693000" />
+      <workItem from="1757732456411" duration="725000" />
     </task>
+    <task id="LOCAL-00001" summary="Feat: Criando a classe genérica de quests">
+      <option name="closed" value="true" />
+      <created>1757715210455</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1757715210455</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Feat: Criando a classe KillQuest">
+      <option name="closed" value="true" />
+      <created>1757715376830</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1757715376830</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Fix: Arrumando método da classe PlayerStats">
+      <option name="closed" value="true" />
+      <created>1757715476040</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1757715476040</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Feat: Criando quest de landmark e as classes necessárias para seu funcionamento">
+      <option name="closed" value="true" />
+      <created>1757719637643</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1757719637643</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Feat: Criando a classe genérica de quests" />
+    <MESSAGE value="Feat: Criando a classe KillQuest" />
+    <MESSAGE value="Fix: Arrumando método da classe PlayerStats" />
+    <MESSAGE value="Feat: Criando quest de landmark e as classes necessárias para seu funcionamento" />
+    <option name="LAST_COMMIT_MESSAGE" value="Feat: Criando quest de landmark e as classes necessárias para seu funcionamento" />
   </component>
 </project>
