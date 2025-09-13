@@ -20,6 +20,7 @@ dependencies {
     // JUnit 5 completo
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
 }
 
 // Adicione esta configuração para usar JUnit 5
