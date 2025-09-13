@@ -4,6 +4,7 @@ package br.dev.projetoc14.player;
 
 
 import org.bukkit.Bukkit;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -13,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.UUID;
 
-import org.bukkit.attribute.Attribute;
+
 
 // Mapeamento de cada player para seus respectivos atributos:
 

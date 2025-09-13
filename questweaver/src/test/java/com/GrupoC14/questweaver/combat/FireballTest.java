@@ -1,13 +1,9 @@
 package com.GrupoC14.questweaver.combat;
 import br.dev.projetoc14.combat.Fireball;
-import br.dev.projetoc14.player.RPGPlayer;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-import br.dev.projetoc14.player.RPGPlayer;
 
 public class FireballTest {
 
