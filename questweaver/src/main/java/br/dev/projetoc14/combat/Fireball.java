@@ -4,11 +4,10 @@ import br.dev.projetoc14.player.RPGPlayer;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
-import org.bukkit.entity.Fireball;
 
-public class FireballAbility extends Ability {
+public class Fireball extends Ability {
 
-    public FireballAbility() {
+    public Fireball() {
         super("Bola de Fogo", 20, 5); // nome, custo de mana, cooldown em segundos
     }
 
@@ -16,7 +15,7 @@ public class FireballAbility extends Ability {
     public void cast(RPGPlayer caster) {
         // Cria uma fireball na frente do player
         Location loc = caster.getEyeLocation();
-        Fireball fireball = caster.launchProjectile(Fireball.class);
+        org.bukkit.entity.Fireball fireball = caster.launchProjectile(org.bukkit.entity.Fireball.class);
         fireball.setYield(2F); // tamanho da explosão
         fireball.setIsIncendiary(false);
 
