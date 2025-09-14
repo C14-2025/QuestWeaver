@@ -31,23 +31,19 @@ public class PlayerStatsManager {
     public void applyStats(@NotNull Player player) {
         PlayerStats stats = getStats(player);
 
-    // Manager de vida:
+        // Manager de vida:
+        player.getAttribute(Attribute.MAX_HEALTH).setBaseValue(stats.getHealth());
+        double currentHealth = Math.min(player.getHealth(), stats.getHealth());
+        player.setHealth(currentHealth);
 
-    player.getAttribute(Attribute.MAX_HEALTH).setBaseValue(stats.getHealth());
-    double currentHealth = Math.min(player.getHealth(), stats.getHealth());
-    player.setHealth(currentHealth);
+        // Manager de dano físco:
+        player.getAttribute(Attribute.ATTACK_DAMAGE).setBaseValue(stats.getStrength());
 
-    // Manager de dano físco:
+        // Manager de defesa/armadura:
+        player.getAttribute(Attribute.ARMOR).setBaseValue(stats.getDefense());
 
-    player.getAttribute(Attribute.ATTACK_DAMAGE).setBaseValue(stats.getStrength());
-
-    // Manager de defesa/armadura:
-
-    player.getAttribute(Attribute.ARMOR).setBaseValue(stats.getDefense());
-
-    // Manager de agilidade/velocidade de movimento:
-
-    double baseSpeed = 0.1; // default do Minecraft
+        // Manager de agilidade/velocidade de movimento:
+        double baseSpeed = 0.1; // default do Minecraft
         player.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(baseSpeed + (stats.getAgility() * 0.001));
     }
 
@@ -80,4 +76,15 @@ public class PlayerStatsManager {
         }
     }
 
+    public void setStats(@NotNull Player player, @NotNull PlayerStats stats) {
+        statsMap.put(player.getUniqueId(), stats);
+
+        // Aplica imediatamente os stats carregados no Player
+        applyStats(player);
+
+        // Atualiza barra de mana se já existir
+        if (manaBars.containsKey(player.getUniqueId())) {
+            updateManaBar(player);
+        }
+    }
 }
