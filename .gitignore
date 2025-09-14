@@ -4,6 +4,7 @@ build/
 
 # IDE
 .idea/
+*.iml
 
 # Minecraft Runtime
 run/

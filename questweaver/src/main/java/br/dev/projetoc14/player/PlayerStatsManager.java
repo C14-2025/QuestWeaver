@@ -14,8 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.UUID;
 
-
-
 // Mapeamento de cada player para seus respectivos atributos:
 
 public class PlayerStatsManager {
@@ -32,19 +30,19 @@ public class PlayerStatsManager {
         PlayerStats stats = getStats(player);
 
         // Manager de vida:
-        player.getAttribute(Attribute.MAX_HEALTH).setBaseValue(stats.getHealth());
+        player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(stats.getHealth());
         double currentHealth = Math.min(player.getHealth(), stats.getHealth());
         player.setHealth(currentHealth);
 
         // Manager de dano físco:
-        player.getAttribute(Attribute.ATTACK_DAMAGE).setBaseValue(stats.getStrength());
+        player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(stats.getStrength());
 
         // Manager de defesa/armadura:
-        player.getAttribute(Attribute.ARMOR).setBaseValue(stats.getDefense());
+        player.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(stats.getDefense());
 
         // Manager de agilidade/velocidade de movimento:
         double baseSpeed = 0.1; // default do Minecraft
-        player.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(baseSpeed + (stats.getAgility() * 0.001));
+        player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(baseSpeed + (stats.getAgility() * 0.001));
     }
 
     // Manager de criação de barra de mana:
