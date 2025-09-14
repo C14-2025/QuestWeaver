@@ -4,13 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="79c5942b-f104-4453-a2e1-e10349216c97" name="Changes" comment="" />
+    <list default="true" id="79c5942b-f104-4453-a2e1-e10349216c97" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/QuestWeaver/src/test/java/com/GrupoC14/questweaver/models/TestPlayerStats.java" beforeDir="false" afterPath="$PROJECT_DIR$/QuestWeaver/src/test/java/com/GrupoC14/questweaver/models/TestPlayerStats.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$/QuestWeaver">
+      <ProjectState />
+    </projectState>
     <projectState path="$PROJECT_DIR$/questweaver">
       <ProjectState />
     </projectState>
@@ -34,19 +42,7 @@
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="questweaver" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="questweaver" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="build" type="c8890929:TasksNode$1" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="questweaver" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="run paper" type="c8890929:TasksNode$1" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
               </path>
             </expand>
             <select />
@@ -85,16 +81,21 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Gradle.ExperienceSystemTest.executor": "Run",
+    "Gradle.ExperienceSystemTest.naoDeveDarXPQuandoMobNaoTemNome.executor": "Run",
+    "Gradle.QuestWeaver [dependencies].executor": "Run",
     "Gradle.SkillTreeTest.testAdicionarHabilidade.executor": "Run",
     "Gradle.TestPlayerStats.testCalculateDamage.executor": "Run",
     "Gradle.TestPlayerStats.testDefaultStats.executor": "Run",
+    "Gradle.TestPlayerStats.testHealthManagement.executor": "Run",
+    "Gradle.TestPlayerStats.testPlayerConstructor.executor": "Run",
     "Gradle.questweaver [build].executor": "Run",
     "Gradle.questweaver [dependencies].executor": "Run",
     "Gradle.questweaver [runServer].executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "feat",
     "ignore.virus.scanning.warn.message": "true",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
@@ -105,8 +106,8 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "project.structure.last.edited": "SDKs",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
     "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
     "to.speed.mode.migration.done": "true",
     "vue.rearranger.settings.migration": "true"
@@ -121,11 +122,11 @@
       <recent name="C:\Users\teus\Desktop\C14-QuestWeaver\questweaver\src\main\java\br\dev\projetoc14" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.questweaver [dependencies]">
-    <configuration name="SkillTreeTest.testAdicionarHabilidade" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+  <component name="RunManager" selected="Gradle.TestPlayerStats">
+    <configuration name="TestPlayerStats" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/questweaver" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/QuestWeaver" />
         <option name="externalSystemIdString" value="GRADLE" />
         <option name="scriptParameters" value="" />
         <option name="taskDescriptions">
@@ -135,7 +136,7 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;com.GrupoC14.questweaver.models.SkillTreeTest.testAdicionarHabilidade&quot;" />
+            <option value="&quot;com.GrupoC14.questweaver.models.TestPlayerStats&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -149,7 +150,7 @@
     <configuration name="TestPlayerStats.testCalculateDamage" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/questweaver" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/QuestWeaver" />
         <option name="externalSystemIdString" value="GRADLE" />
         <option name="scriptParameters" value="" />
         <option name="taskDescriptions">
@@ -170,10 +171,10 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="TestPlayerStats.testDefaultStats" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="TestPlayerStats.testHealthManagement" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/questweaver" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/QuestWeaver" />
         <option name="externalSystemIdString" value="GRADLE" />
         <option name="scriptParameters" value="" />
         <option name="taskDescriptions">
@@ -183,7 +184,7 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;com.GrupoC14.questweaver.models.TestPlayerStats.testDefaultStats&quot;" />
+            <option value="&quot;com.GrupoC14.questweaver.models.TestPlayerStats.testHealthManagement&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -194,57 +195,61 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="questweaver [dependencies]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/questweaver" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="dependencies" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>false</RunAsTest>
-      <method v="2" />
-    </configuration>
-    <configuration name="questweaver [runServer]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="TestPlayerStats.testIsAlive" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/QuestWeaver" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
+        <option name="scriptParameters" value="" />
         <option name="taskDescriptions">
           <list />
         </option>
         <option name="taskNames">
           <list>
-            <option value="runServer" />
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;com.GrupoC14.questweaver.models.TestPlayerStats.testIsAlive&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
       <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
       <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>false</RunAsTest>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="TestPlayerStats.testManaManagement" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/QuestWeaver" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;com.GrupoC14.questweaver.models.TestPlayerStats.testManaManagement&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.questweaver [dependencies]" />
-        <item itemvalue="Gradle.SkillTreeTest.testAdicionarHabilidade" />
+        <item itemvalue="Gradle.TestPlayerStats" />
+        <item itemvalue="Gradle.TestPlayerStats.testManaManagement" />
         <item itemvalue="Gradle.TestPlayerStats.testCalculateDamage" />
-        <item itemvalue="Gradle.TestPlayerStats.testDefaultStats" />
-        <item itemvalue="Gradle.questweaver [runServer]" />
+        <item itemvalue="Gradle.TestPlayerStats.testIsAlive" />
+        <item itemvalue="Gradle.TestPlayerStats.testHealthManagement" />
       </list>
     </recent_temporary>
   </component>
@@ -269,7 +274,7 @@
       <workItem from="1757625625911" duration="814000" />
       <workItem from="1757629801273" duration="1630000" />
       <workItem from="1757758784969" duration="757000" />
-      <workItem from="1757870615129" duration="943000" />
+      <workItem from="1757870615129" duration="3641000" />
     </task>
     <servers />
   </component>
