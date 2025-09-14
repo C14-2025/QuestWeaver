@@ -58,15 +58,10 @@ public class PlayerListener implements Listener {
                 // Recupera stats do player
                 PlayerStats stats = statsManager.getStats(player);
 
-                if (stats == null) {
-                    cancel();
-                    return;
-                }
-
                 // Se já está no máximo, não faz nada
                 if (stats.getCurrentMana() >= stats.getMana()) return;
 
-                    // Regen de mana: +1/s
+                // Regen de mana: +1/s
                 stats.restoreMana(1);
 
                 // Atualização da barra de mana:

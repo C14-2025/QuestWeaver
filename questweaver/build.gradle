@@ -16,12 +16,16 @@ repositories {
 
 dependencies {
     compileOnly "io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT"
-    testImplementation "io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT"
 
-    // JUnit 5 completo
-    testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    // JUnit 5
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.10.1"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.10.1"
 
+    // Mockito para JUnit 5
+    testImplementation "org.mockito:mockito-core:5.6.0"
+    testImplementation "org.mockito:mockito-junit-jupiter:5.6.0"
+
+    implementation 'com.google.code.gson:gson:2.13.2'
 }
 
 // Adicione esta configuração para usar JUnit 5
