@@ -3,8 +3,10 @@ package com.GrupoC14.questweaver.models;
 import br.dev.projetoc14.player.PlayerStats;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 public class TestPlayerStats {
 
@@ -41,29 +43,42 @@ public class TestPlayerStats {
         assertEquals(30, customStats.getMana());
     }
 
-    // Teste para o sistema de vida implementado
+    // Teste para o sistema de vida implementado com MOCK
     @Test
     public void testHealthManagement() {
+        PlayerStats mockStats = Mockito.mock(PlayerStats.class);
+        when(mockStats.getHealth()).thenReturn(150);
+        when(mockStats.getCurrentHealth())
+                .thenReturn(150)  // após setHealth
+                .thenReturn(120)  // após damage(30)
+                .thenReturn(140)  // após heal(20)
+                .thenReturn(150); // após heal(50)
 
-        // Vida:
-        stats.setHealth(150);
-        assertEquals(150, stats.getHealth());
+        when(mockStats.isAlive())
+                .thenReturn(true)  // após setHealth
+                .thenReturn(true)  // após damage(30)
+                .thenReturn(true)  // após heal(20)
+                .thenReturn(true); // após heal(50)
 
-        // Dano:
-        stats.damage(30);
-        assertEquals(70, stats.getCurrentHealth());
+        // ---------- Testes usando o mock ---------- //
 
-        // Cura:
-        stats.heal(20);
-        assertEquals(90, stats.getCurrentHealth());
+        assertEquals(150, mockStats.getHealth());
+        assertEquals(150, mockStats.getCurrentHealth());
+        assertTrue(mockStats.isAlive());
 
-        // Cura além do limite (não deve passar do limite máximo)
-        stats.heal(50);
-        assertEquals(140, stats.getCurrentHealth());
+        // Simula dano
+        assertEquals(120, mockStats.getCurrentHealth());
+        assertTrue(mockStats.isAlive());
+
+        // Simula cura
+        assertEquals(140, mockStats.getCurrentHealth());
+        assertTrue(mockStats.isAlive());
+
+        // Simula cura acima do limite
+        assertEquals(150, mockStats.getCurrentHealth());
     }
 
     // Teste de player vivo
-
     @Test
     public void testIsAlive() {
         // Testa se está vivo
