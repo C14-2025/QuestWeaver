@@ -1,4 +1,4 @@
-package br.dev.projetoc14.player;
+package br.dev.projetoc14.skilltree;
 
 import java.util.HashMap;
 import java.util.HashSet;

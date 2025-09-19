@@ -1,6 +1,6 @@
 package com.GrupoC14.questweaver.models;
 
-import br.dev.projetoc14.player.SkillTree;
+import br.dev.projetoc14.skilltree.SkillTree;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
