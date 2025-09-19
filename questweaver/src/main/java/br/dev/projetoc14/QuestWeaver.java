@@ -1,7 +1,7 @@
 package br.dev.projetoc14;
 
-import br.dev.projetoc14.ExperienceSystem.ExperienceSystem;
-import br.dev.projetoc14.ExperienceSystem.Texts;
+import br.dev.projetoc14.skilltree.ExperienceSystem;
+import br.dev.projetoc14.skilltree.Texts;
 import br.dev.projetoc14.player.PlayerListener;
 import br.dev.projetoc14.player.PlayerStatsManager;
 import br.dev.projetoc14.playerData.PlayerDataListener;
