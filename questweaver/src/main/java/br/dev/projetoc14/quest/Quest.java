@@ -46,4 +46,7 @@ public abstract class Quest {
         return completed;
     }
 
+    public String getDescription() {
+        return description;
+    }
 }
