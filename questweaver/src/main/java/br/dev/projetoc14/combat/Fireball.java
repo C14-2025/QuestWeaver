@@ -7,6 +7,8 @@ import org.bukkit.Sound;
 
 public class Fireball extends Ability {
 
+    private final int damage = 25; // quanto de dano a fireball causa
+
     public Fireball() {
         super("Bola de Fogo", 20, 5); // nome, custo de mana, cooldown em segundos
     }
@@ -26,4 +28,13 @@ public class Fireball extends Ability {
         caster.sendMessage("🔥 Você lançou uma Bola de Fogo!");
     }
 
+    public void applyDamage(RPGPlayer caster, RPGPlayer target) {
+        int newHealth = target.getCurrentHealth() - damage;
+        if (newHealth < 0) newHealth = 0;
+        target.setCurrentHealth(newHealth);
+    }
+
+    public int getDamage() {
+        return damage;
+    }
 }
