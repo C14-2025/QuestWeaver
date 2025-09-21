@@ -31,6 +31,7 @@ public class FireballTest {
         target.setCurrentHealth(80); // começa com 80 de vida
     }
 
+    // Testa se os valores da habilidade foram inicializados corretamente
     @Test
     public void testAbilityProperties() {
         assertEquals("Bola de Fogo", fireball.getName());
@@ -39,12 +40,14 @@ public class FireballTest {
         assertEquals(25, fireball.getDamage());
     }
 
+    // Testa se a bola de fogo causa dano
     @Test
     public void testFireballAppliesDamage() {
         fireball.applyDamage(caster, target);
         assertEquals(55, target.getCurrentHealth()); // 80 - 25
     }
 
+    // Testa se o dano do player não fica abaixo de 0 após o dano
     @Test
     public void testFireballDoesNotGoBelowZero() {
         target.setCurrentHealth(10);
