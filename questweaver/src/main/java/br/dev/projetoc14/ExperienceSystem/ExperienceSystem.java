@@ -22,15 +22,16 @@ public class ExperienceSystem implements Listener {
 
         if (killer == null) return;
 
-        String mobName = mob.getCustomName(); // pegando o nick atual do mob
+        String mobName = mob.getCustomName();
 
+        if (mobName == null) return;
 
         if(mobName.equalsIgnoreCase(alvo)){
             if(killer.getLevel() < maxLevel){
                 killer.giveExpLevels(xpPerKill);
                 killer.sendMessage("§a+1XP.");
             } else {
-                killer.sendMessage("§aNível máximo atingido.");
+                killer.sendMessage("§cNível máximo atingido.");
             }
         }
     }

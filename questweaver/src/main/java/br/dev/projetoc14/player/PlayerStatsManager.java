@@ -1,9 +1,7 @@
 package br.dev.projetoc14.player;
 
-// Classe essencial para linkar stats com o jogo
-
-
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -14,13 +12,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.UUID;
 
-// Mapeamento de cada player para seus respectivos atributos:
-
 public class PlayerStatsManager {
     private final HashMap<UUID, PlayerStats> statsMap = new HashMap<>();
     private final HashMap<UUID, BossBar> manaBars = new HashMap<>();
+    private final HashMap<UUID, Integer> regenTasks = new HashMap<>();
 
-    // Retorna os stats de um player e cria um padrão se não existir(computeIfAbsent)
+    // Retorna os stats de um player e cria um padrão se não existir
     public PlayerStats getStats(@NotNull Player player) {
         return statsMap.computeIfAbsent(player.getUniqueId(), uuid -> new PlayerStats());
     }
@@ -34,7 +31,7 @@ public class PlayerStatsManager {
         double currentHealth = Math.min(player.getHealth(), stats.getHealth());
         player.setHealth(currentHealth);
 
-        // Manager de dano físco:
+        // Manager de dano físico:
         player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(stats.getStrength());
 
         // Manager de defesa/armadura:
@@ -45,8 +42,11 @@ public class PlayerStatsManager {
         player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(baseSpeed + (stats.getAgility() * 0.001));
     }
 
-    // Manager de criação de barra de mana:
+    public boolean hasStats(Player player) {
+        return statsMap.containsKey(player.getUniqueId());
+    }
 
+    // Manager de criação de barra de mana:
     public void createManaBar(@NotNull Player player) {
         BossBar bar = Bukkit.createBossBar("Mana", BarColor.PURPLE, BarStyle.SEGMENTED_10);
         bar.addPlayer(player);
@@ -55,7 +55,6 @@ public class PlayerStatsManager {
     }
 
     // Manager de update de barra de mana:
-
     public void updateManaBar(@NotNull Player player) {
         PlayerStats stats = getStats(player);
         BossBar bar = manaBars.get(player.getUniqueId());
@@ -84,5 +83,36 @@ public class PlayerStatsManager {
         if (manaBars.containsKey(player.getUniqueId())) {
             updateManaBar(player);
         }
+    }
+
+    public void removeStats(Player player) {
+        UUID uuid = player.getUniqueId();
+
+        // Remove do HashMap em memória
+        statsMap.remove(uuid);
+
+        // Remove a barra de mana (boss bar)
+        if (manaBars.containsKey(uuid)) {
+            BossBar manaBar = manaBars.get(uuid);
+            manaBar.removePlayer(player);
+            manaBars.remove(uuid);
+        }
+
+        // Cancela a task de regeneração se existir
+        if (regenTasks.containsKey(uuid)) {
+            Bukkit.getScheduler().cancelTask(regenTasks.get(uuid));
+            regenTasks.remove(uuid);
+        }
+
+        // Reseta os atributos do jogador para valores padrão
+        player.setMaxHealth(20.0);
+        player.setHealth(20.0);
+        player.setLevel(0);
+        player.setExp(0);
+
+        // Limpa o inventário
+        player.getInventory().clear();
+
+        player.sendMessage(ChatColor.YELLOW + "Seus stats foram resetados!");
     }
 }

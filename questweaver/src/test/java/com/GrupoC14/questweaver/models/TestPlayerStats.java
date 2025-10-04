@@ -20,14 +20,14 @@ public class TestPlayerStats {
     // Teste para ver se os valores padrões dos stats estão corretos
     @Test
     public void testDefaultStats() {
-        assertEquals(10, stats.getStrength());
-        assertEquals(10, stats.getDefense());
+        assertEquals(1, stats.getStrength());
+        assertEquals(0, stats.getDefense());
         assertEquals(10, stats.getAgility());
         assertEquals(10, stats.getIntelligence());
-        assertEquals(100, stats.getHealth());
-        assertEquals(50, stats.getMana());
-        assertEquals(100, stats.getCurrentHealth());
-        assertEquals(50, stats.getCurrentMana());
+        assertEquals(20, stats.getHealth());
+        assertEquals(40, stats.getMana());
+        assertEquals(20, stats.getCurrentHealth());
+        assertEquals(40, stats.getCurrentMana());
     }
 
     @Test
@@ -84,7 +84,7 @@ public class TestPlayerStats {
         // Testa se está vivo
         assertTrue(stats.isAlive());
 
-        stats.damage(100); // Remove toda a vida
+        stats.damage(20); // Remove toda a vida (era 100, agora é 20)
         assertFalse(stats.isAlive());
 
         stats.heal(1); // Recupera 1 de vida
@@ -105,9 +105,10 @@ public class TestPlayerStats {
 
     @Test
     public void testCalculateDamage() {
-        assertEquals(20, stats.calculatePhysicalDamage());
+
+        assertEquals(2, stats.calculatePhysicalDamage());
         assertEquals(30, stats.calculateMagicalDamage());
         int reducedDAMAGE = stats.calculateDamageReduction(15);
-        assertEquals(10, reducedDAMAGE);
+        assertEquals(15, reducedDAMAGE);
     }
 }

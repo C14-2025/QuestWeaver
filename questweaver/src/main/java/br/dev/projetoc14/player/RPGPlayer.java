@@ -30,8 +30,8 @@ public abstract class RPGPlayer {
         this.experience = 0;
         this.stats = new PlayerStats();
 
-        this.health = 100;        // padrão
-        this.currentHealth = 100; // começa cheio
+        this.health = 20;        // padrão
+        this.currentHealth = 20; // começa cheio
 
         initializeClass();
     }
