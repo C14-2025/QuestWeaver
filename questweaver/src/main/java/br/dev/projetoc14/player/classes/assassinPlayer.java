@@ -6,9 +6,9 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class assassinPlayer extends RPGPlayer {
+public class AssassinPlayer extends RPGPlayer {
 
-    public assassinPlayer(Player player) {
+    public AssassinPlayer(Player player) {
         super(player, PlayerClass.ASSASSIN); // Corrigido para a classe Assassino
     }
 

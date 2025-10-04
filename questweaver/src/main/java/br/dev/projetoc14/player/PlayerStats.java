@@ -13,12 +13,12 @@ public class PlayerStats {
 
     public PlayerStats() {
         // Valores base
-        this.strength = 10;
-        this.defense = 10;
+        this.strength = 1;
+        this.defense = 0;
         this.agility = 10;
         this.intelligence = 10;
-        this.health = 100;
-        this.mana = 50;
+        this.health = 20;
+        this.mana = 40;
         this.currentHealth = this.health;
         this.currentMana = this.mana;
     }
