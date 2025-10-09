@@ -7,6 +7,9 @@ import br.dev.projetoc14.player.PlayerListener;
 import br.dev.projetoc14.player.PlayerStatsManager;
 import br.dev.projetoc14.playerData.PlayerDataListener;
 import br.dev.projetoc14.playerData.PlayerDataManager;
+import br.dev.projetoc14.quest.QuestManager;
+import br.dev.projetoc14.quest.listeners.MobKillQuestListener;
+import br.dev.projetoc14.quest.listeners.PlayerQuestJoinListener;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -17,6 +20,7 @@ public final class QuestWeaver extends JavaPlugin {
 
     private PlayerStatsManager statsManager;
     private PlayerDataManager dataManager;
+    private QuestManager questManager;
 
     @Override
     public void onEnable() {
@@ -26,6 +30,7 @@ public final class QuestWeaver extends JavaPlugin {
         // Inicializa PlayerStatsManager e PlayerDataManager
         this.statsManager = new PlayerStatsManager();
         this.dataManager = new PlayerDataManager(this);
+        this.questManager = new QuestManager();
 
         // Listener de mecânica (mana, barra, regeneração)
         PlayerListener playerListener = new PlayerListener(statsManager, this);
@@ -42,7 +47,14 @@ public final class QuestWeaver extends JavaPlugin {
         // Sistema de experiência
         Bukkit.getPluginManager().registerEvents(new ExperienceSystem(), this);
 
+        PlayerQuestJoinListener questJoinListener = new PlayerQuestJoinListener(questManager);
+        getServer().getPluginManager().registerEvents(questJoinListener, this);
+
+        MobKillQuestListener mobKillListener = new MobKillQuestListener(questManager);
+        getServer().getPluginManager().registerEvents(mobKillListener, this);
+
         getLogger().info("[QuestWeaver] Plugin iniciado com sucesso!");
+        getLogger().info("[QuestWeaver] Sistema de Quests carregado!");
     }
 
     @Override
@@ -72,6 +84,19 @@ public final class QuestWeaver extends JavaPlugin {
             return true;
         }
 
+        if(command.getName().equalsIgnoreCase("quests")) {
+            if(sender instanceof Player player) {
+                questManager.showActiveQuests(player);
+            } else {
+                sender.sendMessage("§cEste comando só pode ser usado por jogadores!");
+            }
+            return true;
+        }
+
         return false;
+    }
+
+    public QuestManager getQuestManager() {
+        return questManager;
     }
 }

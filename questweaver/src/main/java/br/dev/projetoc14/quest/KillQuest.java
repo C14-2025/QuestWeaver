@@ -42,4 +42,8 @@ public class KillQuest extends Quest {
     public int getCurrentCount() {
         return currentCount;
     }
+
+    public int getTargetCount() {
+        return targetCount;
+    }
 }
