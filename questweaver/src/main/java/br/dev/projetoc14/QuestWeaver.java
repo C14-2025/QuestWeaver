@@ -1,5 +1,6 @@
 package br.dev.projetoc14;
 
+import br.dev.projetoc14.commands.StartMatchCommand;
 import br.dev.projetoc14.skilltree.ExperienceSystem;
 import br.dev.projetoc14.skilltree.Texts;
 import br.dev.projetoc14.player.PlayerListener;
@@ -8,18 +9,30 @@ import br.dev.projetoc14.playerData.PlayerDataListener;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class QuestWeaver extends JavaPlugin {
 
+    private static FileConfiguration config;
+    private static QuestWeaver instance;
+
+    public static Plugin getInstance() { return instance; }
+
     @Override
     public void onEnable() {
+        instance = this;
         // Mensagem inicial do plugin
         Texts.StartupPlugin();
 
         // Inicializa PlayerStatsManager
         PlayerStatsManager statsManager = new PlayerStatsManager();
+
+        // get config.yml
+        saveDefaultConfig();
+        config = getConfig();
 
         // Listener de mecânica (mana, barra, regeneração)
         PlayerListener playerListener = new PlayerListener(statsManager, this);
@@ -31,6 +44,9 @@ public final class QuestWeaver extends JavaPlugin {
 
         // Sistema de experiência
         Bukkit.getPluginManager().registerEvents(new ExperienceSystem(), this);
+
+        // Comandos
+        getCommand("startmatch").setExecutor(new StartMatchCommand());
 
         getLogger().info("[QuestWeaver] Plugin iniciado com sucesso!");
     }
@@ -51,5 +67,10 @@ public final class QuestWeaver extends JavaPlugin {
         }
 
         return true;
+    }
+
+    public static String getServerName(){
+        return config.getString("HGconfigs.server-name");
+
     }
 }
