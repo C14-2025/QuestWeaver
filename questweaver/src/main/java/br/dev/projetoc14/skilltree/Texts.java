@@ -1,4 +1,4 @@
-package br.dev.projetoc14.ExperienceSystem;
+package br.dev.projetoc14.skilltree;
 
 import org.bukkit.Bukkit;
 

@@ -1,7 +1,7 @@
 package br.dev.projetoc14;
 
-import br.dev.projetoc14.ExperienceSystem.ExperienceSystem;
-import br.dev.projetoc14.ExperienceSystem.Texts;
+import br.dev.projetoc14.skilltree.ExperienceSystem;
+import br.dev.projetoc14.skilltree.Texts;
 import br.dev.projetoc14.player.ClassSelectListener;
 import br.dev.projetoc14.player.PlayerListener;
 import br.dev.projetoc14.player.PlayerStatsManager;
@@ -58,7 +58,6 @@ public final class QuestWeaver extends JavaPlugin {
         getServer().getPluginManager().registerEvents(mobKillListener, this);
 
         getLogger().info("[QuestWeaver] Plugin iniciado com sucesso!");
-        getLogger().info("[QuestWeaver] Sistema de Quests carregado!");
     }
 
     @Override
@@ -68,37 +67,15 @@ public final class QuestWeaver extends JavaPlugin {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String label, String[] args) {
-        if(command.getName().equalsIgnoreCase("help")) {
+        if(label.equalsIgnoreCase("help")) {
             if(sender instanceof Player player) {
                 player.sendMessage("Apenas testando o método!");
             } else {
                 sender.sendMessage("Mensagem indo para o console!");
             }
-            return true;
         }
 
-        if(command.getName().equalsIgnoreCase("resetclass")) {
-            if(sender instanceof Player player) {
-                statsManager.removeStats(player);
-                dataManager.deletePlayerData(player);
-                player.sendMessage("§aClasse resetada! Relogue para escolher novamente.");
-            } else {
-                sender.sendMessage("§cEste comando só pode ser usado por jogadores!");
-            }
-            return true;
-        }
-
-        if(command.getName().equalsIgnoreCase("quests")) {
-            if(sender instanceof Player player) {
-                // Ao invés de usar questManager.showActiveQuests
-                questBook.showBook(player);
-            } else {
-                sender.sendMessage("§cEste comando só pode ser usado por jogadores!");
-            }
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
     public QuestManager getQuestManager() {
