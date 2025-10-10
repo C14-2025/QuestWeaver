@@ -6,7 +6,6 @@ import br.dev.projetoc14.player.ClassSelectListener;
 import br.dev.projetoc14.player.PlayerListener;
 import br.dev.projetoc14.player.PlayerStatsManager;
 import br.dev.projetoc14.playerData.PlayerDataListener;
-import br.dev.projetoc14.playerData.PlayerDataManager;
 import br.dev.projetoc14.quest.utils.QuestBook;
 import br.dev.projetoc14.quest.utils.QuestManager;
 import br.dev.projetoc14.quest.listeners.MobKillQuestListener;
@@ -21,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 public final class QuestWeaver extends JavaPlugin {
 
     private PlayerStatsManager statsManager;
-    private PlayerDataManager dataManager;
     private QuestManager questManager;
     private QuestBook questBook;
 
@@ -32,7 +30,6 @@ public final class QuestWeaver extends JavaPlugin {
 
         // Inicializa PlayerStatsManager e PlayerDataManager
         this.statsManager = new PlayerStatsManager();
-        this.dataManager = new PlayerDataManager(this);
         this.questManager = new QuestManager();
         this.questBook = new QuestBook(questManager);
 
@@ -66,12 +63,20 @@ public final class QuestWeaver extends JavaPlugin {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String label, String[] args) {
-        if(label.equalsIgnoreCase("help")) {
-            if(sender instanceof Player player) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+        if (label.equalsIgnoreCase("help")) {
+            if (sender instanceof Player player) {
                 player.sendMessage("Apenas testando o método!");
             } else {
                 sender.sendMessage("Mensagem indo para o console!");
+            }
+        }
+
+        if (label.equalsIgnoreCase("quests")) {
+            if (sender instanceof Player player) {
+                questBook.showBook(player);
+            } else {
+                sender.sendMessage("§cEste comando só pode ser usado por jogadores!");
             }
         }
 
