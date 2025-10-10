@@ -3,10 +3,14 @@
 // Gerenciador central de todas as quests
 // =============================================
 
-package br.dev.projetoc14.quest;
+package br.dev.projetoc14.quest.utils;
 
 import br.dev.projetoc14.quest.KillQuest;
+import br.dev.projetoc14.quest.Quest;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
+import org.bukkit.Location;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -35,6 +39,12 @@ public class QuestManager {
     public void createFirstQuest(Player player) {
         UUID playerId = player.getUniqueId();
 
+        Location playerLoc = player.getLocation();
+        Location spawnLocation = playerLoc.clone();
+        Vector direction = playerLoc.getDirection().setY(0).normalize(); // remove componente Y e normaliza
+        spawnLocation.add(direction.multiply(12)); // 12 blocos na direção que o ‘player’ olha
+        spawnLocation.setY(spawnLocation.getWorld().getHighestBlockYAt(spawnLocation));
+
         // Cria a KillQuest inicial
         KillQuest firstQuest = new KillQuest(
                 "first_kill_quest",
@@ -43,7 +53,8 @@ public class QuestManager {
                 50,
                 "ZOMBIE",
                 5,
-                0
+                0,
+                spawnLocation
         );
 
         // Cria dados do jogador
@@ -53,12 +64,14 @@ public class QuestManager {
         // Salva
         playerQuests.put(playerId, questData);
 
-        // Mensagem pro jogador
+        // Mensagem para o jogador
         player.sendMessage("§6═══════════════════════════");
         player.sendMessage("§e✦ §6Nova Quest Recebida!");
         player.sendMessage("§f" + firstQuest.getName());
         player.sendMessage("§7" + firstQuest.getDescription());
         player.sendMessage("§6═══════════════════════════");
+
+        firstQuest.assignToPlayer(player);
     }
 
     /*
@@ -84,7 +97,7 @@ public class QuestManager {
             if (quest instanceof KillQuest killQuest) {
                 player.sendMessage("§e• §f" + quest.getName());
                 player.sendMessage("  §7" + quest.getDescription());
-                player.sendMessage("  §aProgresso: " + killQuest.getCurrentCount() + "/" + killQuest.getTargetCount());
+                player.sendMessage("  §aProgresso: " + killQuest.getProgressText());
             }
         }
     }

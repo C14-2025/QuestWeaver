@@ -5,7 +5,7 @@
 
 package br.dev.projetoc14.quest.listeners;
 
-import br.dev.projetoc14.quest.QuestManager;
+import br.dev.projetoc14.quest.utils.QuestManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,17 +16,16 @@ import org.bukkit.event.player.PlayerJoinEvent;
  */
 public class PlayerQuestJoinListener implements Listener {
 
-    private QuestManager questManager;
+    private final QuestManager questManager;
 
     public PlayerQuestJoinListener(QuestManager questManager) {
         this.questManager = questManager;
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        // Se é primeira vez, cria a quest inicial
         if (!questManager.hasQuests(player)) {
             questManager.createFirstQuest(player);
         }

@@ -10,3 +10,5 @@ commands:
     description: "Comandos básicos do plugin QuestWeaver"
   resetclass:
     description: Reseta a Classe
+  quests:
+      description: Mostra as quests ativas e seu progresso

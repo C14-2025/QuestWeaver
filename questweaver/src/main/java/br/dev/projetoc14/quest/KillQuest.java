@@ -1,22 +1,15 @@
 package br.dev.projetoc14.quest;
 
+import org.bukkit.Location;
 import net.kyori.adventure.text.Component;
 import org.bukkit.World;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 
 public class KillQuest extends Quest {
     private final String targetMob;
     private final int targetCount;
     private int currentCount;
     private final Location spawnLocation;
-
-    // Construtor para compatibilidade com testes
-    public KillQuest(String id, String name, String description, int experienceReward,
-                     String targetMob, int targetCount, int currentCount) {
-        this(id, name, description, experienceReward, targetMob, targetCount, currentCount, null);
-    }
 
     // Construtor completo
     public KillQuest(String id, String name, String description, int experienceReward,
@@ -49,8 +42,18 @@ public class KillQuest extends Quest {
             );
 
             Entity entity = world.spawnEntity(randomLocation, entityType);
+            if (entity instanceof Zombie zombie) {
+                // Garante que não queime no sol
+                zombie.setShouldBurnInDay(false);
+            }
+
+            if (entity instanceof Skeleton skeleton) {
+                // Garante que não queime no sol
+                skeleton.setShouldBurnInDay(false);
+            }
+
             // Usando o novo metodo com Component
-            entity.customName(Component.text(getName() + " Target"));
+            entity.customName(Component.text("Quest Target"));
             entity.setCustomNameVisible(true);
         }
     }
@@ -67,9 +70,11 @@ public class KillQuest extends Quest {
 
     @Override
     public void updateProgress(Object... params) {
-        if (params[0] instanceof String && params[0].equals(targetMob)) {
-            currentCount++;
-            completed = checkCompletion();
+        if (params.length > 0 && params[0] instanceof String mobType) {
+            if (mobType.equalsIgnoreCase(targetMob)) {
+                currentCount++;
+                completed = checkCompletion();
+            }
         }
     }
 

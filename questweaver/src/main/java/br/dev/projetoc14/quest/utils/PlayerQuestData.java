@@ -1,5 +1,6 @@
-package br.dev.projetoc14.quest;
+package br.dev.projetoc14.quest.utils;
 
+import br.dev.projetoc14.quest.Quest;
 import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.Map;

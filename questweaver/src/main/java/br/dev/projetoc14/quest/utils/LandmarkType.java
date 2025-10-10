@@ -1,4 +1,4 @@
-package br.dev.projetoc14.quest;
+package br.dev.projetoc14.quest.utils;
 
 /*
  * Enum que define os tipos de landmarks que o jogador pode encontrar.

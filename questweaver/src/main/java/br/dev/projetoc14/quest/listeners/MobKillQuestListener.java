@@ -5,9 +5,10 @@
 
 package br.dev.projetoc14.quest.listeners;
 
-import br.dev.projetoc14.quest.PlayerQuestData;
+import br.dev.projetoc14.QuestWeaver;
+import br.dev.projetoc14.quest.utils.PlayerQuestData;
 import br.dev.projetoc14.quest.Quest;
-import br.dev.projetoc14.quest.QuestManager;
+import br.dev.projetoc14.quest.utils.QuestManager;
 import br.dev.projetoc14.quest.KillQuest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,10 +20,12 @@ import org.bukkit.event.entity.EntityDeathEvent;
  */
 public class MobKillQuestListener implements Listener {
 
-    private QuestManager questManager;
+    private final QuestManager questManager;
+    private final QuestWeaver plugin;
 
-    public MobKillQuestListener(QuestManager questManager) {
+    public MobKillQuestListener(QuestManager questManager, QuestWeaver plugin) {
         this.questManager = questManager;
+        this.plugin = plugin;
     }
 
     @EventHandler
@@ -45,10 +48,11 @@ public class MobKillQuestListener implements Listener {
                 quest.updateProgress(mobType);
 
                 // Verifica se completou
-                if (quest.checkCompletion() && !quest.isCompleted()) {
+                if (quest.checkCompletion()) {
                     player.sendMessage("§a✓ Quest Completa: §e" + quest.getName());
-                    player.sendMessage("§6+50 XP!");
+                    player.sendMessage("§6+" + quest.getExperienceReward() + " XP!");
                     questData.completeQuest(quest.getId());
+                    plugin.getQuestBook().updateBook(player);
                 }
             }
         }
