@@ -71,4 +71,16 @@ public class ExperienceSystem implements Listener {
         }
         return pNivelAtual; // não ganha XP
     }
+
+    // retorna a quantidade total de níveis do jogador
+    public static int getLevel(Player player) {
+        return player.getLevel();
+    }
+
+    // remove níveis do jogador (sem deixar abaixo de 0)
+    public static void removeLevels(Player player, int amount) {
+        int newLevel = Math.max(0, player.getLevel() - amount);
+        player.setLevel(newLevel);
+    }
+
 }
