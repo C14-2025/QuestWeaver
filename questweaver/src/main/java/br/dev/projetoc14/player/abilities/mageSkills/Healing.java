@@ -1,4 +1,4 @@
-package br.dev.projetoc14.combat;
+package br.dev.projetoc14.player.abilities;
 
 import br.dev.projetoc14.player.RPGPlayer;
 
