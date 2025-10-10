@@ -1,6 +1,6 @@
 package com.GrupoC14.questweaver.combat;
 
-import br.dev.projetoc14.combat.Fireball;
+import br.dev.projetoc14.player.abilities.mageSkills.Fireball;
 import br.dev.projetoc14.player.MagePlayer;
 import br.dev.projetoc14.player.RPGPlayer;
 import org.bukkit.entity.Player;

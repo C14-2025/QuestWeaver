@@ -1,6 +1,7 @@
-package br.dev.projetoc14.player.abilities;
+package br.dev.projetoc14.player.abilities.mageSkills;
 
 import br.dev.projetoc14.player.RPGPlayer;
+import br.dev.projetoc14.player.abilities.Ability;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;

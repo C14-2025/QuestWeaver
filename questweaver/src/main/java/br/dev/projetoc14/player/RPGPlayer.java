@@ -1,6 +1,6 @@
 package br.dev.projetoc14.player;
 
-import br.dev.projetoc14.combat.Ability;
+import br.dev.projetoc14.player.abilities.Ability;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
