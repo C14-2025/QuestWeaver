@@ -1,8 +1,3 @@
-// =============================================
-// ARQUIVO 5: br/dev/projetoc14/quests/listeners/PlayerQuestJoinListener.java
-// Detecta quando jogador entra no servidor
-// =============================================
-
 package br.dev.projetoc14.quest.listeners;
 
 import br.dev.projetoc14.quest.utils.QuestManager;

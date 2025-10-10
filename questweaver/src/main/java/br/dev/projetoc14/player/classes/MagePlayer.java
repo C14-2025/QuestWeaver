@@ -1,5 +1,7 @@
-package br.dev.projetoc14.player;
+package br.dev.projetoc14.player.classes;
 
+import br.dev.projetoc14.player.PlayerClass;
+import br.dev.projetoc14.player.RPGPlayer;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

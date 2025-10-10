@@ -1,8 +1,3 @@
-// =============================================
-// ARQUIVO 6: br/dev/projetoc14/quests/listeners/MobKillQuestListener.java
-// Atualiza quest quando jogador mata mob
-// =============================================
-
 package br.dev.projetoc14.quest.listeners;
 
 import br.dev.projetoc14.QuestWeaver;
