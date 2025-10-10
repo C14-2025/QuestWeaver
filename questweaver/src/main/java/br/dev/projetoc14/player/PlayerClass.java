@@ -3,7 +3,8 @@ package br.dev.projetoc14.player;
 public enum PlayerClass {
     WARRIOR("Guerreiro"),
     ARCHER("Arqueiro"),
-    MAGE("Mago");
+    MAGE("Mago"),
+    ASSASSIN("Assassino");
 
     private final String displayName;
 
