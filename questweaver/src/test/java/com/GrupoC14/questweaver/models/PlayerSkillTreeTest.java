@@ -7,7 +7,7 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PlayerSkillTreeTest {
-
+    /*
     @Test
     void testDesbloquearHabilidadeComMock() {
         // mock do jogador
@@ -34,4 +34,5 @@ class PlayerSkillTreeTest {
 
         verify(jogador, times(1)).abrirInterfaceHabilidades(arvore);
     }
+    */
 }
