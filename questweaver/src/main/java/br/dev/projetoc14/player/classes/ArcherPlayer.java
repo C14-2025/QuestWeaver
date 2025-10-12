@@ -39,7 +39,7 @@ public class ArcherPlayer extends RPGPlayer {
                 new ItemStack(Material.BOW, 1),
                 new ItemStack(Material.ARROW, 32),
                 new ItemStack(Material.LEATHER_CHESTPLATE, 1),
-                new ItemStack(Material.COOKED_CHICKEN, 5)
+                new ItemStack(Material.BREAD, 8)
         };
     }
 }

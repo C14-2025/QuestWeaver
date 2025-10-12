@@ -19,7 +19,7 @@ public class MagePlayer extends RPGPlayer {
         stats.setDefense(6);
         stats.setAgility(10);
         stats.setIntelligence(18);
-        stats.setHealth(20);
+        stats.setHealth(80);
         stats.setMana(120);
     }
 
@@ -37,8 +37,8 @@ public class MagePlayer extends RPGPlayer {
         return new ItemStack[] {
                 new ItemStack(Material.BLAZE_ROD, 1), // Cajado
                 new ItemStack(Material.ENCHANTED_BOOK, 2),
-                new ItemStack(Material.POTION, 3),
-                new ItemStack(Material.BREAD, 10)
+                new ItemStack(Material.SPLASH_POTION, 3),
+                new ItemStack(Material.CAKE, 6)
         };
     }
 }

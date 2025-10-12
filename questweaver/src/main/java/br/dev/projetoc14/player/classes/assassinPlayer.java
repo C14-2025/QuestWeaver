@@ -19,7 +19,7 @@ public class AssassinPlayer extends RPGPlayer {
         stats.setDefense(6);        // Defesa baixa
         stats.setAgility(18);       // Muito ágil
         stats.setIntelligence(6);   // Pouca inteligência
-        stats.setHealth(100);       // Vida mediana
+        stats.setHealth(80);       // Vida baixa
         stats.setMana(60);          // Pouco mana, usa mais ataques físicos
     }
 
@@ -39,7 +39,7 @@ public class AssassinPlayer extends RPGPlayer {
                 new ItemStack(Material.IRON_SWORD, 1),    // Lâmina leve
                 new ItemStack(Material.LEATHER_CHESTPLATE, 1), // Armadura leve
                 new ItemStack(Material.LEATHER_BOOTS, 1),
-                new ItemStack(Material.BREAD, 10)         // Suprimentos básicos
+                new ItemStack(Material.COOKED_BEEF, 4)         // Suprimentos básicos
         };
     }
 }
