@@ -20,9 +20,11 @@ public class PlayerDataManager {
         this.plugin = plugin;
         this.dataFolder = new File(plugin.getDataFolder(), "playerdata");
 
+        plugin.getLogger().info("[PlayerDataManager] Pasta de dados: " + dataFolder.getAbsolutePath());
+
         if (!dataFolder.exists()) {
             if (dataFolder.mkdirs()) {
-                plugin.getLogger().info("[PlayerData] Pasta 'playerdata' criada com sucesso.");
+                plugin.getLogger().info("[PlayerData] Pasta 'playerdata' criada com sucesso em: " + dataFolder.getAbsolutePath());
             } else {
                 plugin.getLogger().warning("[PlayerData] Falha ao criar a pasta 'playerdata'. Verifique permissoes!");
             }
@@ -35,14 +37,21 @@ public class PlayerDataManager {
         return new File(dataFolder, player.getUniqueId().toString() + ".json");
     }
 
+    public boolean hasPlayerData(Player player) {
+        return getPlayerFile(player).exists();
+    }
+
     // Salvar stats
     public void savePlayerStats(Player player, PlayerStats stats) {
         File file = getPlayerFile(player);
+        plugin.getLogger().info("[PlayerData] Tentando salvar em: " + file.getAbsolutePath());
+
         try (FileWriter writer = new FileWriter(file)) {
             gson.toJson(stats, writer);
-            plugin.getLogger().fine("[PlayerData] Stats salvos para " + player.getName());
+            plugin.getLogger().info("[PlayerData] Stats salvos com sucesso para " + player.getName());
         } catch (IOException e) {
             plugin.getLogger().severe("[PlayerData] Erro ao salvar stats de " + player.getName() + ": " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -62,5 +71,13 @@ public class PlayerDataManager {
             plugin.getLogger().severe("[PlayerData] Erro ao carregar stats de " + player.getName() + ": " + e.getMessage());
             return new PlayerStats();
         }
+    }
+
+    public boolean deletePlayerData(Player player) {
+        File file = getPlayerFile(player);
+        if (file.exists()) {
+            return file.delete();
+        }
+        return false;
     }
 }
