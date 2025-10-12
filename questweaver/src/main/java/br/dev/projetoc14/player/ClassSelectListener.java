@@ -56,7 +56,7 @@ public class ClassSelectListener implements Listener {
                 ChatColor.GRAY + "Especialista em feitiços"
         ));
         mage.setItemMeta(mMeta);
-        inventory.setItem(10, mage);
+        inventory.setItem(1, mage);
 
         // Arqueiro - Slot 12
         ItemStack archer = new ItemStack(Material.BOW);
@@ -68,10 +68,10 @@ public class ClassSelectListener implements Listener {
                 ChatColor.GRAY + "Precisão letal"
         ));
         archer.setItemMeta(aMeta);
-        inventory.setItem(12, archer);
+        inventory.setItem(3, archer);
 
         // Guerreiro - Slot 14
-        ItemStack warrior = new ItemStack(Material.IRON_SWORD);
+        ItemStack warrior = new ItemStack(Material.IRON_AXE);
         ItemMeta wMeta = warrior.getItemMeta();
         wMeta.setDisplayName(ChatColor.RED + "GUERREIRO");
         wMeta.setLore(Arrays.asList(
@@ -80,10 +80,10 @@ public class ClassSelectListener implements Listener {
                 ChatColor.GRAY + "Combate corpo a corpo"
         ));
         warrior.setItemMeta(wMeta);
-        inventory.setItem(14, warrior);
+        inventory.setItem(5, warrior);
 
         // Assassino - Slot 16
-        ItemStack assassin = new ItemStack(Material.NETHERITE_SWORD);
+        ItemStack assassin = new ItemStack(Material.IRON_SWORD);
         ItemMeta assMeta = assassin.getItemMeta();
         assMeta.setDisplayName(ChatColor.DARK_GRAY + "ASSASSINO");
         assMeta.setLore(Arrays.asList(
@@ -92,7 +92,7 @@ public class ClassSelectListener implements Listener {
                 ChatColor.GRAY + "Mestre da furtividade"
         ));
         assassin.setItemMeta(assMeta);
-        inventory.setItem(16, assassin);
+        inventory.setItem(7, assassin);
 
         player.openInventory(inventory);
         plugin.getLogger().info("[ClassSelect] Inventário aberto para " + player.getName());
@@ -100,8 +100,8 @@ public class ClassSelectListener implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        event.getView().title();
-        if (!event.getView().title().equals("Escolha sua Classe")) return;
+        event.getView().getTitle();
+        if (!event.getView().getTitle().equals("Escolha sua Classe")) return;
 
         event.setCancelled(true);
 
@@ -138,7 +138,7 @@ public class ClassSelectListener implements Listener {
                 player.sendMessage(ChatColor.RED + "Você escolheu a classe " + ChatColor.BOLD + "Guerreiro" + ChatColor.RED + "!");
                 player.closeInventory();
             }
-            case NETHERITE_SWORD -> {
+            case IRON_SWORD -> {
                 AssassinPlayer assassin = new AssassinPlayer(player);
                 statsManager.setStats(player, assassin.getStats());
                 statsManager.applyStats(player);
