@@ -18,16 +18,15 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 public final class QuestWeaver extends JavaPlugin {
 
     private PlayerStatsManager statsManager;
     private PlayerDataManager dataManager;
-
-    private PlayerStatsManager statsManager;
     private QuestManager questManager;
     private QuestBook questBook;
+    private static FileConfiguration config;
+    private static Plugin instance;
 
     @Override
     public void onEnable() {
@@ -79,8 +78,8 @@ public final class QuestWeaver extends JavaPlugin {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(command.getName().equalsIgnoreCase("help")) {
-            if(sender instanceof Player player) {
+        if (command.getName().equalsIgnoreCase("help")) {
+            if (sender instanceof Player player) {
                 player.sendMessage("Apenas testando o método!");
             } else {
                 sender.sendMessage("Mensagem indo para o console!");
@@ -88,25 +87,34 @@ public final class QuestWeaver extends JavaPlugin {
             return true;
         }
 
-        if(command.getName().equalsIgnoreCase("resetclass")) {
-            if(sender instanceof Player player) {
+        if (command.getName().equalsIgnoreCase("resetclass")) {
+            if (sender instanceof Player player) {
                 statsManager.removeStats(player);
                 dataManager.deletePlayerData(player);
                 player.sendMessage("§aClasse resetada! Relogue para escolher novamente.");
             } else {
                 sender.sendMessage("§cEste comando só pode ser usado por jogadores!");
             }
-            return true;
         }
 
-        return false;
+        if (label.equalsIgnoreCase("quests")) {
+            if (sender instanceof Player player) {
+                questBook.showBook(player);
+            } else {
+                sender.sendMessage("§cEste comando só pode ser usado por jogadores!");
+            }
+        }
+
+            return true;
     }
 
     public static String getServerName(){
         return config.getString("HGconfigs.server-name");
-
     }
-}
+
+    public static Plugin getInstance() {
+        return instance;
+    }
 
     public QuestManager getQuestManager() {
         return questManager;

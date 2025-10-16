@@ -35,7 +35,7 @@ public class AssassinPlayer extends RPGPlayer {
 
     @Override
     public ItemStack[] getStartingEquipment() {
-        return new ItemStack[] {
+        return new ItemStack[]{
                 new ItemStack(Material.IRON_SWORD, 1),    // Lâmina leve
                 new ItemStack(Material.LEATHER_CHESTPLATE, 1), // Armadura leve
                 new ItemStack(Material.LEATHER_BOOTS, 1),
