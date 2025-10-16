@@ -8,6 +8,8 @@ author: GrupoC14
 commands:
   help:
     description: "Comandos básicos do plugin QuestWeaver"
+  quests:
+      description: "Mostra as quests ativas e seu progresso"
   startmatch:
     description: "Inicia jogo mesmo que não contenha nenhum jogador."
     usage: /startmatch

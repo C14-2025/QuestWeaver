@@ -12,7 +12,7 @@ public class KillQuestTest {
     @BeforeEach
     void setUp() {
         killQuest = new KillQuest("kill_001", "Caçador de Zumbis",
-                "Mate 5 zumbis", 100, "ZOMBIE", 5, 0);
+                "Mate 5 zumbis", 100, "ZOMBIE", 5, 0, null);
     }
 
     @Test

@@ -19,7 +19,7 @@ public class MagePlayer extends RPGPlayer {
         stats.setDefense(6);
         stats.setAgility(10);
         stats.setIntelligence(18);
-        stats.setHealth(80);
+        stats.setHealth(20);
         stats.setMana(120);
     }
 

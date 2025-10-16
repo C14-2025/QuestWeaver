@@ -7,6 +7,9 @@ package br.dev.projetoc14.quest;
  * Quando encontra, a quest é marcada como completa.
  */
 
+import br.dev.projetoc14.quest.utils.LandmarkType;
+import org.bukkit.Location;
+
 public class LandmarkQuest extends Quest {
     private final LandmarkType targetType;
     private final double detectionRadius;

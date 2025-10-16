@@ -46,7 +46,7 @@ public class ClassSelectListener implements Listener {
     private void openClassInventory(Player player) {
         Inventory inventory = Bukkit.createInventory(null, 27, "Escolha sua Classe");
 
-        // Mago - Slot 10
+        // Mago
         ItemStack mage = new ItemStack(Material.BLAZE_ROD);
         ItemMeta mMeta = mage.getItemMeta();
         mMeta.setDisplayName(ChatColor.DARK_PURPLE + "MAGO");
@@ -100,7 +100,6 @@ public class ClassSelectListener implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        event.getView().getTitle();
         if (!event.getView().getTitle().equals("Escolha sua Classe")) return;
 
         event.setCancelled(true);

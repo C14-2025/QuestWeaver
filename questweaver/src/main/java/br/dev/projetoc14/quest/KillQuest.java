@@ -1,45 +1,101 @@
 package br.dev.projetoc14.quest;
 
-/*
+import org.bukkit.Location;
+import net.kyori.adventure.text.Component;
+import org.bukkit.World;
+import org.bukkit.entity.*;
 
-    Missão de matar uma certa quantidade de um certo mob
-
- */
 public class KillQuest extends Quest {
-    private String targetMob;
-    private int targetCount;
+    private final String targetMob;
+    private final int targetCount;
     private int currentCount;
+    private final Location spawnLocation;
 
-    public KillQuest(String id, String name, String description, int experienceReward, String targetMob, int targetCount, int currentCount) {
+    // Construtor completo
+    public KillQuest(String id, String name, String description, int experienceReward,
+                     String targetMob, int targetCount, int currentCount, Location spawnLocation) {
         super(id, name, description, experienceReward);
         this.targetMob = targetMob;
         this.targetCount = targetCount;
         this.currentCount = currentCount;
+        this.spawnLocation = spawnLocation;
+    }
+
+    public void spawnTargetEntities(Player player) {
+        if (spawnLocation == null) return;
+
+        EntityType entityType;
+        try {
+            entityType = EntityType.valueOf(targetMob.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Tipo de entidade invalido: " + targetMob);
+            return;
+        }
+
+        World world = player.getWorld();
+        for (int i = 0; i < targetCount; i++) {
+            Location randomLocation = new Location(
+                    world,
+                    spawnLocation.getX() + (Math.random() * 4 - 2),
+                    player.getLocation().getY(),
+                    spawnLocation.getZ() + (Math.random() * 4 - 2)
+            );
+
+            Entity entity = world.spawnEntity(randomLocation, entityType);
+            if (entity instanceof Zombie zombie) {
+                // Garante que não queime no sol
+                zombie.setShouldBurnInDay(false);
+            }
+
+            if (entity instanceof Skeleton skeleton) {
+                // Garante que não queime no sol
+                skeleton.setShouldBurnInDay(false);
+            }
+
+            // Usando o novo metodo com Component
+            entity.customName(Component.text("Quest Target"));
+            entity.setCustomNameVisible(true);
+        }
+    }
+
+
+    public void assignToPlayer(Player player) {
+        spawnTargetEntities(player);
     }
 
     @Override
     public boolean checkCompletion() {
-        /*
-        Condição de conclusão para essa missão é matar o número pedido de
-        mobs, então se a contagem atual bater o quanto é definido
-        */
         return currentCount >= targetCount;
     }
 
     @Override
     public void updateProgress(Object... params) {
-        /*
-
-         */
-        if (params[0] instanceof String && params[0].equals(targetMob)) {
-            currentCount++;
-            completed = checkCompletion();
+        if (params.length > 0 && params[0] instanceof String mobType) {
+            if (mobType.equalsIgnoreCase(targetMob)) {
+                currentCount++;
+                completed = checkCompletion();
+            }
         }
     }
 
-    //Getters e Setters
-
+    // Getters
     public int getCurrentCount() {
         return currentCount;
+    }
+
+    public String getTargetMob() {
+        return targetMob;
+    }
+
+    public int getTargetCount() {
+        return targetCount;
+    }
+
+    public Location getSpawnLocation() {
+        return spawnLocation;
+    }
+
+    public String getProgressText() {
+        return String.format("%d/%d %s eliminados", currentCount, targetCount, targetMob);
     }
 }

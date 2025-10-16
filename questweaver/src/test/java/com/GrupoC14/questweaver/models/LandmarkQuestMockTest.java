@@ -1,7 +1,7 @@
 package com.GrupoC14.questweaver.models;
 
 import br.dev.projetoc14.quest.LandmarkQuest;
-import br.dev.projetoc14.quest.LandmarkType;
+import br.dev.projetoc14.quest.utils.LandmarkType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mock;
