@@ -2,6 +2,7 @@ name: QuestWeaver
 version: '${version}'
 main: br.dev.projetoc14.QuestWeaver
 api-version: '1.21'
+author: GrupoC14
 
 # Especificando comandos
 commands:
@@ -11,3 +12,5 @@ commands:
     description: "Inicia jogo mesmo que não contenha nenhum jogador."
     usage: /startmatch
     permission: questweaver.plugin.startmatch
+  resetclass:
+    description: "Reseta a Classe"

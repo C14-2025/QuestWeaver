@@ -1,5 +1,7 @@
-package br.dev.projetoc14.player;
+package br.dev.projetoc14.player.classes;
 
+import br.dev.projetoc14.player.PlayerClass;
+import br.dev.projetoc14.player.RPGPlayer;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -37,7 +39,7 @@ public class ArcherPlayer extends RPGPlayer {
                 new ItemStack(Material.BOW, 1),
                 new ItemStack(Material.ARROW, 32),
                 new ItemStack(Material.LEATHER_CHESTPLATE, 1),
-                new ItemStack(Material.COOKED_CHICKEN, 5)
+                new ItemStack(Material.BREAD, 8)
         };
     }
 }
