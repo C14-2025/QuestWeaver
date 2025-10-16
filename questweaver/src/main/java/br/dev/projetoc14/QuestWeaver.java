@@ -10,7 +10,9 @@ import br.dev.projetoc14.playerData.PlayerDataManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class QuestWeaver extends JavaPlugin {
@@ -20,12 +22,17 @@ public final class QuestWeaver extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        instance = this;
         // Mensagem inicial do plugin
         Texts.StartupPlugin();
 
         // Inicializa PlayerStatsManager e PlayerDataManager
         this.statsManager = new PlayerStatsManager();
         this.dataManager = new PlayerDataManager(this);
+
+        // get config.yml
+        saveDefaultConfig();
+        config = getConfig();
 
         // Listener de mecânica (mana, barra, regeneração)
         PlayerListener playerListener = new PlayerListener(statsManager, this);
@@ -68,5 +75,10 @@ public final class QuestWeaver extends JavaPlugin {
         }
 
         return false;
+    }
+
+    public static String getServerName(){
+        return config.getString("HGconfigs.server-name");
+
     }
 }
