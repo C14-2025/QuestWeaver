@@ -35,9 +35,12 @@ public class WarriorPlayer extends RPGPlayer {
     @Override
     public ItemStack[] getStartingEquipment() {
         return new ItemStack[] {
-                new ItemStack(Material.IRON_SWORD, 1),
+                new ItemStack(Material.IRON_AXE, 1),
                 new ItemStack(Material.IRON_CHESTPLATE, 1),
-                new ItemStack(Material.COOKED_BEEF, 5)
+                new ItemStack(Material.IRON_LEGGINGS, 1),
+                new ItemStack(Material.IRON_BOOTS, 1),
+                new  ItemStack(Material.IRON_HELMET, 1),
+                new ItemStack(Material.APPLE, 10)
         };
     }
 }
