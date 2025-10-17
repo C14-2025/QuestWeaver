@@ -24,7 +24,11 @@ pipeline {
         stage('Build') {
             steps {
                 dir('questweaver') {
-                    sh './gradlew clean build'
+                    sh '''
+                        echo "Dando permissão de execução ao gradlew..."
+                        chmod +x gradlew
+                        ./gradlew clean build
+                    '''
                 }
             }
         }
