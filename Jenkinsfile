@@ -33,10 +33,24 @@ pipeline {
             }
         }
 
+        stage('Test') {
+            steps {
+                dir('questweaver') {
+                    sh './gradlew test'
+                }
+            }
+        }
+
         stage('Archive') {
             steps {
                 echo "🔹 Arquivando .jar gerado pelo Gradle..."
                 archiveArtifacts artifacts: 'questweaver/build/libs/*.jar', fingerprint: true
+            }
+        }
+
+        stage('Publish Test Results') {
+            steps {
+                junit 'questweaver/build/test-results/test/*.xml'
             }
         }
     }
