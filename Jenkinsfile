@@ -96,6 +96,51 @@ pipeline {
             }
         }
 
+        stage('Package Validation') {
+            steps {
+                dir('questweaver') {
+                    sh '''
+                        echo "Iniciando Validação do JAR"
+
+                        # Localiza o JAR
+                        JAR_FILE=$(ls build/libs/*.jar | grep -v "plain" | head -n 1)
+
+                        if [ -z "$JAR_FILE" ]; then
+                            echo "ERRO: JAR não encontrado!"
+                            exit 1
+                        fi
+
+                        JAR_NAME=$(basename "$JAR_FILE")
+                        JAR_SIZE=$(du -h "$JAR_FILE" | cut -f1)
+                        echo "JAR: $JAR_NAME ($JAR_SIZE)"
+
+                        # Valida integridade e plugin.yml
+                        if ! jar tf "$JAR_FILE" > /dev/null 2>&1; then
+                            echo "ERRO: JAR corrompido"
+                            exit 1
+                        fi
+
+                        # Verifica plugin.yml (Obrigatório para Minecraft)
+                        if ! jar tf "$JAR_FILE" | grep -q "^plugin.yml$"; then
+                            echo "ERRO: plugin.yml não encontrado - falha no Minecraft!"
+                            exit 1
+                        fi
+
+                        # Extrai e exibe informações essenciais
+                        jar xf "$JAR_FILE" plugin.yml
+                        echo "Informações Plugin:"
+                        grep -E "^(name|version):" plugin.yml | sed 's/^/  /'
+                        rm plugin.yml
+
+                        # Checksum (Importante para deploy/cache)
+                        echo "MD5: $(md5sum "$JAR_FILE" | cut -d' ' -f1)"
+
+                        echo "Validação concluída com sucesso!"
+                    '''
+                }
+            }
+        }
+
         stages {
             stage('Deploy Plugin') {
                 steps {
