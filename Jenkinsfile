@@ -8,6 +8,20 @@ pipeline {
     }
 
     stages {
+        stage('Setup Java') {
+            steps {
+                sh '''
+                    if [ ! -d "/opt/java/openjdk-21" ]; then
+                        echo "Instalando Java 21..."
+                        apt update
+                        apt install -y openjdk-21-jdk
+                    fi
+                    echo "Java configurado:"
+                    java -version
+                '''
+            }
+        }
+
         stage('Build') {
             steps {
                 dir('questweaver') {
