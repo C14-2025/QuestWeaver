@@ -32,5 +32,12 @@ pipeline {
                 }
             }
         }
+
+        stage('Archive') {
+            steps {
+                echo "🔹 Arquivando .jar gerado pelo Gradle..."
+                archiveArtifacts artifacts: 'questweaver/build/libs/*.jar', fingerprint: true
+            }
+        }
     }
 }
