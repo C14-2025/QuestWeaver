@@ -15,28 +15,22 @@ pipeline {
                         sudo apt update
                         sudo apt install -y openjdk-21-jdk
                     fi
-                    echo "Java configurado:"
                     java -version
                 '''
             }
         }
 
-        stage('Build') {
+        stage('Run Tests') {
             steps {
                 dir('questweaver') {
-                    sh '''
-                        echo "Dando permissão de execução ao gradlew..."
-                        chmod +x gradlew
-                        ./gradlew clean build
-                    '''
+                    sh './gradlew test'
                 }
             }
         }
 
-        stage('Archive') {
+        stage('Publish Test Results') {
             steps {
-                echo "🔹 Arquivando .jar gerado pelo Gradle..."
-                archiveArtifacts artifacts: 'questweaver/build/libs/*.jar', fingerprint: true
+                junit 'questweaver/build/test-results/test/*.xml'
             }
         }
     }
