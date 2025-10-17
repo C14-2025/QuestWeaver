@@ -170,21 +170,20 @@ pipeline {
     post {
         always {
             emailext(
-                subject: "🔧 Pipeline '${env.JOB_NAME} #${env.BUILD_NUMBER}' finalizada",
+                subject: "Pipeline '${env.JOB_NAME} #${env.BUILD_NUMBER}' finalizada",
                 body: """\
-Olá !
+            Olá!
 
-A pipeline do Jenkins acabou de rodar com o seguinte status:
+            A pipeline do Jenkins acabou de rodar com o seguinte status:
 
-Projeto: ${env.JOB_NAME}
-Build: #${env.BUILD_NUMBER}
-Resultado: ${currentBuild.currentResult}
-Detalhes: ${env.BUILD_URL}
+            Projeto: ${env.JOB_NAME}
+            Build: #${env.BUILD_NUMBER}
+            Resultado: ${currentBuild.currentResult}
+            Detalhes: ${env.BUILD_URL}
 
- Deploy e reinício do servidor foram executados.
-
-""",
-                to: "matheus.maciel@gec.inatel.br", "pedro.henrique05@ges.inatel.br", "joao.gr@gec.inatel.br", "beatriz.cobral@gec.inatel.br", "felipe.loschi@ges.inatel.br", "felipe.ft@gec.inatel.br"
+            Deploy e reinício do servidor foram executados.
+            """,
+                to: "matheus.maciel@gec.inatel.br, pedro.henrique05@ges.inatel.br, joao.gr@gec.inatel.br, beatriz.cobral@gec.inatel.br, felipe.loschi@ges.inatel.br, felipe.ft@gec.inatel.br"
             )
         }
     }
