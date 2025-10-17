@@ -1,11 +1,14 @@
-package br.dev.projetoc14.combat;
+package br.dev.projetoc14.player.abilities.mageSkills;
 
 import br.dev.projetoc14.player.RPGPlayer;
+import br.dev.projetoc14.player.abilities.Ability;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 
 public class Fireball extends Ability {
+
+    private final int damage = 25; // quanto de dano a fireball causa
 
     public Fireball() {
         super("Bola de Fogo", 20, 5); // nome, custo de mana, cooldown em segundos
@@ -26,4 +29,13 @@ public class Fireball extends Ability {
         caster.sendMessage("🔥 Você lançou uma Bola de Fogo!");
     }
 
+    public void applyDamage(RPGPlayer caster, RPGPlayer target) {
+        int newHealth = target.getCurrentHealth() - damage;
+        if (newHealth < 0) newHealth = 0;
+        target.setCurrentHealth(newHealth);
+    }
+
+    public int getDamage() {
+        return damage;
+    }
 }

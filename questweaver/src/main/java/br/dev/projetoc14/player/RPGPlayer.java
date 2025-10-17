@@ -1,6 +1,6 @@
 package br.dev.projetoc14.player;
 
-import br.dev.projetoc14.combat.Ability;
+import br.dev.projetoc14.player.abilities.Ability;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -30,8 +30,8 @@ public abstract class RPGPlayer {
         this.experience = 0;
         this.stats = new PlayerStats();
 
-        this.health = 100;        // padrão
-        this.currentHealth = 100; // começa cheio
+        this.health = 20;        // padrão
+        this.currentHealth = 20; // começa cheio
 
         initializeClass();
     }

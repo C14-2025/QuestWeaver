@@ -46,4 +46,11 @@ public abstract class Quest {
         return completed;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public int getExperienceReward() {
+        return experienceReward;
+    }
 }

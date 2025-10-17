@@ -1,5 +1,7 @@
-package br.dev.projetoc14.player;
+package br.dev.projetoc14.player.classes;
 
+import br.dev.projetoc14.player.PlayerClass;
+import br.dev.projetoc14.player.RPGPlayer;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -13,11 +15,11 @@ public class MagePlayer extends RPGPlayer {
     @Override
     protected void initializeClass() {
         // Stats iniciais do mago
-        stats.setStrength(6);
+        stats.setStrength(1);
         stats.setDefense(6);
         stats.setAgility(10);
         stats.setIntelligence(18);
-        stats.setHealth(80);
+        stats.setHealth(20);
         stats.setMana(120);
     }
 
@@ -35,8 +37,8 @@ public class MagePlayer extends RPGPlayer {
         return new ItemStack[] {
                 new ItemStack(Material.BLAZE_ROD, 1), // Cajado
                 new ItemStack(Material.ENCHANTED_BOOK, 2),
-                new ItemStack(Material.POTION, 3),
-                new ItemStack(Material.BREAD, 10)
+                new ItemStack(Material.SPLASH_POTION, 3),
+                new ItemStack(Material.CAKE, 6)
         };
     }
 }
