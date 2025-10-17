@@ -141,7 +141,6 @@ pipeline {
             }
         }
 
-        stages {
             stage('Deploy Plugin') {
                 steps {
                     script {
@@ -164,6 +163,5 @@ pipeline {
                     }
                 }
             }
-        }
     }
 }
