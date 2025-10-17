@@ -146,7 +146,10 @@ pipeline {
                     script {
                         echo "Iniciando deploy para a pasta: ${env.MINECRAFT_PLUGIN_DIR}"
 
-                        def jarFile = findFiles(glob: 'build/libs/*.jar')[0]?.path
+                        def jarFile = sh(
+                            script: 'ls questweaver/build/libs/*.jar | grep -v "plain" | head -n 1',
+                            returnStdout: true
+                        ).trim()
 
                         if (jarFile) {
                             echo "Arquivo do plugin encontrado: ${jarFile}"
