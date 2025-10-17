@@ -4,6 +4,7 @@ pipeline {
     environment {
         JAVA_HOME = "/opt/java/openjdk-21"
         PATH = "${env.JAVA_HOME}/:${env.PATH}"
+        MINECRAFT_PLUGIN_DIR = '/DATA/AppData/crafty/servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/plugins'
     }
 
     stages {
@@ -43,7 +44,7 @@ pipeline {
 
         stage('Archive') {
             steps {
-                echo "🔹 Arquivando .jar gerado pelo Gradle..."
+                echo "Gerando arquivo .jar pelo Gradle..."
                 archiveArtifacts artifacts: 'questweaver/build/libs/*.jar', fingerprint: true
             }
         }
@@ -64,7 +65,7 @@ pipeline {
                     dir('questweaver') {
                         sh '''
                             if [ ! -d "src" ]; then
-                                echo "⚠️ Diretório src não encontrado, abortando análise."
+                                echo "Diretório src não encontrado, abortando análise."
                                 exit 0
                             fi
 
@@ -88,8 +89,33 @@ pipeline {
                             find src -name "*.java" -exec wc -l {} \\; 2>/dev/null | sort -rn | head -5 | awk '{print $1 " linhas - " $2}'
 
                             echo ""
-                            echo "✅ Estatísticas resumidas geradas com sucesso!"
+                            echo "Estatísticas resumidas geradas com sucesso!"
                         '''
+                    }
+                }
+            }
+        }
+
+        stages {
+            stage('Deploy Plugin') {
+                steps {
+                    script {
+                        echo "Iniciando deploy para a pasta: ${env.MINECRAFT_PLUGIN_DIR}"
+
+                        def jarFile = findFiles(glob: 'build/libs/*.jar')[0]?.path
+
+                        if (jarFile) {
+                            echo "Arquivo do plugin encontrado: ${jarFile}"
+
+                            // Comando para copiar o arquivo para a pasta de plugins do servidor
+                            sh "cp ${jarFile} ${env.MINECRAFT_PLUGIN_DIR}"
+
+                            echo "Plugin copiado com sucesso!"
+                            echo "Lembre-se de recarregar o servidor com o comando '/reload confirm'"
+                        } else {
+                            // Falha o build se o .jar não for encontrado
+                            error "Nenhum arquivo .jar foi encontrado no workspace! O job de 'Package' precisa rodar primeiro."
+                        }
                     }
                 }
             }
