@@ -4,7 +4,7 @@ pipeline {
     environment {
         JAVA_HOME = "/opt/java/openjdk-21"
         PATH = "${env.JAVA_HOME}/:${env.PATH}"
-        MINECRAFT_PLUGIN_DIR = '/DATA/AppData/crafty/servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/plugins'
+        MINECRAFT_PLUGIN_DIR = "/DATA/AppData/crafty/servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/plugins/"
     }
 
     stages {
@@ -146,7 +146,10 @@ pipeline {
                     script {
                         echo "Iniciando deploy para a pasta: ${env.MINECRAFT_PLUGIN_DIR}"
 
-                        def jarFile = findFiles(glob: 'build/libs/*.jar')[0]?.path
+                        def jarFile = sh(
+                            script: 'ls questweaver/build/libs/*.jar | grep -v "plain" | head -n 1',
+                            returnStdout: true
+                        ).trim()
 
                         if (jarFile) {
                             echo "Arquivo do plugin encontrado: ${jarFile}"
