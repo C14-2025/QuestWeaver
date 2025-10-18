@@ -140,6 +140,11 @@ pipeline {
                         if (jarFile) {
                             echo "Arquivo do plugin encontrado: ${jarFile}"
 
+                            // removendo versões antigas do plugin
+                            echo "Removendo versões antigas do plugin..."
+                            sh "rm -f ${env.MINECRAFT_PLUGIN_DIR}/questweaver*.jar"
+                            sh "rm -rf ${env.MINECRAFT_PLUGIN_DIR}/QuestWeaver"
+
                             // Comando para copiar o arquivo para a pasta de plugins do servidor
                             sh "cp ${jarFile} ${env.MINECRAFT_PLUGIN_DIR}"
 
