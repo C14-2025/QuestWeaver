@@ -156,7 +156,7 @@ pipeline {
 
                             // religando servidor
                             echo "Religando servidor Minecraft..."
-                            sh "cd Root/DATA/crafty/servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793 && screen -dmS Projeto-C14 java -Xms1000M -Xmx4000M -jar paper-1.21.8.jar nogui"
+                            sh "cd /root/DATA/crafty/servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793 && screen -dmS Projeto-C14 java -Xms1000M -Xmx4000M -jar paper-1.21.8.jar nogui"
                             
                         } else {
                             // Falha o build se o .jar não for encontrado
