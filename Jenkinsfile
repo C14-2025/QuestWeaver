@@ -169,7 +169,7 @@ pipeline {
 
             Deploy e reinício do servidor foram executados.
             """,
-                to: "maathdesigner@outlook.com"
+                to: "matheus.maciel@gec.inatel.br", "pedro.henrique05@ges.inatel.br", "joao.gr@gec.inatel.br", "beatriz.cobral@gec.inatel.br", "felipe.loschi@ges.inatel.br", "felipe.ft@gec.inatel.br"
             )
         }
     }
