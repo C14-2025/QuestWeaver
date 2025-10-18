@@ -140,6 +140,11 @@ pipeline {
                         if (jarFile) {
                             echo "Arquivo do plugin encontrado: ${jarFile}"
 
+                            // desligando servidor
+                            echo "Desligando o servidor Minecraft..."
+                            sh 'screen -S Projeto-C14 -X stuff "stop\\n"'
+                            sleep(10)
+
                             // removendo versões antigas do plugin
                             echo "Removendo versões antigas do plugin..."
                             sh "rm -f ${env.MINECRAFT_PLUGIN_DIR}/questweaver*.jar"
@@ -147,9 +152,12 @@ pipeline {
 
                             // Comando para copiar o arquivo para a pasta de plugins do servidor
                             sh "cp ${jarFile} ${env.MINECRAFT_PLUGIN_DIR}"
-
                             echo "Plugin copiado com sucesso!"
-                            echo "Lembre-se de recarregar o servidor com o comando '/reload confirm'"
+
+                            // religando servidor
+                            echo "Religando servidor Minecraft..."
+                            sh "cd Root/DATA/crafty/servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793 && screen -dmS Projeto-C14 java -Xms1000M -Xmx4000M -jar paper-1.21.8.jar nogui"
+                            
                         } else {
                             // Falha o build se o .jar não for encontrado
                             error "Nenhum arquivo .jar foi encontrado no workspace! O job de 'Package' precisa rodar primeiro."
@@ -174,7 +182,7 @@ pipeline {
 
             Deploy e reinício do servidor foram executados.
             """,
-                to: "matheus.maciel@gec.inatel.br, pedro.henrique05@ges.inatel.br, joao.gr@gec.inatel.br, beatriz.cobral@gec.inatel.br, felipe.loschi@ges.inatel.br, felipe.ft@gec.inatel.br"
+                to: "matheus.maciel@gec.inatel.br"
             )
         }
     }
