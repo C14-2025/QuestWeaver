@@ -143,7 +143,7 @@ pipeline {
                             // desligando servidor
                             echo "Desligando o servidor Minecraft..."
                             sh '''
-                                curl -k -X POST "https://100.68.81.19:8111/api/v2/servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/action/stop_server" \
+                                curl -k -X POST "https://172.18.0.2:8111/api/v2/servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/action/stop_server" \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpYXQiOjE3NjA4MzMxMzgsInRva2VuX2lkIjoxfQ.Nyob6B24xWaKUw2Lnn-6PUXfY8WDQ16Mo_mfhfGgdmY"
 
                             '''
@@ -161,7 +161,7 @@ pipeline {
                             // religando servidor
                             echo "Religando servidor Minecraft..."
                             sh '''
-                                curl -k -X POST "https://100.68.81.19:8111/api/v2/servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/action/start_server" \
+                                curl -k -X POST "https://172.18.0.2:8111/api/v2/servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/action/start_server" \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpYXQiOjE3NjA4MzMxMzgsInRva2VuX2lkIjoxfQ.Nyob6B24xWaKUw2Lnn-6PUXfY8WDQ16Mo_mfhfGgdmY"
 
                             '''
