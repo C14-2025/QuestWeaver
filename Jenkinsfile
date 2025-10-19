@@ -41,7 +41,7 @@ pipeline {
             }
         }
 
-        stage('Estatísticas') {
+        stage('Stats') {
             steps {
                 script {
                     echo "Data: ${new Date()}"
@@ -127,7 +127,7 @@ pipeline {
             }
         }
 
-            stage('Deploy Plugin') {
+            stage('Deploy') {
                 steps {
                     script {
                         echo "Iniciando deploy para a pasta: ${env.MINECRAFT_PLUGIN_DIR}"
