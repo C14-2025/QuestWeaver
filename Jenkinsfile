@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        JAVA_HOME = '/opt/java/openjdk'
+        JAVA_HOME = "/opt/java/openjdk"
         PATH = "${env.JAVA_HOME}/:${env.PATH}"
-        MINECRAFT_PLUGIN_DIR = '/minecraft-servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/plugins'
+        MINECRAFT_PLUGIN_DIR = "/minecraft-servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/plugins"
     }
 
     stages {
@@ -30,7 +30,7 @@ pipeline {
 
         stage('Archive') {
             steps {
-                echo 'Gerando arquivo .jar pelo Gradle...'
+                echo "Gerando arquivo .jar pelo Gradle..."
                 archiveArtifacts artifacts: 'questweaver/build/libs/*.jar', fingerprint: true
             }
         }
@@ -46,7 +46,7 @@ pipeline {
                 script {
                     echo "Data: ${new Date()}"
                     echo "Build: #${env.BUILD_NUMBER}"
-                    echo ''
+                    echo ""
 
                     dir('questweaver') {
                         sh '''
@@ -128,49 +128,33 @@ pipeline {
         }
 
             stage('Deploy Plugin') {
-            steps {
-                script {
-                    echo "Iniciando deploy do plugin para a pasta: ${env.MINECRAFT_PLUGIN_DIR}"
+                steps {
+                    script {
+                        echo "Iniciando deploy para a pasta: ${env.MINECRAFT_PLUGIN_DIR}"
 
-                    def jarFile = sh(
-                script: 'ls questweaver/build/libs/*.jar | grep -v "plain" | head -n 1',
-                returnStdout: true
-            ).trim()
+                        def jarFile = sh(
+                            script: 'ls questweaver/build/libs/*.jar | grep -v "plain" | head -n 1',
+                            returnStdout: true
+                        ).trim()
 
-                    if (jarFile) {
-                        echo "Arquivo do plugin encontrado: ${jarFile}"
+                        if (jarFile) {
+                            echo "Arquivo do plugin encontrado: ${jarFile}"
 
-                        withCredentials([string(credentialsId: 'CRAFTY_TOKEN', variable: 'CRAFTY_TOKEN')]) {
-                            // Desligando servidor via Crafty
-                            echo 'Desligando o servidor Minecraft...'
-                            sh '''
-                        curl -k -X POST "https://100.68.81.19:8111/api/v2/servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/action/stop_server" \
-                            -H "Authorization: Bearer {CRAFTY_TOKEN}"
-                    '''
-                            sleep(15)
-
-                            // Removendo versões antigas
-                            echo '🧹 Removendo versões antigas do plugin...'
+                            // removendo versões antigas do plugin
+                            echo "Removendo versões antigas do plugin..."
                             sh "rm -f ${env.MINECRAFT_PLUGIN_DIR}/questweaver*.jar"
                             sh "rm -rf ${env.MINECRAFT_PLUGIN_DIR}/QuestWeaver"
 
-                            // Copiando novo .jar
-                            echo 'Copiando nova versão do plugin...'
+                            // Comando para copiar o arquivo para a pasta de plugins do servidor
                             sh "cp ${jarFile} ${env.MINECRAFT_PLUGIN_DIR}"
-                            echo 'Plugin copiado com sucesso!'
-
-                            // Religando servidor
-                            echo 'Iniciando servidor Minecraft...'
-                            sh '''
-                        curl -k -X POST "http://oracleserver.tail3eb201.ts.net:8111/api/v2/servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/action/start_server" \
-                            -H "Authorization: Bearer {CRAFTY_TOKEN}"
-                    '''
+                            echo "Plugin copiado com sucesso!"
+                            
+                        } else {
+                            // Falha o build se o .jar não for encontrado
+                            error "Nenhum arquivo .jar foi encontrado no workspace! O job de 'Package' precisa rodar primeiro."
                         }
-            } else {
-                        error "Nenhum arquivo .jar foi encontrado no workspace! O job de 'Package' precisa rodar primeiro."
                     }
                 }
-            }
             }
     }
     post {
@@ -189,7 +173,7 @@ pipeline {
 
             Deploy e reinício do servidor foram executados.
             """,
-                to: 'matheus.maciel@gec.inatel.br'
+                to: "matheus.maciel@gec.inatel.br"
             )
         }
     }
