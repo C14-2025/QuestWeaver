@@ -145,7 +145,7 @@ pipeline {
                             echo 'Desligando o servidor Minecraft...'
                             sh '''
                         curl -k -X POST "https://100.68.81.19:8111/api/v2/servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/action/stop_server" \
-                            -H "Authorization: Bearer ${CRAFTY_TOKEN}"
+                            -H "Authorization: Bearer {CRAFTY_TOKEN}"
                     '''
                             sleep(15)
 
@@ -162,8 +162,8 @@ pipeline {
                             // Religando servidor
                             echo 'Iniciando servidor Minecraft...'
                             sh '''
-                        curl -k -X POST "https://100.68.81.19:8111/api/v2/servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/action/start_server" \
-                            -H "Authorization: Bearer ${CRAFTY_TOKEN}"
+                        curl -k -X POST "http://oracleserver.tail3eb201.ts.net:8111/api/v2/servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/action/start_server" \
+                            -H "Authorization: Bearer {CRAFTY_TOKEN}"
                     '''
                         }
             } else {
