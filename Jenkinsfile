@@ -142,8 +142,11 @@ pipeline {
 
                             // desligando servidor
                             echo "Desligando o servidor Minecraft..."
-                            sh 'screen -S Projeto-C14 -X stuff "stop\\n"'
-                            sleep(10)
+                            sh '''
+                                curl -k -X POST "https://100.68.81.19:8111/api/v2/servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/action/stop_server" \
+                                -H "Authorization: Bearer ${CRAFTY_TOKEN}"
+                            '''
+                            sleep(15)
 
                             // removendo versões antigas do plugin
                             echo "Removendo versões antigas do plugin..."
@@ -156,7 +159,10 @@ pipeline {
 
                             // religando servidor
                             echo "Religando servidor Minecraft..."
-                            sh "cd /root/DATA/crafty/servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793 && screen -dmS Projeto-C14 java -Xms1000M -Xmx4000M -jar paper-1.21.8.jar nogui"
+                            sh '''
+                                curl -k -X POST "https://100.68.81.19:8111/api/v2/servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/action/start_server" \
+                                -H "Authorization: Bearer ${CRAFTY_TOKEN}"
+                            '''
                             
                         } else {
                             // Falha o build se o .jar não for encontrado
