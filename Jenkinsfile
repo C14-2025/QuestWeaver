@@ -144,7 +144,7 @@ pipeline {
                             // Desligando servidor via Crafty
                             echo 'Desligando o servidor Minecraft...'
                             sh '''
-                        curl -k -X POST "https://172.18.0.2:8111/api/v2/servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/action/stop_server" \
+                        curl -k -X POST "https://100.68.81.19:8111/api/v2/servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/action/stop_server" \
                             -H "Authorization: Bearer ${CRAFTY_TOKEN}"
                     '''
                             sleep(15)
@@ -162,7 +162,7 @@ pipeline {
                             // Religando servidor
                             echo 'Iniciando servidor Minecraft...'
                             sh '''
-                        curl -k -X POST "https://172.18.0.2:8111/api/v2/servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/action/start_server" \
+                        curl -k -X POST "https://100.68.81.19:8111/api/v2/servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/action/start_server" \
                             -H "Authorization: Bearer ${CRAFTY_TOKEN}"
                     '''
                         }
