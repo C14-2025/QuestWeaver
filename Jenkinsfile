@@ -162,7 +162,7 @@ pipeline {
             emailext(
                 subject: "Pipeline '${env.JOB_NAME} #${env.BUILD_NUMBER}' finalizada",
                 body: """\
-            Olá! 
+            Olá!
 
             A pipeline do Jenkins acabou de rodar com o seguinte status:
 
