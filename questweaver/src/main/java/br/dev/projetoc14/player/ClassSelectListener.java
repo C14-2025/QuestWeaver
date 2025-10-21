@@ -75,9 +75,9 @@ public class ClassSelectListener implements Listener {
                 ChatColor.GRAY + "Especialista em feitiços"
         ));
         mage.setItemMeta(mMeta);
-        inventory.setItem(1, mage);
+        inventory.setItem(10, mage);
 
-        // Arqueiro - Slot 12
+
         ItemStack archer = new ItemStack(Material.BOW);
         ItemMeta aMeta = archer.getItemMeta();
         aMeta.setDisplayName(ChatColor.GREEN + "ARQUEIRO");
@@ -87,9 +87,9 @@ public class ClassSelectListener implements Listener {
                 ChatColor.GRAY + "Precisão letal"
         ));
         archer.setItemMeta(aMeta);
-        inventory.setItem(3, archer);
+        inventory.setItem(12, archer);
 
-        // Guerreiro - Slot 14
+
         ItemStack warrior = new ItemStack(Material.IRON_AXE);
         ItemMeta wMeta = warrior.getItemMeta();
         wMeta.setDisplayName(ChatColor.RED + "GUERREIRO");
@@ -99,9 +99,9 @@ public class ClassSelectListener implements Listener {
                 ChatColor.GRAY + "Combate corpo a corpo"
         ));
         warrior.setItemMeta(wMeta);
-        inventory.setItem(5, warrior);
+        inventory.setItem(14, warrior);
 
-        // Assassino - Slot 16
+
         ItemStack assassin = new ItemStack(Material.IRON_SWORD);
         ItemMeta assMeta = assassin.getItemMeta();
         assMeta.setDisplayName(ChatColor.DARK_GRAY + "ASSASSINO");
@@ -111,7 +111,7 @@ public class ClassSelectListener implements Listener {
                 ChatColor.GRAY + "Mestre da furtividade"
         ));
         assassin.setItemMeta(assMeta);
-        inventory.setItem(7, assassin);
+        inventory.setItem(16, assassin);
 
         player.openInventory(inventory);
         plugin.getLogger().info("[ClassSelect] Inventário aberto para " + player.getName());

@@ -14,7 +14,7 @@ public class PlayerJoinItems {
 
     public static void give(Player player) {
 
-        player.getInventory().setItem(4, ClassSelector.create()); // slot 5
+        player.getInventory().setItem(0, ClassSelector.create()); 
 
     }
 
