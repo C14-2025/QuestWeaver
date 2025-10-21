@@ -1,6 +1,7 @@
 package br.dev.projetoc14;
 
 import br.dev.projetoc14.ExperienceSystem.ExperienceSystem;
+import br.dev.projetoc14.player.PlayerJoinListener;
 import br.dev.projetoc14.skilltree.Texts;
 import br.dev.projetoc14.player.ClassSelectListener;
 import br.dev.projetoc14.player.PlayerListener;
@@ -45,6 +46,9 @@ public final class QuestWeaver extends JavaPlugin {
         this.statsManager = new PlayerStatsManager();
         this.questManager = new QuestManager();
         this.questBook = new QuestBook(questManager);
+
+        // player join listener
+        Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
 
         // Listener de mecânica (mana, barra, regeneração)
         PlayerListener playerListener = new PlayerListener(statsManager, this);

@@ -25,7 +25,6 @@ public class PlayerJoinListener implements Listener {
         - set player join items
         @author: sno0s
      */
-
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
 

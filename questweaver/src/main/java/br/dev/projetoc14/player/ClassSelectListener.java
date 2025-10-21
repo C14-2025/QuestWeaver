@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -28,9 +29,21 @@ public class ClassSelectListener implements Listener {
         this.plugin = plugin;
     }
 
+    /**
+     *
+     * @param event
+     * only runs the envent if the item is o seletor de classe porra
+     */
     @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
+    public void onJoin(PlayerInteractEvent event) {
         Player player = event.getPlayer();
+        ItemStack item = event.getItem();
+
+        if (item == null || !item.hasItemMeta() || !item.getItemMeta().hasDisplayName())
+            return;
+
+        if (!item.getItemMeta().getDisplayName().equalsIgnoreCase("§eSeletor de Classe"))
+            return;
 
         plugin.getLogger().info("[ClassSelect] Jogador " + player.getName() + " entrou");
         plugin.getLogger().info("[ClassSelect] hasStats? " + statsManager.hasStats(player));
@@ -41,8 +54,14 @@ public class ClassSelectListener implements Listener {
         } else {
             plugin.getLogger().info("[ClassSelect] Jogador já tem stats, pulando seleção");
         }
+
     }
 
+    /**
+     *
+     * @param player
+     * lógica do inventário de seleção de classe
+     */
     private void openClassInventory(Player player) {
         Inventory inventory = Bukkit.createInventory(null, 27, "Escolha sua Classe");
 
