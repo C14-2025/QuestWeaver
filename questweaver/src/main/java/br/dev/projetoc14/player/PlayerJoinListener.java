@@ -2,6 +2,7 @@ package br.dev.projetoc14.player;
 
 //import br.dev.sno0s.hgplugin.utils.PlayerJoinItems;
 
+import br.dev.projetoc14.QuestWeaver;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.World;
@@ -13,8 +14,8 @@ import org.bukkit.Location;
 
 import static br.dev.projetoc14.QuestWeaver.getServerName;
 
-
 public class PlayerJoinListener implements Listener {
+    QuestWeaver plugin = (QuestWeaver) QuestWeaver.getInstance();
 
     /*
         this method do:
@@ -41,6 +42,9 @@ public class PlayerJoinListener implements Listener {
             player.setGameMode(GameMode.ADVENTURE);
             player.getInventory().clear();
             PlayerJoinItems.give(player);
+
+            // cria o arquivo de configuração do player!!!!!
+            plugin.getPlayerFileManager().createPlayerFile(player);
 
         }
     }

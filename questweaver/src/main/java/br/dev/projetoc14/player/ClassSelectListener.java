@@ -32,7 +32,7 @@ public class ClassSelectListener implements Listener {
     /**
      *
      * @param event
-     * only runs the envent if the item is o seletor de classe porra
+     * only runs the envent if the item is o seletor de classe
      */
     @EventHandler
     public void onJoin(PlayerInteractEvent event) {

@@ -1,6 +1,7 @@
 package br.dev.projetoc14;
 
 import br.dev.projetoc14.ExperienceSystem.ExperienceSystem;
+import br.dev.projetoc14.match.PlayerFileManager;
 import br.dev.projetoc14.player.PlayerJoinListener;
 import br.dev.projetoc14.skilltree.Texts;
 import br.dev.projetoc14.player.ClassSelectListener;
@@ -28,10 +29,12 @@ public final class QuestWeaver extends JavaPlugin {
     private QuestBook questBook;
     private static FileConfiguration config;
     private static Plugin instance;
+    private PlayerFileManager playerFileManager;
 
     @Override
     public void onEnable() {
         instance = this;
+        playerFileManager = new PlayerFileManager(this);
         // Mensagem inicial do plugin
         Texts.StartupPlugin();
 
@@ -127,4 +130,7 @@ public final class QuestWeaver extends JavaPlugin {
     public QuestBook getQuestBook() {
         return questBook;
     }
+    public PlayerFileManager getPlayerFileManager() { return playerFileManager; }
+
+
 }
