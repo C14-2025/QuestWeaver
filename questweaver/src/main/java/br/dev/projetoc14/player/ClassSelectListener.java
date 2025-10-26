@@ -1,5 +1,8 @@
 package br.dev.projetoc14.player;
 
+import br.dev.projetoc14.QuestWeaver;
+import br.dev.projetoc14.match.PlayerFileManager;
+import br.dev.projetoc14.quest.Quest;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -23,6 +26,7 @@ public class ClassSelectListener implements Listener {
 
     private final PlayerStatsManager statsManager;
     private final JavaPlugin plugin;
+    private final PlayerFileManager fileManager = (PlayerFileManager) QuestWeaver.getInstance();
 
     public ClassSelectListener(PlayerStatsManager statsManager, JavaPlugin plugin) {
         this.statsManager = statsManager;
@@ -130,6 +134,8 @@ public class ClassSelectListener implements Listener {
 
         switch (clicked.getType()) {
             case BLAZE_ROD -> {
+
+                fileManager.setPlayerClass(player, "Mago");
                 MagePlayer mage = new MagePlayer(player);
                 statsManager.setStats(player, mage.getStats());
                 statsManager.applyStats(player);
