@@ -27,23 +27,22 @@ public class PlayerJoinListener implements Listener {
         @author: sno0s
      */
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    public void onPlayerJoin(PlayerJoinEvent event)
+    {
 
         World world = Bukkit.getWorld("world");
         if (world != null) {
             Player player = event.getPlayer();
             Location spawn = world.getSpawnLocation();
 
-            // welcome message
             Bukkit.broadcastMessage(getServerName() + " §f" + player.getName() + " §eEntrou no servidor!");
 
-            //basic configs
+            // basic configs
             player.teleport(spawn);
             player.setGameMode(GameMode.ADVENTURE);
             player.getInventory().clear();
             PlayerJoinItems.give(player);
 
-            // cria o arquivo de configuração do player!!!!!
             plugin.getPlayerFileManager().createPlayerFile(player);
 
         }

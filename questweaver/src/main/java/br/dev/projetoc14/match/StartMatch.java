@@ -3,6 +3,7 @@ package br.dev.projetoc14.match;
 
 import br.dev.projetoc14.QuestWeaver;
 import br.dev.projetoc14.items.SkillTree;
+import br.dev.projetoc14.player.PlayerStatsManager;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -13,6 +14,16 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.Collection;
 
 public class StartMatch {
+
+    private final PlayerFileManager fileManager;
+    private final PlayerStatsManager statsManager;
+    private StartMatchItems start;
+
+    public StartMatch(PlayerFileManager fileManager, PlayerStatsManager statsManager) {
+        this.fileManager = fileManager;
+        this.statsManager = statsManager;
+        this.start =  new StartMatchItems(fileManager, statsManager);
+    }
 
     /*
         if all players are set in, the match will start
@@ -32,6 +43,7 @@ public class StartMatch {
             p.setInvulnerable(true);
             p.setGameMode(GameMode.SURVIVAL);
             p.getInventory().clear();
+
             /*
                 TODO: aqui, chamar o método para cada item que deve ser dado ao player no inicio da partida
                 TODO: teleportá-los para perto de suas estruturas para que não se enfrentem de início

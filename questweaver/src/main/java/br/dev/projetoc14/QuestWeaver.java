@@ -1,12 +1,11 @@
 package br.dev.projetoc14;
 
 import br.dev.projetoc14.ExperienceSystem.ExperienceSystem;
+import br.dev.projetoc14.commands.HelpCommand;
+import br.dev.projetoc14.commands.QuestsCommand;
 import br.dev.projetoc14.match.PlayerFileManager;
-import br.dev.projetoc14.player.PlayerJoinListener;
+import br.dev.projetoc14.player.*;
 import br.dev.projetoc14.skilltree.Texts;
-import br.dev.projetoc14.player.ClassSelectListener;
-import br.dev.projetoc14.player.PlayerListener;
-import br.dev.projetoc14.player.PlayerStatsManager;
 import br.dev.projetoc14.playerData.PlayerDataListener;
 import br.dev.projetoc14.quest.utils.QuestBook;
 import br.dev.projetoc14.quest.utils.QuestManager;
@@ -20,6 +19,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 public final class QuestWeaver extends JavaPlugin {
 
@@ -31,6 +31,8 @@ public final class QuestWeaver extends JavaPlugin {
     private static Plugin instance;
     private PlayerFileManager playerFileManager;
 
+
+
     @Override
     public void onEnable() {
         instance = this;
@@ -38,27 +40,29 @@ public final class QuestWeaver extends JavaPlugin {
         // Mensagem inicial do plugin
         Texts.StartupPlugin();
 
-        // Inicializa PlayerStatsManager e PlayerDataManager
-        this.statsManager = new PlayerStatsManager();
-        this.dataManager = new PlayerDataManager(this);
-
         // get config.yml
         saveDefaultConfig();
         config = getConfig();
+
         // Inicializa PlayerStatsManager e PlayerDataManager
+        this.dataManager = new PlayerDataManager(this);
         this.statsManager = new PlayerStatsManager();
         this.questManager = new QuestManager();
         this.questBook = new QuestBook(questManager);
 
-        // player join listener
+
+
+
+        // player join & disconnect listener
         Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerDisconnectListener(playerFileManager, statsManager, dataManager), this);
 
         // Listener de mecânica (mana, barra, regeneração)
         PlayerListener playerListener = new PlayerListener(statsManager, this);
         getServer().getPluginManager().registerEvents(playerListener, this);
 
         // Listener de Escolha de Classe
-        ClassSelectListener classSelectListener = new ClassSelectListener(statsManager, this);
+        ClassSelectListener classSelectListener = new ClassSelectListener(statsManager, playerFileManager, this);
         getServer().getPluginManager().registerEvents(classSelectListener, this);
 
         // Listener de persistência JSON
@@ -74,6 +78,10 @@ public final class QuestWeaver extends JavaPlugin {
         MobKillQuestListener mobKillListener = new MobKillQuestListener(questManager, this);
         getServer().getPluginManager().registerEvents(mobKillListener, this);
 
+        // ativação dos comandos
+        getCommand("quests").setExecutor(new QuestsCommand(questBook));
+        getCommand("help").setExecutor(new HelpCommand());
+
         getLogger().info("[QuestWeaver] Plugin iniciado com sucesso!");
     }
 
@@ -83,53 +91,20 @@ public final class QuestWeaver extends JavaPlugin {
         getLogger().info("[QuestWeaver] Plugin finalizado!");
     }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("help")) {
-            if (sender instanceof Player player) {
-                player.sendMessage("Apenas testando o método!");
-            } else {
-                sender.sendMessage("Mensagem indo para o console!");
-            }
-            return true;
-        }
 
-        if (command.getName().equalsIgnoreCase("resetclass")) {
-            if (sender instanceof Player player) {
-                statsManager.removeStats(player);
-                dataManager.deletePlayerData(player);
-                player.sendMessage("§aClasse resetada! Relogue para escolher novamente.");
-            } else {
-                sender.sendMessage("§cEste comando só pode ser usado por jogadores!");
-            }
-        }
-
-        if (label.equalsIgnoreCase("quests")) {
-            if (sender instanceof Player player) {
-                questBook.showBook(player);
-            } else {
-                sender.sendMessage("§cEste comando só pode ser usado por jogadores!");
-            }
-        }
-
-            return true;
-    }
 
     public static String getServerName(){
-        return config.getString("HGconfigs.server-name");
+        return config.getString("server-conf.server-name");
     }
 
     public static Plugin getInstance() {
         return instance;
     }
 
-    public QuestManager getQuestManager() {
-        return questManager;
-    }
-
     public QuestBook getQuestBook() {
         return questBook;
     }
+
     public PlayerFileManager getPlayerFileManager() { return playerFileManager; }
 
 
