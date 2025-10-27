@@ -17,7 +17,7 @@ public class ExplosiveArrow extends Ability {
     }
 
     @Override
-    public void cast(RPGPlayer caster) {
+    protected void onCast(RPGPlayer caster) {
         Location loc = caster.getEyeLocation();
         Arrow arrow = caster.launchProjectile(Arrow.class);
         arrow.setCritical(true);

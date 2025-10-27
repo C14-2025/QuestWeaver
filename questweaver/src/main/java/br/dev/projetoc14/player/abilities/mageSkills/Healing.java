@@ -5,18 +5,29 @@ import br.dev.projetoc14.player.abilities.Ability;
 
 public class Healing extends Ability {
 
-    private final int healAmount = 30;
-
     public Healing() {
         super("Cura", 15, 3); // nome, custo de mana, cooldown
     }
 
     @Override
-    public void cast(RPGPlayer caster) {
-        caster.heal(healAmount); // 🔥 agora realmente aplica a cura
+    protected void onCast(RPGPlayer caster) {
+        int healAmount = 30;
+        caster.heal(healAmount);
+    }
+
+    public String getName() {
+        return "Cura";
+    }
+
+    public int getManaCost() {
+        return 15;
+    }
+
+    public int getCooldown() {
+        return 3;
     }
 
     public int getHealAmount() {
-        return healAmount;
+        return 30;
     }
 }
