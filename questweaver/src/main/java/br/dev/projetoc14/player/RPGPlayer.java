@@ -149,4 +149,7 @@ public abstract class RPGPlayer {
     public void setLevel(int level) { this.level = level; }
     public int getExperience() { return experience; }
     public PlayerStats getStats() { return stats; }
+
+    public void setHealth(int i) {
+    }
 }

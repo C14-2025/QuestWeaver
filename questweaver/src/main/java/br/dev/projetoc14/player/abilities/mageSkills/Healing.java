@@ -14,4 +14,20 @@ public class Healing extends Ability {
         int healAmount = 30;
         caster.heal(healAmount);
     }
+
+    public String getName() {
+        return "Cura";
+    }
+
+    public int getManaCost() {
+        return 15;
+    }
+
+    public int getCooldown() {
+        return 3;
+    }
+
+    public int getHealAmount() {
+        return 30;
+    }
 }
