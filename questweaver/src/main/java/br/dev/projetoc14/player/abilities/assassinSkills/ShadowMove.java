@@ -9,7 +9,7 @@ public class ShadowMove extends Ability {
     }
 
     @Override
-    public void cast(RPGPlayer caster) {
+    protected void onCast(RPGPlayer caster) {
         caster.getStats().setAgility((int)(caster.getStats().getAgility()*1.2));
     }
 }

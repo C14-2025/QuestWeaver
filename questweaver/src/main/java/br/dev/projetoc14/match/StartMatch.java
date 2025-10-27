@@ -17,12 +17,14 @@ public class StartMatch {
 
     private final PlayerFileManager fileManager;
     private final PlayerStatsManager statsManager;
+    private final Plugin plugin;
     private StartMatchItems start;
 
-    public StartMatch(PlayerFileManager fileManager, PlayerStatsManager statsManager) {
+    public StartMatch(PlayerFileManager fileManager, PlayerStatsManager statsManager, Plugin plugin) {
         this.fileManager = fileManager;
         this.statsManager = statsManager;
-        this.start =  new StartMatchItems(fileManager, statsManager);
+        this.plugin = plugin;
+        this.start =  new StartMatchItems(fileManager, statsManager, (QuestWeaver) plugin);
     }
 
     /*
@@ -34,9 +36,8 @@ public class StartMatch {
         - author: sno0s
      */
 
-    public static void execute() {
+    public void execute() {
         Collection<? extends Player> jogadores = Bukkit.getOnlinePlayers();
-        Plugin plugin = QuestWeaver.getInstance();
 
         // players initial configs, in invincibility
         for (Player p : jogadores) {
@@ -49,6 +50,7 @@ public class StartMatch {
                 TODO: teleportá-los para perto de suas estruturas para que não se enfrentem de início
                 tempo de invencibilidade pode ser ajustado
              */
+            start.setItems(p);
             p.getInventory().setItem(8, SkillTree.create());
         }
 

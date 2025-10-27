@@ -2,9 +2,11 @@ package br.dev.projetoc14.player.classes;
 
 import br.dev.projetoc14.player.PlayerClass;
 import br.dev.projetoc14.player.RPGPlayer;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class MagePlayer extends RPGPlayer {
 
@@ -34,8 +36,16 @@ public class MagePlayer extends RPGPlayer {
 
     @Override
     public ItemStack[] getStartingEquipment() {
+        ItemStack wand = new ItemStack(Material.BLAZE_ROD, 1);
+
+        ItemMeta wandMeta = wand.getItemMeta();
+        if (wandMeta != null){
+            // Definaindo o nome com cores para corresponder à checagem do Listener
+            wandMeta.setDisplayName(ChatColor.AQUA + "Cajado Mágico");
+            wand.setItemMeta(wandMeta);
+        }
         return new ItemStack[] {
-                new ItemStack(Material.BLAZE_ROD, 1), // Cajado
+                wand, // Cajado customizado
                 new ItemStack(Material.ENCHANTED_BOOK, 2),
                 new ItemStack(Material.SPLASH_POTION, 3),
                 new ItemStack(Material.CAKE, 6)

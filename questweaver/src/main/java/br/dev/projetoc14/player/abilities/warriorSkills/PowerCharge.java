@@ -16,7 +16,7 @@ public class PowerCharge extends Ability {
     }
 
     @Override
-    public void cast(RPGPlayer caster) {
+    protected void onCast(RPGPlayer caster) {
 
     }
 }
