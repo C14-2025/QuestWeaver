@@ -2,6 +2,7 @@ package br.dev.projetoc14.player;
 
 import br.dev.projetoc14.player.abilities.Ability;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -9,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public abstract class RPGPlayer {
 
@@ -19,9 +21,13 @@ public abstract class RPGPlayer {
     protected PlayerStats stats;
     protected List<Ability> abilities = new ArrayList<>();
 
-    // ==== Novo sistema de vida ==== //
-    protected int health;
+    // ==== Sistema de Vida ==== //
+    protected int maxHealth;
     protected int currentHealth;
+
+    // ==== Sistema de Mana ==== //
+    protected int maxMana;
+    protected int currentMana;
 
     public RPGPlayer(Player player, PlayerClass playerClass, int level, int experience, PlayerStats stats) {
         this.player = player;
@@ -30,8 +36,11 @@ public abstract class RPGPlayer {
         this.experience = 0;
         this.stats = new PlayerStats();
 
-        this.health = 20;        // padrão
-        this.currentHealth = 20; // começa cheio
+        // Valores padrão
+        this.maxHealth = 100;
+        this.currentHealth = 100;
+        this.maxMana = 100;
+        this.currentMana = 100;
 
         initializeClass();
     }
@@ -40,41 +49,94 @@ public abstract class RPGPlayer {
         this(player, playerClass, 1, 0, new PlayerStats());
     }
 
+    public RPGPlayer get(Player p) {
+        return this;
+    }
+
     protected abstract void initializeClass();
     public abstract void levelUp();
     public abstract ItemStack[] getStartingEquipment();
 
     // ==== Vida ==== //
-    public int getHealth() { return health; }
-    public void setHealth(int health) { this.health = health; }
+    public int getMaxHealth() { return maxHealth; }
+    public void setMaxHealth(int maxHealth) {
+        this.maxHealth = maxHealth;
+        this.currentHealth = Math.min(this.currentHealth, maxHealth);
+    }
 
     public int getCurrentHealth() { return currentHealth; }
     public void setCurrentHealth(int currentHealth) {
-        this.currentHealth = Math.min(currentHealth, this.health); // nunca passar do máximo
+        this.currentHealth = Math.max(0, Math.min(currentHealth, this.maxHealth));
     }
 
     public void heal(int amount) {
-        this.currentHealth = Math.min(this.currentHealth + amount, this.health);
+        int newHealth = this.currentHealth + amount;
+        setCurrentHealth(newHealth);
+
+        // Feedback visual
+        player.sendMessage("§a💚 +§l" + amount + " HP");
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 2f);
     }
 
     public void damage(int amount) {
-        this.currentHealth = Math.max(this.currentHealth - amount, 0);
+        int newHealth = this.currentHealth - amount;
+        setCurrentHealth(newHealth);
+
+        // Feedback visual
+        player.sendMessage("§c❤ -§l" + amount + " HP");
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_HURT, 1f, 1f);
     }
 
     public boolean isAlive() {
         return this.currentHealth > 0;
     }
 
+    // ==== Mana ==== //
+    public int getMaxMana() { return maxMana; }
+    public void setMaxMana(int maxMana) {
+        this.maxMana = maxMana;
+        this.currentMana = Math.min(this.currentMana, maxMana);
+    }
+
+    public int getCurrentMana() { return currentMana; }
+    public void setCurrentMana(int currentMana) {
+        this.currentMana = Math.max(0, Math.min(currentMana, this.maxMana));
+    }
+
+    public void restoreMana(int amount) {
+        int newMana = this.currentMana + amount;
+        setCurrentMana(newMana);
+
+        player.sendMessage("§b✨ +§l" + amount + " Mana");
+    }
+
+    public void consumeMana(int amount) {
+        int newMana = this.currentMana - amount;
+        setCurrentMana(newMana);
+    }
+
+    public boolean hasMana(int amount) {
+        return this.currentMana >= amount;
+    }
+
     // ==== Experiência ==== //
     public void addExperience(int exp) {
         this.experience += exp;
+        // Aqui você pode adicionar lógica de level up automático
     }
 
     // ==== Delegadores do Bukkit Player ==== //
+    public UUID getUniqueId() { return player.getUniqueId(); }
+    public Location getLocation() { return player.getLocation(); }
     public Location getEyeLocation() { return player.getEyeLocation(); }
-    public <T extends Projectile> T launchProjectile(Class<T> projectileClass) { return player.launchProjectile(projectileClass); }
+    public <T extends Projectile> T launchProjectile(Class<T> projectileClass) {
+        return player.launchProjectile(projectileClass);
+    }
     public World getWorld() { return player.getWorld(); }
     public void sendMessage(String message) { player.sendMessage(message); }
+    public void playSound(Location loc, Sound sound, float volume, float pitch) {
+        player.playSound(loc, sound, volume, pitch);
+    }
 
     // ==== Abilities ==== //
     public void addAbility(Ability ability) { abilities.add(ability); }

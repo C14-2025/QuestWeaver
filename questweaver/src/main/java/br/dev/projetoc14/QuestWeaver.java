@@ -5,6 +5,7 @@ import br.dev.projetoc14.commands.HelpCommand;
 import br.dev.projetoc14.commands.QuestsCommand;
 import br.dev.projetoc14.match.PlayerFileManager;
 import br.dev.projetoc14.player.*;
+import br.dev.projetoc14.player.abilities.mageSkills.MagicWandListener;
 import br.dev.projetoc14.skilltree.Texts;
 import br.dev.projetoc14.playerData.PlayerDataListener;
 import br.dev.projetoc14.quest.utils.QuestBook;
@@ -21,6 +22,10 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 public final class QuestWeaver extends JavaPlugin {
 
     private PlayerStatsManager statsManager;
@@ -30,6 +35,7 @@ public final class QuestWeaver extends JavaPlugin {
     private static FileConfiguration config;
     private static Plugin instance;
     private PlayerFileManager playerFileManager;
+    private final Map<UUID, RPGPlayer> rpgPlayers = new HashMap<>();
 
 
 
@@ -78,6 +84,10 @@ public final class QuestWeaver extends JavaPlugin {
         MobKillQuestListener mobKillListener = new MobKillQuestListener(questManager, this);
         getServer().getPluginManager().registerEvents(mobKillListener, this);
 
+        // Magic Wand Listener (Habilidades de Mago)
+        MagicWandListener magicWandListener = new MagicWandListener(this);
+        getServer().getPluginManager().registerEvents(magicWandListener, this);
+
         // ativação dos comandos
         getCommand("quests").setExecutor(new QuestsCommand(questBook));
         getCommand("help").setExecutor(new HelpCommand());
@@ -106,6 +116,10 @@ public final class QuestWeaver extends JavaPlugin {
     }
 
     public PlayerFileManager getPlayerFileManager() { return playerFileManager; }
+
+    public RPGPlayer getRPGPlayer(Player player) {
+        return rpgPlayers.get(player.getUniqueId());
+    }
 
 
 }
