@@ -2,6 +2,7 @@ package br.dev.projetoc14.player;
 
 //import br.dev.sno0s.hgplugin.utils.PlayerJoinItems;
 
+import br.dev.projetoc14.QuestWeaver;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.World;
@@ -13,8 +14,8 @@ import org.bukkit.Location;
 
 import static br.dev.projetoc14.QuestWeaver.getServerName;
 
-
 public class PlayerJoinListener implements Listener {
+    QuestWeaver plugin = (QuestWeaver) QuestWeaver.getInstance();
 
     /*
         this method do:
@@ -26,21 +27,23 @@ public class PlayerJoinListener implements Listener {
         @author: sno0s
      */
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    public void onPlayerJoin(PlayerJoinEvent event)
+    {
 
         World world = Bukkit.getWorld("world");
         if (world != null) {
             Player player = event.getPlayer();
             Location spawn = world.getSpawnLocation();
 
-            // welcome message
             Bukkit.broadcastMessage(getServerName() + " §f" + player.getName() + " §eEntrou no servidor!");
 
-            //basic configs
+            // basic configs
             player.teleport(spawn);
             player.setGameMode(GameMode.ADVENTURE);
             player.getInventory().clear();
             PlayerJoinItems.give(player);
+
+            plugin.getPlayerFileManager().createPlayerFile(player);
 
         }
     }
