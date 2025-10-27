@@ -16,7 +16,6 @@ public class ArcherPlayer extends RPGPlayer {
     protected void initializeClass() {
         // Stats iniciais do arqueiro
         stats.setStrength(10);
-        stats.setDefense(8);
         stats.setAgility(15);
         stats.setIntelligence(7);
         stats.setHealth(100);
@@ -38,8 +37,7 @@ public class ArcherPlayer extends RPGPlayer {
         return new ItemStack[] {
                 new ItemStack(Material.BOW, 1),
                 new ItemStack(Material.ARROW, 32),
-                new ItemStack(Material.LEATHER_CHESTPLATE, 1),
-                new ItemStack(Material.BREAD, 8)
+                new ItemStack(Material.LEATHER_CHESTPLATE, 1)
         };
     }
 }
