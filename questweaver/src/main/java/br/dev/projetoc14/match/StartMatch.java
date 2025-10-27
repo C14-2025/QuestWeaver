@@ -37,12 +37,17 @@ public class StartMatch {
     public static void execute() {
         Collection<? extends Player> jogadores = Bukkit.getOnlinePlayers();
         Plugin plugin = QuestWeaver.getInstance();
+        PlayerFileManager fileManager = new PlayerFileManager((QuestWeaver) plugin);
+        PlayerStatsManager statsManager = new PlayerStatsManager();
+        StartMatchItems matchItems = new StartMatchItems(fileManager, statsManager);
 
         // players initial configs, in invincibility
         for (Player p : jogadores) {
             p.setInvulnerable(true);
             p.setGameMode(GameMode.SURVIVAL);
             p.getInventory().clear();
+
+            matchItems.setItems(p);
 
             /*
                 TODO: aqui, chamar o método para cada item que deve ser dado ao player no inicio da partida
