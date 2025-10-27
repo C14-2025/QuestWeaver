@@ -1,5 +1,6 @@
 package br.dev.projetoc14.player;
 
+import br.dev.projetoc14.match.ClassReadyManager;
 import br.dev.projetoc14.match.PlayerFileManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -23,11 +24,14 @@ public class ClassSelectListener implements Listener {
     private final PlayerStatsManager statsManager;
     private final JavaPlugin plugin;
     private final PlayerFileManager fileManager;
+    private final ClassReadyManager readyManager;
 
-    public ClassSelectListener(PlayerStatsManager statsManager, PlayerFileManager fileManager, JavaPlugin plugin) {
+
+    public ClassSelectListener(PlayerStatsManager statsManager, PlayerFileManager fileManager, JavaPlugin plugin, ClassReadyManager readyManager) {
         this.statsManager = statsManager;
         this.fileManager = fileManager;
         this.plugin = plugin;
+        this.readyManager = readyManager;
     }
 
     /**
@@ -138,21 +142,25 @@ public class ClassSelectListener implements Listener {
                 fileManager.setPlayerClass(player, "Mago");
                 player.sendMessage(ChatColor.DARK_PURPLE + "Você escolheu a classe " + ChatColor.BOLD + "Mago" + ChatColor.DARK_PURPLE + "!");
                 player.closeInventory();
+                readyManager.markPlayerReady(player);
             }
             case BOW -> {
                 fileManager.setPlayerClass(player, "Arqueiro");
                 player.sendMessage(ChatColor.GREEN + "Você escolheu a classe " + ChatColor.BOLD + "Arqueiro" + ChatColor.GREEN + "!");
                 player.closeInventory();
+                readyManager.markPlayerReady(player);
             }
             case IRON_AXE -> {
                 fileManager.setPlayerClass(player, "Guerreiro");
                 player.sendMessage(ChatColor.RED + "Você escolheu a classe " + ChatColor.BOLD + "Guerreiro" + ChatColor.RED + "!");
                 player.closeInventory();
+                readyManager.markPlayerReady(player);
             }
             case IRON_SWORD -> {
                 fileManager.setPlayerClass(player, "Assassino");
                 player.sendMessage(ChatColor.DARK_GRAY + "Você escolheu a classe " + ChatColor.BOLD + "Assassino" + ChatColor.DARK_GRAY + "!");
                 player.closeInventory();
+                readyManager.markPlayerReady(player);
             }
             default -> {
                 player.sendMessage(ChatColor.GRAY + "Classe inválida!");

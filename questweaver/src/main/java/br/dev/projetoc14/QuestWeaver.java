@@ -3,6 +3,7 @@ package br.dev.projetoc14;
 import br.dev.projetoc14.ExperienceSystem.ExperienceSystem;
 import br.dev.projetoc14.commands.HelpCommand;
 import br.dev.projetoc14.commands.QuestsCommand;
+import br.dev.projetoc14.match.ClassReadyManager;
 import br.dev.projetoc14.match.PlayerFileManager;
 import br.dev.projetoc14.player.*;
 import br.dev.projetoc14.player.abilities.mageSkills.MagicWandListener;
@@ -20,6 +21,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -42,6 +44,7 @@ public final class QuestWeaver extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        ClassReadyManager readyManager = new ClassReadyManager((QuestWeaver) instance);
         playerFileManager = new PlayerFileManager(this);
         // Mensagem inicial do plugin
         Texts.StartupPlugin();
@@ -57,8 +60,6 @@ public final class QuestWeaver extends JavaPlugin {
         this.questBook = new QuestBook(questManager);
 
 
-
-
         // player join & disconnect listener
         Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerDisconnectListener(playerFileManager, statsManager, dataManager), this);
@@ -68,7 +69,7 @@ public final class QuestWeaver extends JavaPlugin {
         getServer().getPluginManager().registerEvents(playerListener, this);
 
         // Listener de Escolha de Classe
-        ClassSelectListener classSelectListener = new ClassSelectListener(statsManager, playerFileManager, this);
+        ClassSelectListener classSelectListener = new ClassSelectListener(statsManager, playerFileManager, (JavaPlugin) instance, readyManager);
         getServer().getPluginManager().registerEvents(classSelectListener, this);
 
         // Listener de persistência JSON
@@ -102,7 +103,6 @@ public final class QuestWeaver extends JavaPlugin {
     }
 
 
-
     public static String getServerName(){
         return config.getString("server-conf.server-name");
     }
@@ -121,5 +121,7 @@ public final class QuestWeaver extends JavaPlugin {
         return rpgPlayers.get(player.getUniqueId());
     }
 
-
+    public PlayerStatsManager getStatsManager() {
+        return  statsManager;
+    }
 }
