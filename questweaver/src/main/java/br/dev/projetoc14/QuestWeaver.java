@@ -124,4 +124,8 @@ public final class QuestWeaver extends JavaPlugin {
     public PlayerStatsManager getStatsManager() {
         return  statsManager;
     }
+
+    public void addRPGPlayer(@NotNull UUID uniqueId, RPGPlayer rpgPlayer) {
+        this.rpgPlayers.put(uniqueId, rpgPlayer);
+    }
 }

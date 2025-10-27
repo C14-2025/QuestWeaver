@@ -24,7 +24,7 @@ public class StartMatch {
         this.fileManager = fileManager;
         this.statsManager = statsManager;
         this.plugin = plugin;
-        this.start =  new StartMatchItems(fileManager, statsManager);
+        this.start =  new StartMatchItems(fileManager, statsManager, (QuestWeaver) plugin);
     }
 
     /*
