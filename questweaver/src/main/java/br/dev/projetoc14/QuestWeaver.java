@@ -1,12 +1,14 @@
 package br.dev.projetoc14;
 
-import br.dev.projetoc14.ExperienceSystem.ExperienceSystem;
 import br.dev.projetoc14.commands.HelpCommand;
 import br.dev.projetoc14.commands.QuestsCommand;
+import br.dev.projetoc14.items.SkillTree;
+import br.dev.projetoc14.ExperienceSystem.ExperienceSystem;
 import br.dev.projetoc14.match.ClassReadyManager;
 import br.dev.projetoc14.match.PlayerFileManager;
 import br.dev.projetoc14.player.*;
 import br.dev.projetoc14.player.abilities.mageSkills.MagicWandListener;
+import br.dev.projetoc14.skilltree.ExperienceSystem;
 import br.dev.projetoc14.skilltree.Texts;
 import br.dev.projetoc14.playerData.PlayerDataListener;
 import br.dev.projetoc14.quest.utils.QuestBook;
@@ -88,6 +90,9 @@ public final class QuestWeaver extends JavaPlugin {
         // Magic Wand Listener (Habilidades de Mago)
         MagicWandListener magicWandListener = new MagicWandListener(this);
         getServer().getPluginManager().registerEvents(magicWandListener, this);
+
+        // skill tree listener
+        getServer().getPluginManager().registerEvents(new SkillTree(playerFileManager), this);
 
         // ativação dos comandos
         getCommand("quests").setExecutor(new QuestsCommand(questBook));
