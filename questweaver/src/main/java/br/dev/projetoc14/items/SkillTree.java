@@ -5,6 +5,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -28,7 +30,7 @@ public class SkillTree implements Listener {
         DONE: fazer abrir uma tela diferente de habilidades para cada classe
         TODO: change deprecated methods
         TODO: fazer com que o player n possa trocar os itens de lugar dentro da interface
-        TODO: mudar a cor das descrições e titulos dos itens
+        DONE: mudar a cor das descrições e titulos dos itens
      */
 
     public static ItemStack create() {
@@ -46,6 +48,24 @@ public class SkillTree implements Listener {
 
     public SkillTree(PlayerFileManager fileManager) {
         this.fileManager = fileManager;
+    }
+
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        if (event.getView().getTitle().equalsIgnoreCase("Árvore de Habilidades")) {
+            event.setCancelled(true);
+            if (event.getClickedInventory() != null &&
+                    event.getClickedInventory().equals(event.getWhoClicked().getInventory())) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onInventoryDrag(InventoryDragEvent event) {
+        if (event.getView().getTitle().equalsIgnoreCase("Árvore de Habilidades")) {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler
