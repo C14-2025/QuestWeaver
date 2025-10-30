@@ -5,6 +5,7 @@ import br.dev.projetoc14.player.RPGPlayer;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 public class AssassinPlayer extends RPGPlayer {
 
@@ -16,7 +17,6 @@ public class AssassinPlayer extends RPGPlayer {
     protected void initializeClass() {
         // Stats iniciais do assassino
         stats.setStrength(14);      // Alto dano físico
-        stats.setDefense(6);        // Defesa baixa
         stats.setAgility(18);       // Muito ágil
         stats.setIntelligence(6);   // Pouca inteligência
         stats.setHealth(80);       // Vida baixa
@@ -34,12 +34,13 @@ public class AssassinPlayer extends RPGPlayer {
     }
 
     @Override
-    public ItemStack[] getStartingEquipment() {
-        return new ItemStack[]{
-                new ItemStack(Material.IRON_SWORD, 1),    // Lâmina leve
-                new ItemStack(Material.LEATHER_CHESTPLATE, 1), // Armadura leve
-                new ItemStack(Material.LEATHER_BOOTS, 1),
-                new ItemStack(Material.COOKED_BEEF, 4)         // Suprimentos básicos
-        };
+    public void getStartingEquipment() {
+        PlayerInventory inv = this.getPlayer().getInventory();
+        // Arma
+        inv.addItem(new ItemStack(Material.IRON_SWORD)); // Lâmina leve
+
+        // Armadura
+        inv.setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE)); // Armadura leve
+        inv.setBoots(new ItemStack(Material.LEATHER_BOOTS));
     }
 }

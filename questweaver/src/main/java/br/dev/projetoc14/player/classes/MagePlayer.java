@@ -4,9 +4,13 @@ import br.dev.projetoc14.player.PlayerClass;
 import br.dev.projetoc14.player.RPGPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionType;
 
 public class MagePlayer extends RPGPlayer {
 
@@ -18,7 +22,6 @@ public class MagePlayer extends RPGPlayer {
     protected void initializeClass() {
         // Stats iniciais do mago
         stats.setStrength(1);
-        stats.setDefense(6);
         stats.setAgility(10);
         stats.setIntelligence(18);
         stats.setHealth(20);
@@ -35,20 +38,24 @@ public class MagePlayer extends RPGPlayer {
     }
 
     @Override
-    public ItemStack[] getStartingEquipment() {
-        ItemStack wand = new ItemStack(Material.BLAZE_ROD, 1);
+    public void getStartingEquipment() {
+        PlayerInventory inv = this.getPlayer().getInventory();
 
+        // Cajado mágico
+        ItemStack wand = new ItemStack(Material.BLAZE_ROD, 1);
         ItemMeta wandMeta = wand.getItemMeta();
-        if (wandMeta != null){
-            // Definaindo o nome com cores para corresponder à checagem do Listener
+        if (wandMeta != null) {
             wandMeta.setDisplayName(ChatColor.AQUA + "Cajado Mágico");
             wand.setItemMeta(wandMeta);
         }
-        return new ItemStack[] {
-                wand, // Cajado customizado
-                new ItemStack(Material.ENCHANTED_BOOK, 2),
-                new ItemStack(Material.SPLASH_POTION, 3),
-                new ItemStack(Material.CAKE, 6)
-        };
+        inv.addItem(wand);
+
+        // Poções de resistência ao fogo
+        ItemStack potionItem = new ItemStack(Material.SPLASH_POTION, 2);
+        PotionMeta potionMeta = (PotionMeta) potionItem.getItemMeta();
+        potionMeta.setBasePotionType(PotionType.FIRE_RESISTANCE);
+        potionItem.setItemMeta(potionMeta);
+        inv.addItem(potionItem);
+
     }
 }

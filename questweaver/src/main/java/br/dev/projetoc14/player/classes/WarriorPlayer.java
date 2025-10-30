@@ -5,6 +5,7 @@ import br.dev.projetoc14.player.RPGPlayer;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 public class WarriorPlayer extends RPGPlayer {
 
@@ -15,7 +16,6 @@ public class WarriorPlayer extends RPGPlayer {
     @Override
     protected void initializeClass() {
         stats.setStrength(15);
-        stats.setDefense(12);
         stats.setAgility(8);
         stats.setIntelligence(5);
         stats.setHealth(120);
@@ -33,14 +33,31 @@ public class WarriorPlayer extends RPGPlayer {
 
     // Méthod: Equipamento Inicial da classe de Guerreiro
     @Override
-    public ItemStack[] getStartingEquipment() {
-        return new ItemStack[] {
-                new ItemStack(Material.IRON_AXE, 1),
-                new ItemStack(Material.IRON_CHESTPLATE, 1),
-                new ItemStack(Material.IRON_LEGGINGS, 1),
-                new ItemStack(Material.IRON_BOOTS, 1),
-                new  ItemStack(Material.IRON_HELMET, 1),
-                new ItemStack(Material.APPLE, 10)
-        };
+    public void getStartingEquipment() {
+        PlayerInventory inv = this.getPlayer().getInventory();
+
+        // Arma
+        inv.addItem(new ItemStack(Material.IRON_AXE));
+
+        // Armadura
+        inv.setHelmet(new ItemStack(Material.IRON_HELMET));
+        inv.setChestplate(new ItemStack(Material.IRON_CHESTPLATE));
+        inv.setLeggings(new ItemStack(Material.IRON_LEGGINGS));
+        inv.setBoots(new ItemStack(Material.IRON_BOOTS));
     }
+
+    /* TODO: Refactor code
+    @Override
+    public void onStart(Player player) {
+        PlayerInventory inv = player.getInventory();
+
+        // Arma
+        inv.addItem(new ItemStack(Material.IRON_AXE));
+
+        // Armadura
+        inv.setHelmet(new ItemStack(Material.IRON_HELMET));
+        inv.setChestplate(new ItemStack(Material.IRON_CHESTPLATE));
+        inv.setLeggings(new ItemStack(Material.IRON_LEGGINGS));
+        inv.setBoots(new ItemStack(Material.IRON_BOOTS));
+    }*/
 }
