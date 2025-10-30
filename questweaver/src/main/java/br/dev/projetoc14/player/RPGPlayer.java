@@ -55,7 +55,7 @@ public abstract class RPGPlayer {
 
     protected abstract void initializeClass();
     public abstract void levelUp();
-    public abstract void getStartingEquipment(Player player);
+    public abstract void getStartingEquipment();
 
     // ==== Vida ==== //
     public int getMaxHealth() { return maxHealth; }

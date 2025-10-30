@@ -38,8 +38,8 @@ public class MagePlayer extends RPGPlayer {
     }
 
     @Override
-    public void getStartingEquipment(Player player) {
-        PlayerInventory inv = player.getInventory();
+    public void getStartingEquipment() {
+        PlayerInventory inv = this.getPlayer().getInventory();
 
         // Cajado mágico
         ItemStack wand = new ItemStack(Material.BLAZE_ROD, 1);

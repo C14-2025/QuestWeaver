@@ -33,8 +33,8 @@ public class WarriorPlayer extends RPGPlayer {
 
     // Méthod: Equipamento Inicial da classe de Guerreiro
     @Override
-    public void getStartingEquipment(Player player) {
-        PlayerInventory inv = player.getInventory();
+    public void getStartingEquipment() {
+        PlayerInventory inv = this.getPlayer().getInventory();
 
         // Arma
         inv.addItem(new ItemStack(Material.IRON_AXE));

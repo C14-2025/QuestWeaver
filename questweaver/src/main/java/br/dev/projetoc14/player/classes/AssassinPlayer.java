@@ -34,8 +34,8 @@ public class AssassinPlayer extends RPGPlayer {
     }
 
     @Override
-    public void getStartingEquipment(Player player) {
-        PlayerInventory inv = player.getInventory();
+    public void getStartingEquipment() {
+        PlayerInventory inv = this.getPlayer().getInventory();
         // Arma
         inv.addItem(new ItemStack(Material.IRON_SWORD)); // Lâmina leve
 

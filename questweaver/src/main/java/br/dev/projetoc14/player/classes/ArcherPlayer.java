@@ -34,8 +34,8 @@ public class ArcherPlayer extends RPGPlayer {
     }
 
     @Override
-    public void getStartingEquipment(Player player) {
-            PlayerInventory inv = player.getInventory();
+    public void getStartingEquipment() {
+        PlayerInventory inv = this.getPlayer().getInventory();
 
         // Arco e flechas
         inv.addItem(new ItemStack(Material.BOW, 1));
