@@ -3,7 +3,7 @@ package br.dev.projetoc14;
 import br.dev.projetoc14.commands.HelpCommand;
 import br.dev.projetoc14.commands.QuestsCommand;
 import br.dev.projetoc14.items.SkillTree;
-import br.dev.projetoc14.ExperienceSystem.ExperienceSystem;
+import br.dev.projetoc14.skilltree.ExperienceSystem;
 import br.dev.projetoc14.match.ClassReadyManager;
 import br.dev.projetoc14.match.PlayerFileManager;
 import br.dev.projetoc14.player.*;
