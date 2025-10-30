@@ -53,7 +53,7 @@ public class StartMatchItems {
             statsManager.setStats(player, rpgPlayer.getStats());
             statsManager.applyStats(player);
             statsManager.createManaBar(player);
-            player.getInventory().setContents(rpgPlayer.getStartingEquipment());
+            rpgPlayer.getStartingEquipment();
         }
     }
 }
