@@ -5,6 +5,7 @@ import br.dev.projetoc14.player.RPGPlayer;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 public class AssassinPlayer extends RPGPlayer {
 
@@ -33,11 +34,13 @@ public class AssassinPlayer extends RPGPlayer {
     }
 
     @Override
-    public ItemStack[] getStartingEquipment() {
-        return new ItemStack[]{
-                new ItemStack(Material.IRON_SWORD, 1),    // Lâmina leve
-                new ItemStack(Material.LEATHER_CHESTPLATE, 1), // Armadura leve
-                new ItemStack(Material.LEATHER_BOOTS, 1)
-        };
+    public void getStartingEquipment(Player player) {
+        PlayerInventory inv = player.getInventory();
+        // Arma
+        inv.addItem(new ItemStack(Material.IRON_SWORD)); // Lâmina leve
+
+        // Armadura
+        inv.setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE)); // Armadura leve
+        inv.setBoots(new ItemStack(Material.LEATHER_BOOTS));
     }
 }

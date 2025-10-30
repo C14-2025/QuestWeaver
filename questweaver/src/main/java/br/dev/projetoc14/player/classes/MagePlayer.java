@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionType;
@@ -37,25 +38,24 @@ public class MagePlayer extends RPGPlayer {
     }
 
     @Override
-    public ItemStack[] getStartingEquipment() {
+    public void getStartingEquipment(Player player) {
+        PlayerInventory inv = player.getInventory();
+
+        // Cajado mágico
         ItemStack wand = new ItemStack(Material.BLAZE_ROD, 1);
-
-        ItemStack potionItem = new ItemStack(Material.SPLASH_POTION, 2);
-        PotionMeta potionMeta = (PotionMeta) potionItem.getItemMeta();
-        potionMeta.setBasePotionType(PotionType.FIRE_RESISTANCE);
-
-        potionItem.setItemMeta(potionMeta);
-
         ItemMeta wandMeta = wand.getItemMeta();
         if (wandMeta != null) {
             wandMeta.setDisplayName(ChatColor.AQUA + "Cajado Mágico");
             wand.setItemMeta(wandMeta);
         }
+        inv.addItem(wand);
 
-        return new ItemStack[] {
-                wand,
-                potionItem,
-                new ItemStack(Material.ENCHANTED_BOOK, 2)
-        };
+        // Poções de resistência ao fogo
+        ItemStack potionItem = new ItemStack(Material.SPLASH_POTION, 2);
+        PotionMeta potionMeta = (PotionMeta) potionItem.getItemMeta();
+        potionMeta.setBasePotionType(PotionType.FIRE_RESISTANCE);
+        potionItem.setItemMeta(potionMeta);
+        inv.addItem(potionItem);
+
     }
 }

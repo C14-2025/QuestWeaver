@@ -33,14 +33,17 @@ public class WarriorPlayer extends RPGPlayer {
 
     // Méthod: Equipamento Inicial da classe de Guerreiro
     @Override
-    public ItemStack[] getStartingEquipment() {
-        return new ItemStack[]{
-                new ItemStack(Material.IRON_AXE, 1),
-                new ItemStack(Material.IRON_CHESTPLATE, 1),
-                new ItemStack(Material.IRON_LEGGINGS, 1),
-                new ItemStack(Material.IRON_BOOTS, 1),
-                new ItemStack(Material.IRON_HELMET, 1)
-        };
+    public void getStartingEquipment(Player player) {
+        PlayerInventory inv = player.getInventory();
+
+        // Arma
+        inv.addItem(new ItemStack(Material.IRON_AXE));
+
+        // Armadura
+        inv.setHelmet(new ItemStack(Material.IRON_HELMET));
+        inv.setChestplate(new ItemStack(Material.IRON_CHESTPLATE));
+        inv.setLeggings(new ItemStack(Material.IRON_LEGGINGS));
+        inv.setBoots(new ItemStack(Material.IRON_BOOTS));
     }
 
     /* TODO: Refactor code

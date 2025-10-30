@@ -5,6 +5,7 @@ import br.dev.projetoc14.player.RPGPlayer;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 public class ArcherPlayer extends RPGPlayer {
 
@@ -33,11 +34,14 @@ public class ArcherPlayer extends RPGPlayer {
     }
 
     @Override
-    public ItemStack[] getStartingEquipment() {
-        return new ItemStack[] {
-                new ItemStack(Material.BOW, 1),
-                new ItemStack(Material.ARROW, 32),
-                new ItemStack(Material.LEATHER_CHESTPLATE, 1)
-        };
+    public void getStartingEquipment(Player player) {
+            PlayerInventory inv = player.getInventory();
+
+        // Arco e flechas
+        inv.addItem(new ItemStack(Material.BOW, 1));
+        inv.addItem(new ItemStack(Material.ARROW, 32));
+
+        // Armadura leve
+        inv.setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE));
     }
 }
