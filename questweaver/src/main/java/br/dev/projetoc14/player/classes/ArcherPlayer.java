@@ -49,6 +49,7 @@ public class ArcherPlayer extends RPGPlayer {
         inv.setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE));
         inv.setBoots(new ItemStack(Material.LEATHER_BOOTS));
 
+        // Livro de quests
         inv.addItem(createQuestBook());
     }
 
