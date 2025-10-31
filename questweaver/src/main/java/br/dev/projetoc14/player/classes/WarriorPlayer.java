@@ -45,6 +45,7 @@ public class WarriorPlayer extends RPGPlayer {
         inv.setLeggings(new ItemStack(Material.IRON_LEGGINGS));
         inv.setBoots(new ItemStack(Material.IRON_BOOTS));
 
+        // Adiciona o livro de quests
         inv.addItem(createQuestBook());
     }
 

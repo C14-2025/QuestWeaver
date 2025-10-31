@@ -147,6 +147,8 @@ public class ClassSelectListener implements Listener {
                 player.closeInventory();
                 readyManager.markPlayerReady(player);
                 if (!questManager.hasQuests(player)) {
+                    //Se o player não tiver nenhuma quest no momento
+                    //começa a primeira quest de matar zumbis
                     questManager.createFirstQuest(player);
                 }
             }
@@ -156,6 +158,8 @@ public class ClassSelectListener implements Listener {
                 player.closeInventory();
                 readyManager.markPlayerReady(player);
                 if (!questManager.hasQuests(player)) {
+                    //Se o player não tiver nenhuma quest no momento
+                    //começa a primeira quest de matar zumbis
                     questManager.createFirstQuest(player);
                 }
             }
@@ -165,6 +169,8 @@ public class ClassSelectListener implements Listener {
                 player.closeInventory();
                 readyManager.markPlayerReady(player);
                 if (!questManager.hasQuests(player)) {
+                    //Se o player não tiver nenhuma quest no momento
+                    //começa a primeira quest de matar zumbis
                     questManager.createFirstQuest(player);
                 }
             }
@@ -174,6 +180,8 @@ public class ClassSelectListener implements Listener {
                 player.closeInventory();
                 readyManager.markPlayerReady(player);
                 if (!questManager.hasQuests(player)) {
+                    //Se o player não tiver nenhuma quest no momento
+                    //começa a primeira quest de matar zumbis
                     questManager.createFirstQuest(player);
                 }
             }

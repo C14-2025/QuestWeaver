@@ -57,6 +57,7 @@ public class MagePlayer extends RPGPlayer {
         potionItem.setItemMeta(potionMeta);
         inv.addItem(potionItem);
 
+        // Adiciona o livro de quests
         inv.addItem(createQuestBook());
 
     }
