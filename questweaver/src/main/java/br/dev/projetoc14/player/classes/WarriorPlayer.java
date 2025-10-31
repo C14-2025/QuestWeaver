@@ -44,6 +44,8 @@ public class WarriorPlayer extends RPGPlayer {
         inv.setChestplate(new ItemStack(Material.IRON_CHESTPLATE));
         inv.setLeggings(new ItemStack(Material.IRON_LEGGINGS));
         inv.setBoots(new ItemStack(Material.IRON_BOOTS));
+
+        inv.addItem(createQuestBook());
     }
 
     /* TODO: Refactor code

@@ -1,12 +1,19 @@
 package br.dev.projetoc14.player;
 
 import br.dev.projetoc14.player.abilities.Ability;
+
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +63,66 @@ public abstract class RPGPlayer {
     protected abstract void initializeClass();
     public abstract void levelUp();
     public abstract void getStartingEquipment();
+
+    /**
+     * Cria o livro de quests inicial para o jogador.
+     * Cada classe pode usar esse método no getStartingEquipment().
+     *
+     * @return ItemStack do livro de quests
+     */
+    protected ItemStack createQuestBook() {
+        ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
+        BookMeta meta = (BookMeta) book.getItemMeta();
+
+        // Define título com cor baseada na classe
+        TextColor classColor = getClassColor();
+        meta.title(Component.text("📖 Livro de Quests")
+                .color(classColor)
+                .decoration(TextDecoration.BOLD, true));
+        meta.author(Component.text("QuestWeaver"));
+
+        // Cria página inicial personalizada
+        Component firstPage = Component.text()
+                .append(Component.text("Livro de Quests\n\n")
+                        .decoration(TextDecoration.BOLD, true)
+                        .decoration(TextDecoration.UNDERLINED, true)
+                        .color(classColor))
+                .append(Component.text("Classe: ")
+                        .color(TextColor.color(0xAAAAAA)))
+                .append(Component.text(playerClass.getDisplayName() + "\n\n")
+                        .color(classColor)
+                        .decoration(TextDecoration.BOLD, true))
+                .append(Component.text("Nível: ")
+                        .color(TextColor.color(0xAAAAAA)))
+                .append(Component.text(level + "\n\n")
+                        .color(TextColor.color(0xFFFFFF)))
+                .append(Component.text("Use ")
+                        .color(TextColor.color(0xAAAAAA)))
+                .append(Component.text("/quests")
+                        .color(TextColor.color(0x5555FF))
+                        .decoration(TextDecoration.UNDERLINED, true))
+                .append(Component.text(" para\nver suas missões\natualizadas.\n\n")
+                        .color(TextColor.color(0xAAAAAA)))
+                .append(Component.text("Boa sorte!")
+                        .color(TextColor.color(0x55FF55)))
+                .build();
+
+        meta.pages(List.of(firstPage));
+        book.setItemMeta(meta);
+        return book;
+    }
+
+    /**
+     * Retorna a cor da classe para personalização do livro
+     */
+    private TextColor getClassColor() {
+        return switch(playerClass) {
+            case WARRIOR -> TextColor.color(0xFF5555);  // Vermelho
+            case MAGE -> TextColor.color(0x5555FF);     // Azul
+            case ARCHER -> TextColor.color(0x55FF55);   // Verde
+            case ASSASSIN -> TextColor.color(0x555555); // Cinza escuro
+        };
+    }
 
     // ==== Vida ==== //
     public int getMaxHealth() { return maxHealth; }

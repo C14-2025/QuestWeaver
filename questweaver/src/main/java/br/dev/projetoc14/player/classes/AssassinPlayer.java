@@ -42,5 +42,7 @@ public class AssassinPlayer extends RPGPlayer {
         // Armadura
         inv.setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE)); // Armadura leve
         inv.setBoots(new ItemStack(Material.LEATHER_BOOTS));
+
+        inv.addItem(createQuestBook());
     }
 }
