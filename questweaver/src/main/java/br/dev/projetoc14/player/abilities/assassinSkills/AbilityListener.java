@@ -38,7 +38,7 @@ public class AbilityListener implements Listener {
         Player player = e.getPlayer();
         Action action = e.getAction();
 
-        if (!isWand(player.getInventory().getItemInMainHand())) return;
+        if (!isPotion(player.getInventory().getItemInMainHand())) return;
         if (!player.isSneaking()) return;
         if (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK) return;
 
@@ -62,13 +62,13 @@ public class AbilityListener implements Listener {
         Action a = e.getAction();
 
         if (a != Action.RIGHT_CLICK_AIR && a != Action.RIGHT_CLICK_BLOCK) return;
-        if (!isWand(p.getInventory().getItemInMainHand())) return;
+        if (!isPotion(p.getInventory().getItemInMainHand())) return;
         if (p.isSneaking()) return;
 
-        //todo: assassin may not get a wand but another iten
+        // todo: assassin may not get a wand but another iten
         AssassinPlayer assassin = getAssassinPlayer(p);
         if (assassin == null) {
-            p.sendActionBar(ChatColor.RED + "❌ Apenas assassinos podem usar este cajado!");
+            p.sendActionBar(ChatColor.RED + "❌ Apenas assassinos podem usar esta poção!");
             return;
         }
 
@@ -100,11 +100,11 @@ public class AbilityListener implements Listener {
     }
 
     // todo: set new item (wand) to assassin (choose an iten that makes sense to an Assassin class)
-    private boolean isWand(ItemStack item) {
+    private boolean isPotion(ItemStack item) {
         if (item == null || item.getType() != Material.BLAZE_ROD) return false;
         if (!item.hasItemMeta()) return false;
         return ChatColor.stripColor(item.getItemMeta().getDisplayName())
-                .equalsIgnoreCase("Cajado Mágico");
+                .equalsIgnoreCase("Poção Mágico");
     }
 
     private String formatName(String nome) {
