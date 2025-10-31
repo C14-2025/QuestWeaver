@@ -43,5 +43,7 @@ public class ArcherPlayer extends RPGPlayer {
 
         // Armadura leve
         inv.setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE));
+
+        inv.addItem(createQuestBook());
     }
 }

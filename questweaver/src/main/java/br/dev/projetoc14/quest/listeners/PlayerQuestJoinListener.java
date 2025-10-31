@@ -17,6 +17,7 @@ public class PlayerQuestJoinListener implements Listener {
         this.questManager = questManager;
     }
 
+    /*
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
@@ -24,5 +25,5 @@ public class PlayerQuestJoinListener implements Listener {
         if (!questManager.hasQuests(player)) {
             questManager.createFirstQuest(player);
         }
-    }
+    }*/
 }
