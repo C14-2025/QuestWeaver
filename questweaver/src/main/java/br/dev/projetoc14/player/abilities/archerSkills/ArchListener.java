@@ -35,13 +35,12 @@ public class ArchListener implements Listener {
     }
 
     @EventHandler
-    public void onItemSwitch(PlayerInteractEvent e) {
+    public void onArrowSwitch(PlayerInteractEvent e) {
         Player player = e.getPlayer();
         Action action = e.getAction();
 
         if (!isBow(player.getInventory().getItemInMainHand())) return;
-        if (!player.isSneaking()) return;
-        if (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK) return;
+        if (action != Action.LEFT_CLICK_AIR && action != Action.LEFT_CLICK_BLOCK) return;
 
         ArcherPlayer archer = getArcherPlayer(player);
         if (archer == null) return;
@@ -53,20 +52,18 @@ public class ArchListener implements Listener {
         habilidadeIndex.put(player.getUniqueId(), index);
 
         String nova = habilidades.get(index);
-        player.sendActionBar(ChatColor.AQUA + "✨ Habilidade: " + ChatColor.GOLD + formatName(nova));
-        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1.5f);
+        player.sendActionBar(ChatColor.AQUA + "Flecha selecionada: " + ChatColor.GOLD + formatName(nova));
+        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1.2f);
     }
 
     @EventHandler
-    public void onClick(PlayerInteractEvent e) {
+    public void onArrowShoot(PlayerInteractEvent e) {
         Player p = e.getPlayer();
         Action a = e.getAction();
 
         if (a != Action.RIGHT_CLICK_AIR && a != Action.RIGHT_CLICK_BLOCK) return;
         if (!isBow(p.getInventory().getItemInMainHand())) return;
-        if (p.isSneaking()) return;
 
-        // todo: assassin may not get a wand but another iten
         ArcherPlayer archer = getArcherPlayer(p);
         if (archer == null) {
             p.sendActionBar(ChatColor.RED + "❌ Apenas arqueiros podem usar este arco!");
@@ -78,8 +75,15 @@ public class ArchListener implements Listener {
         int index = habilidadeIndex.getOrDefault(p.getUniqueId(), 0);
         String habilidadeNome = habilidades.get(index);
 
-        Ability ability = abilityMap.get(habilidadeNome);
+        // Flecha normal = disparo padrão
+        if (habilidadeNome.equals("NORMALARROW")) {
+            p.launchProjectile(org.bukkit.entity.Arrow.class);
+            p.playSound(p.getLocation(), Sound.ENTITY_ARROW_SHOOT, 1f, 1f);
+            return;
+        }
 
+        // Flecha especial (explosiva)
+        Ability ability = abilityMap.get(habilidadeNome);
         if (ability != null) {
             if (ability.canCast(archer)) {
                 ability.cast(archer);

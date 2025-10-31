@@ -2,10 +2,15 @@ package br.dev.projetoc14.player.classes;
 
 import br.dev.projetoc14.player.PlayerClass;
 import br.dev.projetoc14.player.RPGPlayer;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.List;
 
 public class ArcherPlayer extends RPGPlayer {
 
@@ -37,13 +42,32 @@ public class ArcherPlayer extends RPGPlayer {
     public void getStartingEquipment() {
         PlayerInventory inv = this.getPlayer().getInventory();
 
-        // Arco e flechas
-        inv.addItem(new ItemStack(Material.BOW, 1));
-        inv.addItem(new ItemStack(Material.ARROW, 32));
+        inv.addItem(createMagicBow());
+        inv.addItem(new ItemStack(Material.ARROW, 64));
 
         // Armadura leve
         inv.setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE));
+        inv.setBoots(new ItemStack(Material.LEATHER_BOOTS));
 
         inv.addItem(createQuestBook());
+    }
+
+    private ItemStack createMagicBow() {
+        ItemStack bow = new ItemStack(Material.BOW, 1);
+        ItemMeta meta = bow.getItemMeta();
+
+        if (meta != null) {
+            meta.setDisplayName(ChatColor.GOLD + "Arco Mágico");
+            meta.setLore(List.of(
+                    ChatColor.GRAY + "Clique esquerdo no ar para alternar o tipo de flecha.",
+                    ChatColor.GRAY + "Clique direito para disparar a habilidade atual.",
+                    "",
+                    ChatColor.DARK_GRAY + "Classe: " + ChatColor.YELLOW + "Arqueiro"
+            ));
+            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+            bow.setItemMeta(meta);
+        }
+
+        return bow;
     }
 }
