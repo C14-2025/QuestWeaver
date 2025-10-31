@@ -3,12 +3,12 @@ package br.dev.projetoc14;
 import br.dev.projetoc14.commands.HelpCommand;
 import br.dev.projetoc14.commands.QuestsCommand;
 import br.dev.projetoc14.items.SkillTree;
+import br.dev.projetoc14.player.listeners.*;
 import br.dev.projetoc14.skilltree.ExperienceSystem;
 import br.dev.projetoc14.match.ClassReadyManager;
 import br.dev.projetoc14.match.PlayerFileManager;
 import br.dev.projetoc14.player.*;
 import br.dev.projetoc14.player.abilities.mageSkills.MagicWandListener;
-import br.dev.projetoc14.skilltree.ExperienceSystem;
 import br.dev.projetoc14.skilltree.Texts;
 import br.dev.projetoc14.playerData.PlayerDataListener;
 import br.dev.projetoc14.quest.utils.QuestBook;
@@ -18,13 +18,10 @@ import br.dev.projetoc14.quest.listeners.PlayerQuestJoinListener;
 import br.dev.projetoc14.playerData.PlayerDataManager;
 import br.dev.projetoc14.quest.listeners.QuestBookInteractListener;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -41,7 +38,6 @@ public final class QuestWeaver extends JavaPlugin {
     private static Plugin instance;
     private PlayerFileManager playerFileManager;
     private final Map<UUID, RPGPlayer> rpgPlayers = new HashMap<>();
-
 
 
     @Override
@@ -97,6 +93,11 @@ public final class QuestWeaver extends JavaPlugin {
         // Magic Wand Listener (Habilidades de Mago)
         MagicWandListener magicWandListener = new MagicWandListener(this);
         getServer().getPluginManager().registerEvents(magicWandListener, this);
+
+        // No Hunger & No Durability
+        getServer().getPluginManager().registerEvents(new HungerDurabilityListener(), this);
+        getLogger().info("QuestWeaver enabled — hunger and durability disabled!");
+
 
         // skill tree listener
         getServer().getPluginManager().registerEvents(new SkillTree(playerFileManager), this);

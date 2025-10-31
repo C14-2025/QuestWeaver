@@ -1,5 +1,7 @@
-package br.dev.projetoc14.player;
+package br.dev.projetoc14.player.listeners;
 
+import br.dev.projetoc14.player.PlayerStats;
+import br.dev.projetoc14.player.PlayerStatsManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

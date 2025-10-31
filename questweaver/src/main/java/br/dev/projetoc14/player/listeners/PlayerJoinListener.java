@@ -1,8 +1,9 @@
-package br.dev.projetoc14.player;
+package br.dev.projetoc14.player.listeners;
 
 //import br.dev.sno0s.hgplugin.utils.PlayerJoinItems;
 
 import br.dev.projetoc14.QuestWeaver;
+import br.dev.projetoc14.player.PlayerJoinItems;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.World;

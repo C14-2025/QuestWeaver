@@ -1,6 +1,7 @@
-package br.dev.projetoc14.player;
+package br.dev.projetoc14.player.listeners;
 
 import br.dev.projetoc14.match.PlayerFileManager;
+import br.dev.projetoc14.player.PlayerStatsManager;
 import br.dev.projetoc14.playerData.PlayerDataManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

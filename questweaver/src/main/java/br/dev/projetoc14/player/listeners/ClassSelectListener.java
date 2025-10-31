@@ -1,7 +1,8 @@
-package br.dev.projetoc14.player;
+package br.dev.projetoc14.player.listeners;
 
 import br.dev.projetoc14.match.ClassReadyManager;
 import br.dev.projetoc14.match.PlayerFileManager;
+import br.dev.projetoc14.player.PlayerStatsManager;
 import br.dev.projetoc14.quest.utils.QuestManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
