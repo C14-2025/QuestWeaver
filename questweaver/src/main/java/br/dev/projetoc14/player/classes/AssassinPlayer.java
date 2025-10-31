@@ -2,10 +2,15 @@ package br.dev.projetoc14.player.classes;
 
 import br.dev.projetoc14.player.PlayerClass;
 import br.dev.projetoc14.player.RPGPlayer;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.List;
 
 public class AssassinPlayer extends RPGPlayer {
 
@@ -42,5 +47,30 @@ public class AssassinPlayer extends RPGPlayer {
         // Armadura
         inv.setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE)); // Armadura leve
         inv.setBoots(new ItemStack(Material.LEATHER_BOOTS));
+
+        // poçao das habilidades
+        inv.addItem(createAssassinPotion());
+    }
+
+
+    //  Cria a poção mágica exclusiva do assassino para ativar habilidades.
+    private ItemStack createAssassinPotion() {
+        ItemStack potion = new ItemStack(Material.POTION, 1);
+        ItemMeta meta = potion.getItemMeta();
+
+        if (meta != null) {
+            meta.setDisplayName(ChatColor.DARK_PURPLE + "Poção das Sombras");
+            meta.setLore(List.of(
+                    ChatColor.GRAY + "Use enquanto agachado (Shift + botão direito)",
+                    ChatColor.GRAY + "para alternar entre habilidades.",
+                    ChatColor.GRAY + "Use normalmente para ativar a habilidade atual.",
+                    "",
+                    ChatColor.DARK_GRAY + "Classe: " + ChatColor.LIGHT_PURPLE + "Assassino"
+            ));
+            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+            potion.setItemMeta(meta);
+        }
+
+        return potion;
     }
 }

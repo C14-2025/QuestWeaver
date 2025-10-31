@@ -19,7 +19,7 @@ import java.util.*;
 public class AbilityListener implements Listener {
     private final QuestWeaver plugin;
     private final Map<UUID, Integer> habilidadeIndex = new HashMap<>();
-    private final List<String> habilidades = Arrays.asList("SHADOWMOVE");
+    private final List<String> habilidades = Arrays.asList("ShadowMove");
 
     // Map para gerir a execução das habilidades
     private final Map<String, Ability> abilityMap = new HashMap<>();
@@ -101,10 +101,10 @@ public class AbilityListener implements Listener {
 
     // todo: set new item (wand) to assassin (choose an iten that makes sense to an Assassin class)
     private boolean isPotion(ItemStack item) {
-        if (item == null || item.getType() != Material.BLAZE_ROD) return false;
+        if (item == null || item.getType() != Material.POTION) return false;
         if (!item.hasItemMeta()) return false;
         return ChatColor.stripColor(item.getItemMeta().getDisplayName())
-                .equalsIgnoreCase("Poção Mágico");
+                .equalsIgnoreCase("Poção das Sombras");
     }
 
     private String formatName(String nome) {
