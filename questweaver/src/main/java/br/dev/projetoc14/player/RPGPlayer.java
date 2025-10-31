@@ -1,6 +1,8 @@
 package br.dev.projetoc14.player;
 
 import br.dev.projetoc14.player.abilities.Ability;
+import br.dev.projetoc14.quest.utils.QuestBook;
+import br.dev.projetoc14.quest.utils.QuestManager;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
@@ -66,7 +68,7 @@ public abstract class RPGPlayer {
 
     /**
      * Cria o livro de quests inicial para o jogador.
-     * Cada classe pode usar esse método no getStartingEquipment().
+     * VERSÃO SIMPLES - só cria um livro placeholder que será atualizado pelo /quests
      *
      * @return ItemStack do livro de quests
      */
@@ -74,37 +76,24 @@ public abstract class RPGPlayer {
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
         BookMeta meta = (BookMeta) book.getItemMeta();
 
-        // Define título com cor baseada na classe
         TextColor classColor = getClassColor();
-        meta.title(Component.text("📖 Livro de Quests")
+        meta.title(Component.text("Livro de Quests")
                 .color(classColor)
                 .decoration(TextDecoration.BOLD, true));
         meta.author(Component.text("QuestWeaver"));
 
-        // Cria página inicial personalizada
+        // Página inicial simples
         Component firstPage = Component.text()
-                .append(Component.text("Livro de Quests\n\n")
+                .append(Component.text("📖 Livro de Quests\n\n")
                         .decoration(TextDecoration.BOLD, true)
-                        .decoration(TextDecoration.UNDERLINED, true)
                         .color(classColor))
-                .append(Component.text("Classe: ")
+                .append(Component.text("Clique com botão\ndireito para ver\nsuas quests!\n\n")
                         .color(TextColor.color(0xAAAAAA)))
-                .append(Component.text(playerClass.getDisplayName() + "\n\n")
-                        .color(classColor)
-                        .decoration(TextDecoration.BOLD, true))
-                .append(Component.text("Nível: ")
-                        .color(TextColor.color(0xAAAAAA)))
-                .append(Component.text(level + "\n\n")
-                        .color(TextColor.color(0xFFFFFF)))
-                .append(Component.text("Use ")
+                .append(Component.text("Ou use:\n")
                         .color(TextColor.color(0xAAAAAA)))
                 .append(Component.text("/quests")
                         .color(TextColor.color(0x5555FF))
                         .decoration(TextDecoration.UNDERLINED, true))
-                .append(Component.text(" para\nver suas missões\natualizadas.\n\n")
-                        .color(TextColor.color(0xAAAAAA)))
-                .append(Component.text("Boa sorte!")
-                        .color(TextColor.color(0x55FF55)))
                 .build();
 
         meta.pages(List.of(firstPage));
