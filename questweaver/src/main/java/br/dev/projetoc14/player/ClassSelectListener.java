@@ -2,6 +2,7 @@ package br.dev.projetoc14.player;
 
 import br.dev.projetoc14.match.ClassReadyManager;
 import br.dev.projetoc14.match.PlayerFileManager;
+import br.dev.projetoc14.quest.utils.QuestManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -25,13 +26,15 @@ public class ClassSelectListener implements Listener {
     private final JavaPlugin plugin;
     private final PlayerFileManager fileManager;
     private final ClassReadyManager readyManager;
+    private final QuestManager questManager;
 
 
-    public ClassSelectListener(PlayerStatsManager statsManager, PlayerFileManager fileManager, JavaPlugin plugin, ClassReadyManager readyManager) {
+    public ClassSelectListener(PlayerStatsManager statsManager, PlayerFileManager fileManager, JavaPlugin plugin, ClassReadyManager readyManager, QuestManager questManager) {
         this.statsManager = statsManager;
         this.fileManager = fileManager;
         this.plugin = plugin;
         this.readyManager = readyManager;
+        this.questManager = questManager;
     }
 
     /**
@@ -143,24 +146,36 @@ public class ClassSelectListener implements Listener {
                 player.sendMessage(ChatColor.DARK_PURPLE + "Você escolheu a classe " + ChatColor.BOLD + "Mago" + ChatColor.DARK_PURPLE + "!");
                 player.closeInventory();
                 readyManager.markPlayerReady(player);
+                if (!questManager.hasQuests(player)) {
+                    questManager.createFirstQuest(player);
+                }
             }
             case BOW -> {
                 fileManager.setPlayerClass(player, "Arqueiro");
                 player.sendMessage(ChatColor.GREEN + "Você escolheu a classe " + ChatColor.BOLD + "Arqueiro" + ChatColor.GREEN + "!");
                 player.closeInventory();
                 readyManager.markPlayerReady(player);
+                if (!questManager.hasQuests(player)) {
+                    questManager.createFirstQuest(player);
+                }
             }
             case IRON_AXE -> {
                 fileManager.setPlayerClass(player, "Guerreiro");
                 player.sendMessage(ChatColor.RED + "Você escolheu a classe " + ChatColor.BOLD + "Guerreiro" + ChatColor.RED + "!");
                 player.closeInventory();
                 readyManager.markPlayerReady(player);
+                if (!questManager.hasQuests(player)) {
+                    questManager.createFirstQuest(player);
+                }
             }
             case IRON_SWORD -> {
                 fileManager.setPlayerClass(player, "Assassino");
                 player.sendMessage(ChatColor.DARK_GRAY + "Você escolheu a classe " + ChatColor.BOLD + "Assassino" + ChatColor.DARK_GRAY + "!");
                 player.closeInventory();
                 readyManager.markPlayerReady(player);
+                if (!questManager.hasQuests(player)) {
+                    questManager.createFirstQuest(player);
+                }
             }
             default -> {
                 player.sendMessage(ChatColor.GRAY + "Classe inválida!");

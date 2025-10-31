@@ -61,6 +61,7 @@ public final class QuestWeaver extends JavaPlugin {
         this.statsManager = new PlayerStatsManager();
         this.questManager = new QuestManager();
         this.questBook = new QuestBook(questManager);
+        this.questManager = new QuestManager();
 
 
         // player join & disconnect listener
@@ -72,7 +73,7 @@ public final class QuestWeaver extends JavaPlugin {
         getServer().getPluginManager().registerEvents(playerListener, this);
 
         // Listener de Escolha de Classe
-        ClassSelectListener classSelectListener = new ClassSelectListener(statsManager, playerFileManager, (JavaPlugin) instance, readyManager);
+        ClassSelectListener classSelectListener = new ClassSelectListener(statsManager, playerFileManager, (JavaPlugin) instance, readyManager, questManager);
         getServer().getPluginManager().registerEvents(classSelectListener, this);
 
         // Listener de persistência JSON
