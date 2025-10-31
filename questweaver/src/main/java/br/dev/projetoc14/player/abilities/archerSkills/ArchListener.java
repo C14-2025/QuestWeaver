@@ -1,8 +1,9 @@
-package br.dev.projetoc14.player.abilities.assassinSkills;
+package br.dev.projetoc14.player.abilities.archerSkills;
 
 import br.dev.projetoc14.QuestWeaver;
 import br.dev.projetoc14.player.RPGPlayer;
 import br.dev.projetoc14.player.abilities.Ability;
+import br.dev.projetoc14.player.classes.ArcherPlayer;
 import br.dev.projetoc14.player.classes.AssassinPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -16,21 +17,21 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
-public class AbilityListener implements Listener {
+public class ArchListener implements Listener {
     private final QuestWeaver plugin;
     private final Map<UUID, Integer> habilidadeIndex = new HashMap<>();
-    private final List<String> habilidades = Arrays.asList("ShadowMove");
+    private final List<String> habilidades = Arrays.asList("EXPLOSIVEARROW");
 
     // Map para gerir a execução das habilidades
     private final Map<String, Ability> abilityMap = new HashMap<>();
 
     // 1. Construtor Corrigido
-    public AbilityListener(QuestWeaver plugin) {
+    public ArchListener(QuestWeaver plugin) {
         this.plugin = plugin;
 
         // Inicializa o mapa para uma execução escalável
-        ShadowMove shadowMoveAbility = new ShadowMove();
-        abilityMap.put("ShadowMove", shadowMoveAbility);
+        ExplosiveArrow explosiveArrow = new ExplosiveArrow();
+        abilityMap.put("ShadowMove", explosiveArrow);
     }
 
     @EventHandler
@@ -38,12 +39,12 @@ public class AbilityListener implements Listener {
         Player player = e.getPlayer();
         Action action = e.getAction();
 
-        if (!isPotion(player.getInventory().getItemInMainHand())) return;
+        if (!isBow(player.getInventory().getItemInMainHand())) return;
         if (!player.isSneaking()) return;
         if (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK) return;
 
-        AssassinPlayer assassin = getAssassinPlayer(player);
-        if (assassin == null) return;
+        ArcherPlayer archer = getArcherPlayer(player);
+        if (archer == null) return;
 
         e.setCancelled(true);
 
@@ -62,13 +63,13 @@ public class AbilityListener implements Listener {
         Action a = e.getAction();
 
         if (a != Action.RIGHT_CLICK_AIR && a != Action.RIGHT_CLICK_BLOCK) return;
-        if (!isPotion(p.getInventory().getItemInMainHand())) return;
+        if (!isBow(p.getInventory().getItemInMainHand())) return;
         if (p.isSneaking()) return;
 
         // todo: assassin may not get a wand but another iten
-        AssassinPlayer assassin = getAssassinPlayer(p);
-        if (assassin == null) {
-            p.sendActionBar(ChatColor.RED + "❌ Apenas assassinos podem usar esta poção!");
+        ArcherPlayer archer = getArcherPlayer(p);
+        if (archer == null) {
+            p.sendActionBar(ChatColor.RED + "❌ Apenas arqueiros podem usar este arco!");
             return;
         }
 
@@ -80,8 +81,8 @@ public class AbilityListener implements Listener {
         Ability ability = abilityMap.get(habilidadeNome);
 
         if (ability != null) {
-            if (ability.canCast(assassin)) {
-                ability.cast(assassin);
+            if (ability.canCast(archer)) {
+                ability.cast(archer);
             } else {
                 sendCooldownMessage(p, ability);
             }
@@ -93,23 +94,23 @@ public class AbilityListener implements Listener {
         p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1f);
     }
 
-    private AssassinPlayer getAssassinPlayer(Player p) {
+    private ArcherPlayer getArcherPlayer(Player p) {
         RPGPlayer rpgPlayer = plugin.getRPGPlayer(p);
-        if (rpgPlayer instanceof AssassinPlayer assassin) return assassin;
+        if (rpgPlayer instanceof ArcherPlayer archer) return archer;
         return null;
     }
 
     // todo: set new item (wand) to assassin (choose an iten that makes sense to an Assassin class)
-    private boolean isPotion(ItemStack item) {
-        if (item == null || item.getType() != Material.POTION) return false;
+    private boolean isBow(ItemStack item) {
+        if (item == null || item.getType() != Material.BOW) return false;
         if (!item.hasItemMeta()) return false;
         return ChatColor.stripColor(item.getItemMeta().getDisplayName())
-                .equalsIgnoreCase("Poção das Sombras");
+                .equalsIgnoreCase("Arco Mágico");
     }
 
     private String formatName(String nome) {
         return switch (nome) {
-            case "SHADOWMOVE" -> "Passos Sombrios";
+            case "EXPLOSIVEARROW" -> "Flechas explosivas";
             //case "" -> "";
             default -> nome;
         };
