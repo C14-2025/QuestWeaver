@@ -80,7 +80,6 @@ public class ArchListener implements Listener {
         Ability ability = abilityMap.get(habilidadeNome);
         if (ability != null) {
             if (ability.canCast(archer)) {
-                e.setCancelled(true); // Cancela apenas quando é uma habilidade especial
                 ability.cast(archer);
             } else {
                 e.setCancelled(true);

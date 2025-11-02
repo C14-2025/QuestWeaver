@@ -31,12 +31,12 @@ public class ExplosiveArrow extends Ability {
 
     public void onHit(ProjectileHitEvent event, RPGPlayer caster, RPGPlayer target) {
         if (!(event.getEntity() instanceof Arrow arrow)) return;
-        if (!arrow.hasMetadata("explosive_arrow")) return;
 
         Location hitLoc = arrow.getLocation();
 
         // Efeitos visuais e sonoros
         hitLoc.getWorld().spawnParticle(Particle.EXPLOSION, hitLoc, 1);
+        hitLoc.getWorld().spawnParticle(Particle.FLAME, hitLoc, 20, 1, 1, 1, 0.05);
         hitLoc.getWorld().playSound(hitLoc, Sound.ENTITY_GENERIC_EXPLODE, 1.2f, 1.0f);
 
         // Dano direto no alvo, se houver
