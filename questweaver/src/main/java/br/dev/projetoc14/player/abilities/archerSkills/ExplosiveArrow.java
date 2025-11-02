@@ -30,11 +30,22 @@ public class ExplosiveArrow extends Ability {
     }
 
     public void onHit(ProjectileHitEvent event, RPGPlayer caster, RPGPlayer target) {
-        if (target == null) return;
-        int newHealth = target.getCurrentHealth() - damage;
-        if (newHealth < 0) newHealth = 0;
-        target.setCurrentHealth(newHealth);
-        target.getWorld().createExplosion(target.getEyeLocation(), 0.0F); // efeito visual, sem dano em blocos
+        if (!(event.getEntity() instanceof Arrow arrow)) return;
+        if (!arrow.hasMetadata("explosive_arrow")) return;
+
+        Location hitLoc = arrow.getLocation();
+
+        // Efeitos visuais e sonoros
+        hitLoc.getWorld().spawnParticle(Particle.EXPLOSION, hitLoc, 1);
+        hitLoc.getWorld().playSound(hitLoc, Sound.ENTITY_GENERIC_EXPLODE, 1.2f, 1.0f);
+
+        // Dano direto no alvo, se houver
+        if (target != null) {
+            int newHealth = target.getCurrentHealth() - damage;
+            if (newHealth < 0) newHealth = 0;
+            target.setCurrentHealth(newHealth);
+        }
+        arrow.remove();
     }
 
     public int getDamage() {
