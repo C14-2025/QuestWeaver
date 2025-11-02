@@ -20,7 +20,7 @@ import java.util.*;
 public class ArchListener implements Listener {
     private final QuestWeaver plugin;
     private final Map<UUID, Integer> habilidadeIndex = new HashMap<>();
-    private final List<String> habilidades = Arrays.asList("EXPLOSIVEARROW");
+    private final List<String> habilidades = Arrays.asList("EXPLOSIVEARROW", "NORMALARROW");
 
     // Map para gerir a execução das habilidades
     private final Map<String, Ability> abilityMap = new HashMap<>();
@@ -31,7 +31,7 @@ public class ArchListener implements Listener {
 
         // Inicializa o mapa para uma execução escalável
         ExplosiveArrow explosiveArrow = new ExplosiveArrow();
-        abilityMap.put("ShadowMove", explosiveArrow);
+        abilityMap.put("EXPLOSIVEARROW", explosiveArrow);
     }
 
     @EventHandler
@@ -70,24 +70,20 @@ public class ArchListener implements Listener {
             return;
         }
 
-        e.setCancelled(true);
-
         int index = habilidadeIndex.getOrDefault(p.getUniqueId(), 0);
         String habilidadeNome = habilidades.get(index);
 
         // Flecha normal = disparo padrão
-        if (habilidadeNome.equals("NORMALARROW")) {
-            p.launchProjectile(org.bukkit.entity.Arrow.class);
-            p.playSound(p.getLocation(), Sound.ENTITY_ARROW_SHOOT, 1f, 1f);
-            return;
-        }
+        if (habilidadeNome.equals("NORMALARROW")) return;
 
         // Flecha especial (explosiva)
         Ability ability = abilityMap.get(habilidadeNome);
         if (ability != null) {
             if (ability.canCast(archer)) {
+                e.setCancelled(true); // Cancela apenas quando é uma habilidade especial
                 ability.cast(archer);
             } else {
+                e.setCancelled(true);
                 sendCooldownMessage(p, ability);
             }
         }
@@ -115,7 +111,7 @@ public class ArchListener implements Listener {
     private String formatName(String nome) {
         return switch (nome) {
             case "EXPLOSIVEARROW" -> "Flechas explosivas";
-            //case "" -> "";
+            case "NORMALARROW" -> "Flechas Normais";
             default -> nome;
         };
     }
