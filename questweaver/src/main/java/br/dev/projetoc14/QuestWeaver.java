@@ -3,6 +3,7 @@ package br.dev.projetoc14;
 import br.dev.projetoc14.commands.HelpCommand;
 import br.dev.projetoc14.commands.QuestsCommand;
 import br.dev.projetoc14.items.SkillTree;
+import br.dev.projetoc14.player.abilities.warriorSkills.CrimsonBladeListener;
 import br.dev.projetoc14.player.listeners.*;
 import br.dev.projetoc14.player.abilities.archerSkills.ArchListener;
 import br.dev.projetoc14.player.abilities.assassinSkills.AbilityListener;
@@ -33,8 +34,6 @@ import java.util.UUID;
 public final class QuestWeaver extends JavaPlugin {
 
     private PlayerStatsManager statsManager;
-    private PlayerDataManager dataManager;
-    private QuestManager questManager;
     private QuestBook questBook;
     private static FileConfiguration config;
     private static Plugin instance;
@@ -55,11 +54,11 @@ public final class QuestWeaver extends JavaPlugin {
         config = getConfig();
 
         // Inicializa PlayerStatsManager e PlayerDataManager
-        this.dataManager = new PlayerDataManager(this);
+        PlayerDataManager dataManager = new PlayerDataManager(this);
         this.statsManager = new PlayerStatsManager();
-        this.questManager = new QuestManager();
+        QuestManager questManager = new QuestManager();
         this.questBook = new QuestBook(questManager);
-        this.questManager = new QuestManager();
+        questManager = new QuestManager();
 
 
         // player join & disconnect listener
@@ -95,6 +94,10 @@ public final class QuestWeaver extends JavaPlugin {
         // Magic Wand Listener (Habilidades de Mago)
         MagicWandListener magicWandListener = new MagicWandListener(this);
         getServer().getPluginManager().registerEvents(magicWandListener, this);
+
+        // Crimson Blade Listener (Habilidades de Guerreiro)
+        CrimsonBladeListener crimsonBladeListener = new CrimsonBladeListener(this);
+        getServer().getPluginManager().registerEvents(crimsonBladeListener, this);
 
         // No Hunger & No Durability
         getServer().getPluginManager().registerEvents(new HungerDurabilityListener(), this);

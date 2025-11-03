@@ -7,13 +7,17 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.plugin.Plugin;
 
 public class ExplosiveArrow extends Ability {
 
     private final int damage = 20;
+    private final Plugin plugin;
 
-    public ExplosiveArrow() {
+    public ExplosiveArrow(Plugin plugin) {
         super("Flecha Explosiva", 15, 6);
+        this.plugin = plugin;
     }
 
     @Override
@@ -23,6 +27,9 @@ public class ExplosiveArrow extends Ability {
         arrow.setCritical(true);
         arrow.setVelocity(arrow.getVelocity().multiply(1.5));
 
+        arrow.setMetadata("explosive_arrow", new FixedMetadataValue(plugin, true));
+        arrow.setMetadata("explosive_arrow_shooter", new FixedMetadataValue(plugin, caster.getUniqueId()));
+
         caster.getWorld().playSound(loc, Sound.ENTITY_ARROW_SHOOT, 1f, 1.2f);
         caster.getWorld().spawnParticle(Particle.CRIT, loc, 10, 0.2, 0.2, 0.2, 0.01);
 
@@ -30,11 +37,22 @@ public class ExplosiveArrow extends Ability {
     }
 
     public void onHit(ProjectileHitEvent event, RPGPlayer caster, RPGPlayer target) {
-        if (target == null) return;
-        int newHealth = target.getCurrentHealth() - damage;
-        if (newHealth < 0) newHealth = 0;
-        target.setCurrentHealth(newHealth);
-        target.getWorld().createExplosion(target.getEyeLocation(), 0.0F); // efeito visual, sem dano em blocos
+        if (!(event.getEntity() instanceof Arrow arrow)) return;
+
+        Location hitLoc = arrow.getLocation();
+
+        // Efeitos visuais e sonoros
+        hitLoc.getWorld().spawnParticle(Particle.EXPLOSION, hitLoc, 1);
+        hitLoc.getWorld().spawnParticle(Particle.FLAME, hitLoc, 20, 1, 1, 1, 0.05);
+        hitLoc.getWorld().playSound(hitLoc, Sound.ENTITY_GENERIC_EXPLODE, 1.2f, 1.0f);
+
+        // Dano direto no alvo, se houver
+        if (target != null) {
+            int newHealth = target.getCurrentHealth() - damage;
+            if (newHealth < 0) newHealth = 0;
+            target.setCurrentHealth(newHealth);
+        }
+        arrow.remove();
     }
 
     public int getDamage() {
