@@ -13,7 +13,7 @@ import java.util.List;
 
 public class PowerCharge extends Ability {
 
-    private final QuestWeaver plugin; // referência ao plugin principal
+    private final QuestWeaver plugin;
 
     public PowerCharge(QuestWeaver plugin) {
         super("Investida Poderosa", 12, 8); // nome, custo de mana, cooldown (segundos)
