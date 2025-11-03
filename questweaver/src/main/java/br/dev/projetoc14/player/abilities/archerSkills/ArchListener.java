@@ -7,11 +7,15 @@ import br.dev.projetoc14.player.abilities.AbilityUtil;
 import br.dev.projetoc14.player.classes.ArcherPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -27,7 +31,7 @@ public class ArchListener implements Listener {
 
     public ArchListener(QuestWeaver plugin) {
         this.plugin = plugin;
-        abilityMap.put("EXPLOSIVEARROW", new ExplosiveArrow());
+        abilityMap.put("EXPLOSIVEARROW", new ExplosiveArrow(plugin));
         // NORMALARROW é disparo padrão, então não requer instância
     }
 
@@ -63,6 +67,40 @@ public class ArchListener implements Listener {
         }
 
         AbilityUtil.executeAbility(p, e, abilityIndex, abilities, abilityMap, archer);
+    }
+
+    @EventHandler
+    public void onProjectileHit(ProjectileHitEvent event) {
+        if (!(event.getEntity() instanceof Arrow arrow)) return;
+
+        // Verificar se a flecha tem a metadata de explosiva
+        if (!arrow.hasMetadata("explosive_arrow")) return;
+
+        // Obter o atirador
+        UUID shooterUUID = null;
+        if (arrow.hasMetadata("explosive_arrow_shooter")) {
+            shooterUUID = (UUID) arrow.getMetadata("explosive_arrow_shooter").get(0).value();
+        }
+
+        if (shooterUUID == null) return;
+
+        Player shooter = Bukkit.getPlayer(shooterUUID);
+        if (shooter == null) return;
+
+        RPGPlayer rpgShooter = plugin.getRPGPlayer(shooter);
+
+        // Verificar se acertou um jogador
+        RPGPlayer target = null;
+        Entity hitEntity = event.getHitEntity();
+        if (hitEntity instanceof Player hitPlayer) {
+            target = plugin.getRPGPlayer(hitPlayer);
+        }
+
+        // Obter a instância da habilidade ExplosiveArrow e executar o efeito
+        Ability ability = abilityMap.get("EXPLOSIVEARROW");
+        if (ability instanceof ExplosiveArrow explosiveArrow) {
+            explosiveArrow.onHit(event, rpgShooter, target);
+        }
     }
 
     private ArcherPlayer getArcherPlayer(Player p) {

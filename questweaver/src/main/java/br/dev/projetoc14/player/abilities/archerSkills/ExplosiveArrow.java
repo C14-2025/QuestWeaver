@@ -7,13 +7,17 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.plugin.Plugin;
 
 public class ExplosiveArrow extends Ability {
 
     private final int damage = 20;
+    private final Plugin plugin;
 
-    public ExplosiveArrow() {
+    public ExplosiveArrow(Plugin plugin) {
         super("Flecha Explosiva", 15, 6);
+        this.plugin = plugin;
     }
 
     @Override
@@ -22,6 +26,9 @@ public class ExplosiveArrow extends Ability {
         Arrow arrow = caster.launchProjectile(Arrow.class);
         arrow.setCritical(true);
         arrow.setVelocity(arrow.getVelocity().multiply(1.5));
+
+        arrow.setMetadata("explosive_arrow", new FixedMetadataValue(plugin, true));
+        arrow.setMetadata("explosive_arrow_shooter", new FixedMetadataValue(plugin, caster.getUniqueId()));
 
         caster.getWorld().playSound(loc, Sound.ENTITY_ARROW_SHOOT, 1f, 1.2f);
         caster.getWorld().spawnParticle(Particle.CRIT, loc, 10, 0.2, 0.2, 0.2, 0.01);
