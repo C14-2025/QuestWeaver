@@ -40,6 +40,14 @@ public abstract class RPGPlayer {
     protected int maxMana;
     protected int currentMana;
 
+    private PlayerStatsManager statsManager; // pode ser null inicialmente
+
+    // Setter para os stats
+    public void setStatsManager(PlayerStatsManager manager) {
+        this.statsManager = manager;
+    }
+
+
     public RPGPlayer(Player player, PlayerClass playerClass, int level, int experience, PlayerStats stats) {
         this.player = player;
         this.playerClass = playerClass;
@@ -157,8 +165,14 @@ public abstract class RPGPlayer {
     }
 
     public int getCurrentMana() { return currentMana; }
+
     public void setCurrentMana(int currentMana) {
         this.currentMana = Math.max(0, Math.min(currentMana, this.maxMana));
+
+        // Atualiza a BossBar se o statsManager estiver setado
+        if (statsManager != null) {
+            statsManager.updateManaBar(player);
+        }
     }
 
     public void restoreMana(int amount) {
@@ -166,11 +180,6 @@ public abstract class RPGPlayer {
         setCurrentMana(newMana);
 
         player.sendMessage("§b✨ +§l" + amount + " Mana");
-    }
-
-    public void consumeMana(int amount) {
-        int newMana = this.currentMana - amount;
-        setCurrentMana(newMana);
     }
 
     public boolean hasMana(int amount) {
