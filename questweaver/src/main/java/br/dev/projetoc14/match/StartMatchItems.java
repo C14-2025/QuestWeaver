@@ -18,42 +18,38 @@ public class StartMatchItems {
     public StartMatchItems(PlayerFileManager fileManager, PlayerStatsManager statsManager, QuestWeaver plugin) {
         this.fileManager = fileManager;
         this.statsManager = statsManager;
-        this.plugin = plugin; // Salva a referência
+        this.plugin = plugin;
     }
 
     public void setItems(Player player) {
-        RPGPlayer rpgPlayer = null;
+        RPGPlayer rpgPlayer;
 
         // 1. Instancia o objeto RPGPlayer
         switch(fileManager.getPlayerClassName(player))
         {
-            case "Mago" -> {
-                rpgPlayer = new MagePlayer(player);
-            }
-            case "Arqueiro" -> {
-                rpgPlayer = new ArcherPlayer(player);
-            }
-            case "Guerreiro" -> {
-                rpgPlayer = new WarriorPlayer(player);
-            }
-            case "Assassino" -> {
-                rpgPlayer = new AssassinPlayer(player);
-            }
+            case "Mago" -> rpgPlayer = new MagePlayer(player);
+            case "Arqueiro" -> rpgPlayer = new ArcherPlayer(player);
+            case "Guerreiro" -> rpgPlayer = new WarriorPlayer(player);
+            case "Assassino" -> rpgPlayer = new AssassinPlayer(player);
             default -> {
                 player.sendMessage("§cErro: Sua classe não foi reconhecida. Contate um administrador.");
                 return;
             }
         }
 
-        // 2. Verifica e registra o jogador
-        if (rpgPlayer != null) {
-            plugin.addRPGPlayer(player.getUniqueId(), rpgPlayer);
+        // 2. Verifica e configura o jogador
+        rpgPlayer.setStatsManager(statsManager);
 
-            // 3. Aplica as Stats e Itens
-            statsManager.setStats(player, rpgPlayer.getStats());
-            statsManager.applyStats(player);
-            statsManager.createManaBar(player);
-            rpgPlayer.getStartingEquipment();
-        }
+        // Registra o jogador no plugin
+        plugin.addRPGPlayer(player.getUniqueId(), rpgPlayer);
+
+        // 3. Aplica as Stats e Itens
+        statsManager.setStats(player, rpgPlayer.getStats());
+        statsManager.applyStats(player);
+        statsManager.createManaBar(player);
+        rpgPlayer.getStartingEquipment();
+
+        // ✅ Feedback para o jogador
+        player.sendMessage("§a✔ Classe carregada: §e" + fileManager.getPlayerClassName(player));
     }
 }
