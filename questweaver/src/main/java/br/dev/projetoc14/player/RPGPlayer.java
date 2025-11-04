@@ -28,12 +28,18 @@ public abstract class RPGPlayer {
 
     private PlayerStatsManager statsManager;
 
+    // 🔹 Novo campo para testes e controle interno
+    private int currentHealth;
+
     public RPGPlayer(Player player, PlayerClass playerClass, int level, int experience, PlayerStats stats) {
         this.player = player;
         this.playerClass = playerClass;
         this.level = level;
         this.experience = experience;
         this.stats = stats != null ? stats : new PlayerStats();
+
+        // Inicializa HP atual no máximo
+        this.currentHealth = this.stats.getHealth();
 
         initializeClass();
     }
@@ -54,42 +60,7 @@ public abstract class RPGPlayer {
     public abstract void levelUp();
     public abstract void getStartingEquipment();
 
-    protected ItemStack createQuestBook() {
-        ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
-        BookMeta meta = (BookMeta) book.getItemMeta();
-
-        TextColor classColor = getClassColor();
-        meta.title(Component.text("Livro de Quests")
-                .color(classColor)
-                .decoration(TextDecoration.BOLD, true));
-        meta.author(Component.text("QuestWeaver"));
-
-        Component firstPage = Component.text()
-                .append(Component.text("📖 Livro de Quests\n\n")
-                        .decoration(TextDecoration.BOLD, true)
-                        .color(classColor))
-                .append(Component.text("Clique com botão\ndireito para ver\nsuas quests!\n\n")
-                        .color(TextColor.color(0xAAAAAA)))
-                .append(Component.text("Ou use:\n")
-                        .color(TextColor.color(0xAAAAAA)))
-                .append(Component.text("/quests")
-                        .color(TextColor.color(0x5555FF))
-                        .decoration(TextDecoration.UNDERLINED, true))
-                .build();
-
-        meta.pages(List.of(firstPage));
-        book.setItemMeta(meta);
-        return book;
-    }
-
-    private TextColor getClassColor() {
-        return switch(playerClass) {
-            case WARRIOR -> TextColor.color(0xFF5555);
-            case MAGE -> TextColor.color(0x5555FF);
-            case ARCHER -> TextColor.color(0x55FF55);
-            case ASSASSIN -> TextColor.color(0x555555);
-        };
-    }
+    // ==== HP e Mana ==== //
 
     public int getMaxHealth() {
         return stats.getHealth();
@@ -97,24 +68,32 @@ public abstract class RPGPlayer {
 
     public void setMaxHealth(int maxHealth) {
         stats.setHealth(maxHealth);
-        // Atualiza no player do Minecraft também
+        if (currentHealth > maxHealth) {
+            currentHealth = maxHealth;
+        }
         if (statsManager != null) {
             statsManager.applyStats(player);
         }
     }
 
+    // ✅ Agora usa o campo interno
     public int getCurrentHealth() {
-        return (int) player.getHealth();
+        return currentHealth;
     }
 
     public void setCurrentHealth(int currentHealth) {
-        double newHealth = Math.max(0, Math.min(currentHealth, getMaxHealth()));
-        player.setHealth(newHealth);
+        int newHealth = Math.max(0, Math.min(currentHealth, getMaxHealth()));
+        this.currentHealth = newHealth;
+        player.setHealth(newHealth); // sincroniza com Bukkit
     }
 
     public void heal(int amount) {
         int newHealth = getCurrentHealth() + amount;
         setCurrentHealth(newHealth);
+
+        if (statsManager != null){
+            statsManager.applyStats(player);
+        }
 
         player.sendMessage("§a💚 +§l" + amount + " HP");
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 2f);
@@ -129,7 +108,7 @@ public abstract class RPGPlayer {
     }
 
     public boolean isAlive() {
-        return player.getHealth() > 0;
+        return currentHealth > 0;
     }
 
     public int getMaxMana() {
@@ -138,7 +117,6 @@ public abstract class RPGPlayer {
 
     public void setMaxMana(int maxMana) {
         stats.setMana(maxMana);
-        // Garante que a mana atual não exceda o novo máximo
         if (stats.getCurrentMana() > maxMana) {
             stats.setCurrentMana(maxMana);
         }
@@ -175,6 +153,44 @@ public abstract class RPGPlayer {
     public void addExperience(int exp) {
         this.experience += exp;
         // Lógica de level up pode ser adicionada aqui
+    }
+
+    // ==== Utilitários ==== //
+    protected ItemStack createQuestBook() {
+        ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
+        BookMeta meta = (BookMeta) book.getItemMeta();
+
+        TextColor classColor = getClassColor();
+        meta.title(Component.text("Livro de Quests")
+                .color(classColor)
+                .decoration(TextDecoration.BOLD, true));
+        meta.author(Component.text("QuestWeaver"));
+
+        Component firstPage = Component.text()
+                .append(Component.text("📖 Livro de Quests\n\n")
+                        .decoration(TextDecoration.BOLD, true)
+                        .color(classColor))
+                .append(Component.text("Clique com botão\ndireito para ver\nsuas quests!\n\n")
+                        .color(TextColor.color(0xAAAAAA)))
+                .append(Component.text("Ou use:\n")
+                        .color(TextColor.color(0xAAAAAA)))
+                .append(Component.text("/quests")
+                        .color(TextColor.color(0x5555FF))
+                        .decoration(TextDecoration.UNDERLINED, true))
+                .build();
+
+        meta.pages(List.of(firstPage));
+        book.setItemMeta(meta);
+        return book;
+    }
+
+    private TextColor getClassColor() {
+        return switch(playerClass) {
+            case WARRIOR -> TextColor.color(0xFF5555);
+            case MAGE -> TextColor.color(0x5555FF);
+            case ARCHER -> TextColor.color(0x55FF55);
+            case ASSASSIN -> TextColor.color(0x555555);
+        };
     }
 
     // ==== Delegadores do Bukkit Player ==== //
