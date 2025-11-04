@@ -24,7 +24,9 @@ public class ClassReadyManager {
     private void checkAllPlayersReady() {
         Set<Player> onlinePlayers = new HashSet<>(Bukkit.getOnlinePlayers());
 
-        if (!onlinePlayers.isEmpty() && playersReady.containsAll(onlinePlayers)) {
+        // if(onlinePlayers.size() < 2) return; todo: habilitar somente quando em produção
+
+        if (playersReady.containsAll(onlinePlayers)) {
             // Todos prontos, iniciar a partida
             StartMatch match = new StartMatch(plugin.getPlayerFileManager(), plugin.getStatsManager(), plugin);
             match.execute();

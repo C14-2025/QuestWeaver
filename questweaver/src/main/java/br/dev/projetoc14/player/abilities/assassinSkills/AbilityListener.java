@@ -21,13 +21,14 @@ import java.util.*;
 public class AbilityListener implements Listener {
     private final QuestWeaver plugin;
     private final Map<UUID, Integer> abilityIndex = new HashMap<>();
-    private final List<String> abilities = List.of("ShadowMove");
+    private final List<String> abilities = List.of("ShadowMove", "VampireKnives");
 
     private final Map<String, Ability> abilityMap = new HashMap<>();
 
     public AbilityListener(QuestWeaver plugin) {
         this.plugin = plugin;
         abilityMap.put("ShadowMove", new ShadowMove());
+        abilityMap.put("VampireKnives", new VampireKnives());
     }
 
     @EventHandler
@@ -50,18 +51,27 @@ public class AbilityListener implements Listener {
         Player p = e.getPlayer();
         Action a = e.getAction();
 
+        // só reage a clique direito
         if (a != Action.RIGHT_CLICK_AIR && a != Action.RIGHT_CLICK_BLOCK) return;
-        if (!isPotion(p.getInventory().getItemInMainHand())) return;
+
+        // verifica se o item é uma poção OU uma espada
+        ItemStack item = p.getInventory().getItemInMainHand();
+        if (!isPotion(item) && !isSword(item)) return;
+
+        // evita ativar enquanto agachado (shift)
         if (p.isSneaking()) return;
 
+        // só assassinos podem usar
         AssassinPlayer assassin = getAssassinPlayer(p);
         if (assassin == null) {
-            p.sendActionBar(NamedTextColor.RED + "❌ Apenas assassinos podem usar esta poção!");
+            p.sendActionBar(NamedTextColor.RED + "❌ Apenas assassinos podem usar esta habilidade!");
             return;
         }
 
+        // executa a habilidade ativa
         AbilityUtil.executeAbility(p, e, abilityIndex, abilities, abilityMap, assassin);
     }
+
 
     private AssassinPlayer getAssassinPlayer(Player p) {
         RPGPlayer rpgPlayer = plugin.getRPGPlayer(p);
@@ -79,6 +89,18 @@ public class AbilityListener implements Listener {
         String displayName = PlainTextComponentSerializer.plainText()
                 .serialize(Objects.requireNonNull(meta.displayName()));
         return displayName.equalsIgnoreCase("Poção das Sombras");
+    }
+
+    private boolean isSword(ItemStack item) {
+        if (item == null || item.getType() != Material.IRON_SWORD) return false;
+        if (!item.hasItemMeta()) return false;
+
+        ItemMeta meta = item.getItemMeta();
+        if (meta.displayName() == null) return false;
+
+        String displayName = PlainTextComponentSerializer.plainText()
+                .serialize(Objects.requireNonNull(meta.displayName()));
+        return displayName.equalsIgnoreCase("Iron Sword");
     }
 
     public String formatName(String nome) {
