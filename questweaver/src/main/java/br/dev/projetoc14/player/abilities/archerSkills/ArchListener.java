@@ -66,6 +66,14 @@ public class ArchListener implements Listener {
             return;
         }
 
+        // Obtém qual habilidade está selecionada
+        String currentAbility = abilities.get(abilityIndex.getOrDefault(p.getUniqueId(), 0));
+
+        // Se for flecha normal, deixa o Minecraft cuidar do disparo padrão
+        if (currentAbility.equalsIgnoreCase("NORMALARROW")) {
+            return;
+        }
+
         AbilityUtil.executeAbility(p, e, abilityIndex, abilities, abilityMap, archer);
     }
 
