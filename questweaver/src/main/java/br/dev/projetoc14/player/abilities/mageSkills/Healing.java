@@ -6,7 +6,7 @@ import br.dev.projetoc14.player.abilities.Ability;
 public class Healing extends Ability {
 
     public Healing() {
-        super("Cura", 15, 3); // nome, custo de mana, cooldown
+        super("Cura", 15, 10); // nome, custo de mana, cooldown
     }
 
     @Override

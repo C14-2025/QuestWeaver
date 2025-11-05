@@ -11,7 +11,7 @@ public class Fireball extends Ability {
     private final int damage = 25;
 
     public Fireball() {
-        super("Bola de Fogo", 20, 5); // nome, custo de mana, cooldown em segundos
+        super("Bola de Fogo", 15, 5); // nome, custo de mana, cooldown em segundos
     }
 
     @Override
@@ -26,7 +26,6 @@ public class Fireball extends Ability {
         caster.getWorld().playSound(loc, Sound.ENTITY_BLAZE_SHOOT, 1f, 1f);
         caster.getWorld().spawnParticle(Particle.FLAME, loc, 20, 0.3, 0.3, 0.3, 0.01);
 
-        caster.sendMessage("🔥 Você lançou uma Bola de Fogo!");
     }
 
     public String getName() {
