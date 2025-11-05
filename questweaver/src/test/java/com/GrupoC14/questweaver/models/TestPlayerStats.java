@@ -22,17 +22,16 @@ public class TestPlayerStats {
     public void testDefaultStats() {
         assertEquals(1, stats.getStrength());
         assertEquals(0, stats.getDefense());
-        assertEquals(10, stats.getAgility());
-        assertEquals(10, stats.getIntelligence());
+        assertEquals(1, stats.getAgility());
+        assertEquals(1, stats.getIntelligence());
         assertEquals(20, stats.getHealth());
-        assertEquals(40, stats.getMana());
-        assertEquals(20, stats.getCurrentHealth());
-        assertEquals(40, stats.getCurrentMana());
+        assertEquals(20, stats.getMana());
+        assertEquals(20, stats.getCurrentMana());
     }
 
+    // ✅ Teste do construtor customizado
     @Test
     public void testPlayerConstructor() {
-
         PlayerStats customStats = new PlayerStats(15, 12, 8, 5, 120, 30);
 
         assertEquals(15, customStats.getStrength());
@@ -43,72 +42,103 @@ public class TestPlayerStats {
         assertEquals(30, customStats.getMana());
     }
 
-    // Teste para o sistema de vida implementado com MOCK
-    @Test
-    public void testHealthManagement() {
-        PlayerStats mockStats = Mockito.mock(PlayerStats.class);
-        when(mockStats.getHealth()).thenReturn(150);
-        when(mockStats.getCurrentHealth())
-                .thenReturn(150)  // após setHealth
-                .thenReturn(120)  // após damage(30)
-                .thenReturn(140)  // após heal(20)
-                .thenReturn(150); // após heal(50)
+    // REMOVIDO testHealthManagement()
+    // Motivo: A gestão de vida agora é responsabilidade do RPGPlayer, não do PlayerStats
 
-        when(mockStats.isAlive())
-                .thenReturn(true)  // após setHealth
-                .thenReturn(true)  // após damage(30)
-                .thenReturn(true)  // após heal(20)
-                .thenReturn(true); // após heal(50)
-
-        // ---------- Testes usando o mock ---------- //
-
-        assertEquals(150, mockStats.getHealth());
-        assertEquals(150, mockStats.getCurrentHealth());
-        assertTrue(mockStats.isAlive());
-
-        // Simula dano
-        assertEquals(120, mockStats.getCurrentHealth());
-        assertTrue(mockStats.isAlive());
-
-        // Simula cura
-        assertEquals(140, mockStats.getCurrentHealth());
-        assertTrue(mockStats.isAlive());
-
-        // Simula cura acima do limite
-        assertEquals(150, mockStats.getCurrentHealth());
-    }
-
-    // Teste de player vivo
-    @Test
-    public void testIsAlive() {
-        // Testa se está vivo
-        assertTrue(stats.isAlive());
-
-        stats.damage(20); // Remove toda a vida (era 100, agora é 20)
-        assertFalse(stats.isAlive());
-
-        stats.heal(1); // Recupera 1 de vida
-        assertTrue(stats.isAlive());
-    }
+    // REMOVIDO testIsAlive()
+    // Motivo: isAlive() agora está no RPGPlayer, não no PlayerStats
 
     // Teste de mana do player stats
-
     @Test
     public void testManaManagement() {
         stats.setMana(100); // Mana máxima
-        stats.fullRestore();
+        stats.fullRestoreMana(); // ⚠️ Nome do método mudou
+        assertEquals(100, stats.getCurrentMana());
+
         stats.useMana(80);
         assertEquals(20, stats.getCurrentMana());
+
+        // Testa se não pode usar mais mana do que tem
+        stats.useMana(30);
+        assertEquals(0, stats.getCurrentMana());
+
+        // Testa hasMana
+        assertFalse(stats.hasMana(10));
+
+        // Restaura mana e testa novamente
+        stats.restoreMana(50);
+        assertEquals(50, stats.getCurrentMana());
+        assertTrue(stats.hasMana(10));
     }
 
     // Testes para cálculo de dano físico
-
     @Test
     public void testCalculateDamage() {
-
+        // Strength padrão = 1, então dano físico = 1 * 2 = 2
         assertEquals(2, stats.calculatePhysicalDamage());
-        assertEquals(30, stats.calculateMagicalDamage());
-        int reducedDAMAGE = stats.calculateDamageReduction(15);
-        assertEquals(15, reducedDAMAGE);
+
+        // Intelligence padrão = 1, então dano mágico = 1 * 3 = 3 (não 30!)
+        assertEquals(3, stats.calculateMagicalDamage()); // ⚠️ CORRIGIDO
+
+        // Defense padrão = 0, então redução = 0/2 = 0
+        // Dano 15 - 0 = 15
+        int reducedDamage = stats.calculateDamageReduction(15);
+        assertEquals(15, reducedDamage);
+    }
+
+    // Teste de redução de dano com defesa
+    @Test
+    public void testDamageReductionWithDefense() {
+        stats.setDefense(10); // Defense = 10, redução = 10/2 = 5
+
+        int reducedDamage = stats.calculateDamageReduction(20);
+        assertEquals(15, reducedDamage); // 20 - 5 = 15
+
+        // Testa que sempre causa pelo menos 1 de dano
+        reducedDamage = stats.calculateDamageReduction(3);
+        assertEquals(1, reducedDamage); // Mínimo de 1
+    }
+
+    // Teste de cálculo de dano com stats customizados
+    @Test
+    public void testCustomStatsDamage() {
+        stats.setStrength(10);
+        stats.setIntelligence(15);
+
+        assertEquals(20, stats.calculatePhysicalDamage()); // 10 * 2
+        assertEquals(45, stats.calculateMagicalDamage());  // 15 * 3
+    }
+
+    // Teste de porcentagem de mana
+    @Test
+    public void testManaPercentage() {
+        stats.setMana(100);
+        stats.fullRestoreMana();
+        assertEquals(1.0, stats.getManaPercentage(), 0.01);
+
+        stats.useMana(50);
+        assertEquals(0.5, stats.getManaPercentage(), 0.01);
+
+        stats.useMana(50);
+        assertEquals(0.0, stats.getManaPercentage(), 0.01);
+    }
+
+    // Teste de setters com validação
+    @Test
+    public void testSettersValidation() {
+        // Testa se setMana ajusta currentMana se necessário
+        stats.setMana(100);
+        stats.fullRestoreMana();
+        assertEquals(100, stats.getCurrentMana());
+
+        stats.setMana(50); // Reduz mana máxima
+        assertEquals(50, stats.getCurrentMana()); // currentMana deve ser ajustada
+    }
+
+    // Teste do método toString
+    @Test
+    public void testToString() {
+        String expected = "PlayerStats{strength=1, defense=0, agility=1, intelligence=1, maxHealth=20, mana=20/20}";
+        assertEquals(expected, stats.toString());
     }
 }

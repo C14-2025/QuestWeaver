@@ -8,9 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.util.List;
 
@@ -22,7 +20,7 @@ public class ArcherPlayer extends RPGPlayer {
 
     @Override
     protected void initializeClass() {
-        // Stats iniciais do arqueiro
+        // Atributos iniciais do Arqueiro
         stats.setStrength(1);
         stats.setAgility(1);
         stats.setIntelligence(7);
@@ -37,54 +35,21 @@ public class ArcherPlayer extends RPGPlayer {
         stats.setStrength(stats.getStrength() + 2);
         stats.setHealth(stats.getHealth() + 10);
         stats.setMana(stats.getMana() + 5);
-        player.sendMessage(ChatColor.GREEN + "🏹 Arqueiro subiu para o nível " + level + "!");
+        refreshHealth();
+        player.sendMessage(ChatColor.GREEN + "🏹 Arqueiro subiu para o nível " + ChatColor.GOLD + level + ChatColor.GREEN + "!");
     }
 
     @Override
     public void getStartingEquipment() {
-        PlayerInventory inv = this.getPlayer().getInventory();
+        // Cria o arco mágico
+        ItemStack magicBow = createMagicBow();
 
-        // Cria e adiciona o arco mágico
-        inv.addItem(createMagicBow());
-        inv.addItem(new ItemStack(Material.ARROW, 10));
-
-        // Cor verde para o arqueiro
-        Color archerColor = Color.fromRGB(0, 150, 0); // Verde floresta
-
-        // Capacete
-        ItemStack helmet = new ItemStack(Material.LEATHER_HELMET);
-        LeatherArmorMeta helmetMeta = (LeatherArmorMeta) helmet.getItemMeta();
-        helmetMeta.setColor(archerColor);
-        helmet.setItemMeta(helmetMeta);
-
-        // Peitoral
-        ItemStack chest = new ItemStack(Material.LEATHER_CHESTPLATE);
-        LeatherArmorMeta chestMeta = (LeatherArmorMeta) chest.getItemMeta();
-        chestMeta.setColor(archerColor);
-        chest.setItemMeta(chestMeta);
-
-        // Calças
-        ItemStack legs = new ItemStack(Material.LEATHER_LEGGINGS);
-        LeatherArmorMeta legsMeta = (LeatherArmorMeta) legs.getItemMeta();
-        legsMeta.setColor(archerColor);
-        legs.setItemMeta(legsMeta);
-
-        // Botas
-        ItemStack boots = new ItemStack(Material.LEATHER_BOOTS);
-        LeatherArmorMeta bootsMeta = (LeatherArmorMeta) boots.getItemMeta();
-        bootsMeta.setColor(archerColor);
-        boots.setItemMeta(bootsMeta);
-
-        // Equipa o jogador
-        inv.setHelmet(helmet);
-        inv.setChestplate(chest);
-        inv.setLeggings(legs);
-        inv.setBoots(boots);
-
-        // Livro de quests
-        inv.addItem(createQuestBook());
+        ClassUtil.equipPlayer(this, magicBow, Color.fromRGB(0, 150, 0)); // Verde floresta
+        // Adiciona flechas iniciais
+        player.getInventory().addItem(new ItemStack(Material.ARROW, 16));
     }
 
+    // Arco mágico do arqueiro com habilidades especiais
     private ItemStack createMagicBow() {
         ItemStack bow = new ItemStack(Material.BOW, 1);
         ItemMeta meta = bow.getItemMeta();
