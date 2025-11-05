@@ -55,7 +55,7 @@ public abstract class RPGPlayer {
         this.currentHealth = this.stats.getHealth();
     }
 
-    public RPGPlayer get(Player p) {
+    public RPGPlayer get() {
         return this;
     }
 
@@ -66,56 +66,6 @@ public abstract class RPGPlayer {
     protected abstract void initializeClass();
     public abstract void levelUp();
     public abstract void getStartingEquipment();
-
-    // ==== HP e Mana ==== //
-
-    public int getMaxHealth() {
-        return stats.getHealth();
-    }
-
-    public void setMaxHealth(int maxHealth) {
-        stats.setHealth(maxHealth);
-        if (currentHealth > maxHealth) {
-            currentHealth = maxHealth;
-        }
-        if (statsManager != null) {
-            statsManager.applyStats(player);
-        }
-    }
-
-    public int getCurrentHealth() {
-        return currentHealth;
-    }
-
-    public void setCurrentHealth(int currentHealth) {
-        int newHealth = Math.max(0, Math.min(currentHealth, getMaxHealth()));
-        this.currentHealth = newHealth;
-        player.setHealth(newHealth); // sincroniza com Bukkit
-    }
-
-    public void heal(int amount) {
-        int newHealth = getCurrentHealth() + amount;
-        setCurrentHealth(newHealth);
-
-        if (statsManager != null){
-            statsManager.applyStats(player);
-        }
-
-        player.sendMessage("§a💚 +§l" + amount + " HP");
-        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 2f);
-    }
-
-    public void damage(int amount) {
-        int newHealth = getCurrentHealth() - amount;
-        setCurrentHealth(newHealth);
-
-        player.sendMessage("§c❤ -§l" + amount + " HP");
-        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_HURT, 1f, 1f);
-    }
-
-    public boolean isAlive() {
-        return currentHealth > 0;
-    }
 
     public int getMaxMana() {
         return stats.getMana();
@@ -224,19 +174,75 @@ public abstract class RPGPlayer {
     public int getExperience() { return experience; }
     public PlayerStats getStats() { return stats; }
 
-    public void setHealth(int health) {
-        setCurrentHealth(health);
+    public int getMaxHealth() {
+        return stats.getHealth();
+    }
+
+    public void setMaxHealth(int maxHealth) {
+        stats.setHealth(maxHealth);
+        if (currentHealth > maxHealth) {
+            currentHealth = maxHealth;
+        }
+        syncHealthWithBukkit();
+    }
+
+    public int getCurrentHealth() {
+        return currentHealth;
+    }
+
+    public void setCurrentHealth(int currentHealth) {
+        this.currentHealth = Math.max(0, Math.min(currentHealth, getMaxHealth()));
+
+        // Sincroniza com o Bukkit de forma proporcional
+        syncHealthWithBukkit();
+    }
+
+    public void heal(int amount) {
+        int newHealth = getCurrentHealth() + amount;
+        setCurrentHealth(newHealth);
+
+        player.sendMessage("§a💚 +§l" + amount + " HP");
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 2f);
+    }
+
+    public void damage(int amount) {
+        int newHealth = getCurrentHealth() - amount;
+        setCurrentHealth(newHealth);
+
+        player.sendMessage("§c❤ -§l" + amount + " HP");
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_HURT, 1f, 1f);
+    }
+
+    public boolean isAlive() {
+        return currentHealth > 0;
+    }
+
+    /**
+     * Sincroniza a vida do RPGPlayer com a barra de vida visual do Bukkit
+     * Converte proporcionalmente: HP_RPG -> HP_Bukkit
+     */
+    private void syncHealthWithBukkit() {
+        if (getMaxHealth() <= 0) return; // Evita divisão por zero
+
+        double maxBukkitHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+        double percentage = (double) currentHealth / getMaxHealth();
+        double bukkitHealth = maxBukkitHealth * percentage;
+
+        // Define a vida visual do Bukkit
+        player.setHealth(Math.max(0.5, Math.min(bukkitHealth, maxBukkitHealth)));
     }
 
     public void refreshHealth() {
         int maxHealth = stats.getHealth();
 
         // 1. Define o máximo de vida do Bukkit
-        player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(maxHealth);
+        player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
 
-        // 2. Define a vida atual como máxima
-        player.setHealth(maxHealth);
+        // 2. Define a vida atual do RPG como máxima
         this.currentHealth = maxHealth;
+
+        // 3. Sincroniza com Bukkit
+        syncHealthWithBukkit();
 
         // 4. Garante fome e saturação
         player.setFoodLevel(20);
