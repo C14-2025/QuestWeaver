@@ -35,6 +35,7 @@ public class ArcherPlayer extends RPGPlayer {
         stats.setStrength(stats.getStrength() + 2);
         stats.setHealth(stats.getHealth() + 10);
         stats.setMana(stats.getMana() + 5);
+        refreshHealth();
         player.sendMessage(ChatColor.GREEN + "🏹 Arqueiro subiu para o nível " + ChatColor.GOLD + level + ChatColor.GREEN + "!");
     }
 

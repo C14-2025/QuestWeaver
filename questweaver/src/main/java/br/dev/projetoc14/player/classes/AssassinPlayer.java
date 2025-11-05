@@ -35,6 +35,7 @@ public class AssassinPlayer extends RPGPlayer {
         stats.setAgility(stats.getAgility() + 2);
         stats.setHealth(stats.getHealth() + 12);
         stats.setMana(stats.getMana() + 5);
+        refreshHealth();
         player.sendMessage(ChatColor.DARK_GRAY + "☠ O Assassino subiu para o nível " + ChatColor.LIGHT_PURPLE + level + ChatColor.DARK_GRAY + "!");
     }
 

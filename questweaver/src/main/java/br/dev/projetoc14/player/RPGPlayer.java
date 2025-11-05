@@ -26,10 +26,7 @@ public abstract class RPGPlayer {
     protected int experience;
     protected PlayerStats stats;
     protected List<Ability> abilities = new ArrayList<>();
-
     private PlayerStatsManager statsManager;
-
-    // 🔹 Novo campo para testes e controle interno
     private int currentHealth;
 
     public RPGPlayer(Player player, PlayerClass playerClass, int level, int experience, PlayerStats stats) {
@@ -39,14 +36,23 @@ public abstract class RPGPlayer {
         this.experience = experience;
         this.stats = stats != null ? stats : new PlayerStats();
 
+        initializeClass();
+
         // Inicializa HP atual no máximo
         this.currentHealth = this.stats.getHealth();
-
-        initializeClass();
     }
 
     public RPGPlayer(Player player, PlayerClass playerClass) {
-        this(player, playerClass, 1, 0, new PlayerStats());
+        this.player = player;
+        this.playerClass = playerClass;
+        this.level = 1;
+        this.experience = 0;
+        this.stats = new PlayerStats(); // Stats base temporário
+
+        // Necessário inicializar antes de setar a vida.
+        initializeClass();
+
+        this.currentHealth = this.stats.getHealth();
     }
 
     public RPGPlayer get(Player p) {
@@ -224,7 +230,18 @@ public abstract class RPGPlayer {
     }
 
     public void refreshHealth() {
-        player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(stats.getHealth());
-        player.setHealth(stats.getHealth());
+        int maxHealth = stats.getHealth();
+
+        // 1. Define o máximo de vida do Bukkit
+        player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(maxHealth);
+
+        // 2. Define a vida atual como máxima
+        player.setHealth(maxHealth);
+        this.currentHealth = maxHealth;
+
+        // 4. Garante fome e saturação
+        player.setFoodLevel(20);
+        player.setSaturation(20f);
+        player.setExhaustion(0f);
     }
 }

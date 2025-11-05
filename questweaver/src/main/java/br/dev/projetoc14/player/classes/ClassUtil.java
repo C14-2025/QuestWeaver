@@ -1,8 +1,12 @@
 package br.dev.projetoc14.player.classes;
 
+import br.dev.projetoc14.QuestWeaver;
 import br.dev.projetoc14.player.RPGPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -10,7 +14,11 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 public class ClassUtil {
 
     public static void equipPlayer(RPGPlayer rpgPlayer, ItemStack weapon, Color color) {
-        PlayerInventory inv = rpgPlayer.getPlayer().getInventory();
+        Player player = rpgPlayer.getPlayer();
+        PlayerInventory inv = player.getInventory();
+
+        // Limpa inventário antes de equipar
+        inv.clear();
 
         // Adiciona a arma principal
         inv.addItem(weapon);
@@ -21,11 +29,24 @@ public class ClassUtil {
         inv.setLeggings(coloredArmor(Material.LEATHER_LEGGINGS, color));
         inv.setBoots(coloredArmor(Material.LEATHER_BOOTS, color));
 
-        // Adiciona o livro de quests (precisa ser público no RPGPlayer)
+        // Adiciona o livro de quests
         inv.addItem(rpgPlayer.createQuestBook());
 
-        // Atualiza vida do jogador para cheia
-        rpgPlayer.refreshHealth();
+        // Atualiza vida com delay para garantir aplicação
+        Bukkit.getScheduler().runTaskLater(QuestWeaver.getInstance(), () -> {
+            // Define vida máxima do Bukkit
+            int maxHealth = rpgPlayer.getMaxHealth();
+            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(maxHealth);
+
+            // Define vida atual - cheia
+            player.setHealth(maxHealth);
+            rpgPlayer.setCurrentHealth(maxHealth);
+
+            // Garante fome e saturação
+            player.setFoodLevel(20);
+            player.setSaturation(20f);
+            player.setExhaustion(0f);
+        }, 2L); // 2 ticks de delay (0.1 segundo)
     }
 
     private static ItemStack coloredArmor(Material material, Color color) {

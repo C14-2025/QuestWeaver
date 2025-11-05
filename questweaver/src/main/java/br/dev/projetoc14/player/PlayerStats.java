@@ -1,4 +1,3 @@
-// PlayerStats.java
 package br.dev.projetoc14.player;
 
 public class PlayerStats {
@@ -8,18 +7,17 @@ public class PlayerStats {
     private int intelligence;  // Inteligência - afeta mana e dano mágico
     private int health;        // Vida máxima
     private int mana;          // Mana máxima
-    private int currentHealth; // Vida atual
     private int currentMana;   // Mana atual
 
+
     public PlayerStats() {
-        // Valores base
+        // Valores base MÍNIMOS (serão sobrescritos por initializeClass())
         this.strength = 1;
         this.defense = 0;
-        this.agility = 10;
-        this.intelligence = 10;
+        this.agility = 1;
+        this.intelligence = 1;
         this.health = 20;
-        this.mana = 40;
-        this.currentHealth = this.health;
+        this.mana = 20;
         this.currentMana = this.mana;
     }
 
@@ -31,7 +29,6 @@ public class PlayerStats {
         this.intelligence = intelligence;
         this.health = health;
         this.mana = mana;
-        this.currentHealth = health;
         this.currentMana = mana;
     }
 
@@ -60,10 +57,6 @@ public class PlayerStats {
         return mana;
     }
 
-    public int getCurrentHealth() {
-        return currentHealth;
-    }
-
     public int getCurrentMana() {
         return currentMana;
     }
@@ -87,10 +80,6 @@ public class PlayerStats {
 
     public void setHealth(int health) {
         this.health = health;
-        // Ajusta a vida atual se necessário
-        if (currentHealth > health) {
-            currentHealth = health;
-        }
     }
 
     public void setMana(int mana) {
@@ -101,23 +90,11 @@ public class PlayerStats {
         }
     }
 
-    public void setCurrentHealth(int currentHealth) {
-        this.currentHealth = Math.max(0, Math.min(currentHealth, health));
-    }
-
     public void setCurrentMana(int currentMana) {
         this.currentMana = Math.max(0, Math.min(currentMana, mana));
     }
 
     // Métodos utilitários
-    public void heal(int amount) {
-        setCurrentHealth(currentHealth + amount);
-    }
-
-    public void damage(int amount) {
-        setCurrentHealth(currentHealth - amount);
-    }
-
     public void restoreMana(int amount) {
         setCurrentMana(currentMana + amount);
     }
@@ -130,26 +107,17 @@ public class PlayerStats {
         return currentMana >= required;
     }
 
-    public boolean isAlive() {
-        return currentHealth > 0;
-    }
-
-    public double getHealthPercentage() {
-        return health > 0 ? (double) currentHealth / health : 0;
-    }
-
     public double getManaPercentage() {
         return mana > 0 ? (double) currentMana / mana : 0;
     }
 
     @Override
     public String toString() {
-        return String.format("PlayerStats{strength=%d, defense=%d, agility=%d, intelligence=%d, health=%d/%d, mana=%d/%d}",
-                strength, defense, agility, intelligence, currentHealth, health, currentMana, mana);
+        return String.format("PlayerStats{strength=%d, defense=%d, agility=%d, intelligence=%d, maxHealth=%d, mana=%d/%d}",
+                strength, defense, agility, intelligence, health, currentMana, mana);
     }
 
-    public void fullRestore() {
-        this.currentHealth = this.health;
+    public void fullRestoreMana() {
         this.currentMana = this.mana;
     }
 
@@ -158,11 +126,11 @@ public class PlayerStats {
     }
 
     public int calculateMagicalDamage() {
-        return intelligence * 3; // Fórmula simples: inteligência x3
+        return intelligence * 3;
     }
 
     public int calculateDamageReduction(int incomingDamage) {
-        int reduction = defense / 2; // Defesa reduz dano pela metade do valor
-        return Math.max(1, incomingDamage - reduction); // Sempre causa pelo menos 1 de dano
+        int reduction = defense / 2;
+        return Math.max(1, incomingDamage - reduction);
     }
 }

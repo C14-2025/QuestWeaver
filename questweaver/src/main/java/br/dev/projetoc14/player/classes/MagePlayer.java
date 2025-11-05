@@ -33,6 +33,7 @@ public class MagePlayer extends RPGPlayer {
         stats.setIntelligence(stats.getIntelligence() + 4);
         stats.setMana(stats.getMana() + 15);
         stats.setHealth(stats.getHealth() + 8);
+        refreshHealth();
         player.sendMessage("§9✦ Seu poder mágico aumenta! Nível " + level + " alcançado!");
     }
 

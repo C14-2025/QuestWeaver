@@ -35,6 +35,7 @@ public class WarriorPlayer extends RPGPlayer {
         stats.setStrength(stats.getStrength() + 3);
         stats.setDefense(stats.getDefense() + 2);
         stats.setHealth(stats.getHealth() + 15);
+        refreshHealth();
         player.sendMessage(ChatColor.RED + "⚔ Guerreiro subiu para o nível " + level + "!");
     }
 

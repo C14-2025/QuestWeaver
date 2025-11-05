@@ -6,6 +6,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
@@ -55,5 +56,20 @@ public class HungerDurabilityListener implements Listener {
     @EventHandler
     public void onItemDamage(PlayerItemDamageEvent event) {
         event.setCancelled(true);
+    }
+
+    /**
+     * Bloqueia regeneração natural de vida por fome/saturação
+     * Isso garante que APENAS o sistema customizado controle a cura
+     */
+    @EventHandler
+    public void onNaturalRegen(EntityRegainHealthEvent event) {
+        if (!(event.getEntity() instanceof Player)) return;
+
+        // Bloqueia apenas regeneração por saturação/fome
+        if (event.getRegainReason() == EntityRegainHealthEvent.RegainReason.SATIATED ||
+                event.getRegainReason() == EntityRegainHealthEvent.RegainReason.REGEN) {
+            event.setCancelled(true);
+        }
     }
 }
