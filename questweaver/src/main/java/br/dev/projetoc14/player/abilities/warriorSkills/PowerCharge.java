@@ -44,8 +44,6 @@ public class PowerCharge extends Ability {
                 () -> applyAreaDamage(player),
                 10L // 0.5 segundos
         );
-
-        player.sendMessage("⚡ Você avançou com uma Investida Poderosa!");
     }
 
     private void applyAreaDamage(Player player) {
