@@ -124,6 +124,17 @@ public final class QuestWeaver extends JavaPlugin {
     @Override
     public void onDisable() {
         // Qualquer código de desligamento do plugin, se necessário
+        // Para todas as regenerações de mana ativas
+        if (statsManager != null) {
+            statsManager.stopAllRegeneration();
+            getLogger().info("[QuestWeaver] Regeneração de mana finalizada para todos os jogadores.");
+        }
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (statsManager != null) {
+                statsManager.removeManaBar(player);
+            }
+        }
         getLogger().info("[QuestWeaver] Plugin finalizado!");
     }
 
