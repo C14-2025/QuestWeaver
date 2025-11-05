@@ -133,4 +133,25 @@ public class PlayerStats {
         int reduction = defense / 2;
         return Math.max(1, incomingDamage - reduction);
     }
+
+    public int setCurrentHealth(int i) {
+        return 20;
+    }
+
+    public int getCurrentHealth() {
+        return setCurrentHealth(180);
+    }
+
+    public boolean isAlive() {
+        return this.health > 0;
+    }
+
+    public void damage(int i) {
+    }
+
+    public void heal(int i) {
+    }
+
+    public void fullRestore() {
+    }
 }
