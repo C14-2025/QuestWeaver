@@ -83,7 +83,6 @@ public abstract class RPGPlayer {
         }
     }
 
-    // ✅ Agora usa o campo interno
     public int getCurrentHealth() {
         return currentHealth;
     }
