@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.inventory.ItemStack;
@@ -156,7 +157,7 @@ public abstract class RPGPlayer {
     }
 
     // ==== Utilitários ==== //
-    protected ItemStack createQuestBook() {
+    public ItemStack createQuestBook() {
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
         BookMeta meta = (BookMeta) book.getItemMeta();
 
@@ -220,5 +221,10 @@ public abstract class RPGPlayer {
 
     public void setHealth(int health) {
         setCurrentHealth(health);
+    }
+
+    public void refreshHealth() {
+        player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(stats.getHealth());
+        player.setHealth(stats.getHealth());
     }
 }
