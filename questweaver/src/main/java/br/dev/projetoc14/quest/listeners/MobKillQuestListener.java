@@ -54,10 +54,10 @@ public class MobKillQuestListener implements Listener {
                                 RangedCombatQuest rangedQuest = new RangedCombatQuest(
                                         "ranged_combat_intro",
                                         "Tiro Certeiro",
-                                        "Acerte 10 flechas em mobs a mais de 20 blocos de distância",
+                                        "Acerte 5 flechas em mobs a mais de 10 blocos de distância",
                                         100,
-                                        1,
-                                        2
+                                        5,
+                                        10
                                 );
 
                                 questData.addQuest(rangedQuest);
