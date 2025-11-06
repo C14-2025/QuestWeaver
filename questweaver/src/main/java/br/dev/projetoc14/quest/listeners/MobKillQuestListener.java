@@ -43,25 +43,31 @@ public class MobKillQuestListener implements Listener {
                     questData.completeQuest(quest.getId());
                     plugin.getQuestBook().updateBook(player);
 
+                    if (quest.getId().equals("first_kill_quest")) {
 
-                    RPGPlayer rpgPlayer = plugin.getRPGPlayer(player);
-                    if (rpgPlayer != null && rpgPlayer.getPlayerClass() == PlayerClass.ARCHER) {
-                        if (!questData.getActiveQuests().containsKey("ranged_combat_intro")) {
-                            RangedCombatQuest rangedQuest = new RangedCombatQuest(
-                                    "ranged_combat_intro",
-                                    "Tiro Certeiro",
-                                    "Acerte 10 flechas em mobs a mais de 20 blocos de distância",
-                                    100,
-                                    1,
-                                    2
-                            );
+                        RPGPlayer rpgPlayer = plugin.getRPGPlayer(player);
+                        if (rpgPlayer != null && rpgPlayer.getPlayerClass() == PlayerClass.ARCHER) {
 
-                            questData.addQuest(rangedQuest);
-                            player.sendMessage("§6═══════════════════════════");
-                            player.sendMessage("§e✦ §6Nova Quest Desbloqueada!");
-                            player.sendMessage("§f" + rangedQuest.getName());
-                            player.sendMessage("§7" + rangedQuest.getDescription());
-                            player.sendMessage("§6═══════════════════════════");
+                            // Já tem a quest? Se não, adiciona
+                            if (!questData.getActiveQuests().containsKey("ranged_combat_intro")) {
+
+                                RangedCombatQuest rangedQuest = new RangedCombatQuest(
+                                        "ranged_combat_intro",
+                                        "Tiro Certeiro",
+                                        "Acerte 10 flechas em mobs a mais de 20 blocos de distância",
+                                        100,
+                                        1,
+                                        2
+                                );
+
+                                questData.addQuest(rangedQuest);
+
+                                player.sendMessage("§6═══════════════════════════");
+                                player.sendMessage("§e✦ §6Nova Quest Desbloqueada!");
+                                player.sendMessage("§f" + rangedQuest.getName());
+                                player.sendMessage("§7" + rangedQuest.getDescription());
+                                player.sendMessage("§6═══════════════════════════");
+                            }
                         }
                     }
                 }

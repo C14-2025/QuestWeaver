@@ -7,6 +7,7 @@ import br.dev.projetoc14.player.abilities.warriorSkills.CrimsonBladeListener;
 import br.dev.projetoc14.player.listeners.*;
 import br.dev.projetoc14.player.abilities.archerSkills.ArchListener;
 import br.dev.projetoc14.player.abilities.assassinSkills.AbilityListener;
+import br.dev.projetoc14.quest.listeners.ArcherRangedQuestListener;
 import br.dev.projetoc14.skilltree.ExperienceSystem;
 import br.dev.projetoc14.match.ClassReadyManager;
 import br.dev.projetoc14.match.PlayerFileManager;
@@ -89,6 +90,9 @@ public final class QuestWeaver extends JavaPlugin {
 
         QuestBookInteractListener bookListener = new QuestBookInteractListener(questManager);
         getServer().getPluginManager().registerEvents(bookListener, this);
+
+        ArcherRangedQuestListener archerRangedListener = new ArcherRangedQuestListener(questManager);
+        getServer().getPluginManager().registerEvents(archerRangedListener, this);
         //Termina aqui
 
         // Magic Wand Listener (Habilidades de Mago)
