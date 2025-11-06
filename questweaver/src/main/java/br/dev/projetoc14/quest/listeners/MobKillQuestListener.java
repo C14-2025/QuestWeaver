@@ -52,8 +52,8 @@ public class MobKillQuestListener implements Listener {
                                     "Tiro Certeiro",
                                     "Acerte 10 flechas em mobs a mais de 20 blocos de distância",
                                     100,
-                                    10,
-                                    20.0
+                                    1,
+                                    2
                             );
 
                             questData.addQuest(rangedQuest);
