@@ -42,6 +42,24 @@ public class KillQuest extends Quest {
             );
 
             Entity entity = world.spawnEntity(randomLocation, entityType);
+
+            if (entity instanceof LivingEntity livingEntity) {
+                // Pega o HP máximo padrão do mob
+                double defaultMaxHealth = livingEntity.getAttribute(
+                        org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH
+                ).getDefaultValue();
+
+                // Triplica o HP
+                double tripleHealth = defaultMaxHealth * 3;
+
+                // Define o novo HP máximo
+                livingEntity.getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH)
+                        .setBaseValue(tripleHealth);
+
+                // Cura o mob para ter HP cheio
+                livingEntity.setHealth(tripleHealth);
+            }
+
             if (entity instanceof Zombie zombie) {
                 // Garante que não queime no sol
                 zombie.setShouldBurnInDay(false);

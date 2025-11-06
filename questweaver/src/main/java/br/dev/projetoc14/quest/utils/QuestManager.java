@@ -7,6 +7,7 @@ package br.dev.projetoc14.quest.utils;
 
 import br.dev.projetoc14.quest.KillQuest;
 import br.dev.projetoc14.quest.Quest;
+import br.dev.projetoc14.quest.types.archer.RangedCombatQuest;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.bukkit.Location;
@@ -101,4 +102,51 @@ public class QuestManager {
             }
         }
     }
+
+    public boolean isDoingQuest(Player player, String questId) {
+        PlayerQuestData data = getPlayerQuests(player);
+        if (data == null) return false;
+        return data.getActiveQuests().containsKey(questId);
+    }
+
+    public void addProgress(Player player, String questId, int amount) {
+        PlayerQuestData data = getPlayerQuests(player);
+        if (data == null) return;
+
+        Quest quest = data.getActiveQuests().get(questId);
+        if (quest instanceof RangedCombatQuest rangedQuest) {
+            // incrementa progresso
+            rangedQuest.setCurrentHits(rangedQuest.getCurrentHits() + amount);
+        }
+    }
+
+    public int getProgress(Player player, String questId) {
+        PlayerQuestData data = getPlayerQuests(player);
+        if (data == null) return 0;
+
+        Quest quest = data.getActiveQuests().get(questId);
+        if (quest instanceof RangedCombatQuest rangedQuest) {
+            return rangedQuest.getCurrentHits();
+        }
+        return 0;
+    }
+
+    public int getGoal(Player player, String questId) {
+        PlayerQuestData data = getPlayerQuests(player);
+        if (data == null) return 0;
+
+        Quest quest = data.getActiveQuests().get(questId);
+        if (quest instanceof RangedCombatQuest rangedQuest) {
+            return rangedQuest.getRequiredHits();
+        }
+        return 0;
+    }
+
+    public void completeQuest(Player player, String questId) {
+        PlayerQuestData data = getPlayerQuests(player);
+        if (data == null) return;
+
+        data.completeQuest(questId);
+    }
+
 }
