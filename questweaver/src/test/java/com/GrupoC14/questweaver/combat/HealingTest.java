@@ -4,6 +4,8 @@ import br.dev.projetoc14.player.abilities.mageSkills.Healing;
 import br.dev.projetoc14.player.classes.MagePlayer;
 import br.dev.projetoc14.player.RPGPlayer;
 import br.dev.projetoc14.player.PlayerStatsManager;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,15 +27,20 @@ public class HealingTest {
         // Mock do Player do Bukkit
         mockBukkitPlayer = mock(Player.class);
 
+        // Mock do AttributeInstance
+        AttributeInstance maxHealthAttr = mock(AttributeInstance.class);
+        when(maxHealthAttr.getValue()).thenReturn(20.0);
+        when(mockBukkitPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH)).thenReturn(maxHealthAttr);
+
         // Configura comportamento de health
-        when(mockBukkitPlayer.getHealth()).thenReturn(50.0);
+        when(mockBukkitPlayer.getHealth()).thenReturn(10.0);
 
         // MagePlayer inicializado com HP máximo = 100
         player = new MagePlayer(mockBukkitPlayer);
         player.getStats().setHealth(100);
-        player.setCurrentHealth(50);
+        player.setCurrentHealth(50); // 50% de vida
 
-        // Configura PlayerStatsManager (para evitar NPE na barra de mana)
+        // Configura PlayerStatsManager
         statsManager = mock(PlayerStatsManager.class);
         player.setStatsManager(statsManager);
     }
@@ -48,9 +55,26 @@ public class HealingTest {
 
     @Test
     public void testHealRestoresHealth() {
+        int hpAntes = player.getCurrentHealth();
+
         heal.cast(player);
 
-        // Verifica que a cura foi aplicada corretamente
-        verify(mockBukkitPlayer).setHealth(80.0);
+        // Verifica que o HP do sistema RPG aumentou
+        assertEquals(hpAntes + 30, player.getCurrentHealth());
+        assertEquals(80, player.getCurrentHealth()); // 50 + 30 = 80
+
+        // Verifica que setHealth foi chamado no mock Bukkit
+        verify(mockBukkitPlayer, atLeastOnce()).setHealth(anyDouble());
+    }
+
+    @Test
+    public void testHealDoesNotExceedMaxHealth() {
+        // Player com 90 HP (perto do máximo de 100)
+        player.setCurrentHealth(90);
+
+        heal.cast(player);
+
+        // Verifica que não passou de 100
+        assertEquals(100, player.getCurrentHealth());
     }
 }

@@ -1,13 +1,17 @@
 package br.dev.projetoc14.player.abilities;
 
 import br.dev.projetoc14.player.RPGPlayer;
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+
 import java.util.*;
 
 public abstract class Ability {
 
     private final String name;
-    private int manaCost;
-    private int cooldown;
+    private final int manaCost;
+    private final int cooldown;
     private final Map<UUID, Long> lastUsed = new HashMap<>();
 
     public Ability(String name, int manaCost, int cooldown) {
@@ -16,31 +20,28 @@ public abstract class Ability {
         this.cooldown = cooldown;
     }
 
-    // Método abstrato que cada habilidade implementa
     protected abstract void onCast(RPGPlayer caster);
 
     /**
      * Método principal para executar a habilidade.
-     * Chama a lógica customizada (onCast) e aplica o custo.
      */
     public final void cast(RPGPlayer caster) {
-        // 1. Executa a lógica da habilidade customizada
         this.onCast(caster);
-
-        // 2. Aplica o custo de mana e registra o uso
         this.applyCost(caster);
     }
 
     /**
-     * Verifica se o jogador pode usar a habilidade
-     * Checa: mana suficiente + cooldown
+     * Verifica se o jogador pode usar a habilidade (mana + cooldown)
      */
-    public boolean canCast(RPGPlayer caster) {
+    public CastResult canCast(RPGPlayer caster) {
+        Player player = caster.getPlayer();
 
         // Verifica mana
         if (caster.getCurrentMana() < manaCost) {
-            caster.sendMessage("§c❌ Mana insuficiente! Necessário: " + manaCost);
-            return false;
+            player.sendActionBar(ChatColor.RED + "❌ Mana insuficiente! (" +
+                    caster.getCurrentMana() + "/" + manaCost + ")");
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1f, 0.8f);
+            return CastResult.NO_MANA;
         }
 
         // Verifica cooldown
@@ -50,23 +51,24 @@ public abstract class Ability {
             long timeRemaining = cooldown - timeElapsed;
 
             if (timeRemaining > 0) {
-                caster.sendMessage("§c⏳ Aguarde " + timeRemaining + "s para usar " + name + " novamente!");
-                return false;
+                player.sendActionBar(ChatColor.RED + "⏳ Aguarde " + timeRemaining + "s para usar " + name + " novamente!");
+                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1f);
+                return CastResult.COOLDOWN;
             }
         }
 
-        return true;
+        return CastResult.SUCCESS;
     }
 
     /**
-     * Aplica o custo de mana e registra o uso (cooldown)
+     * Aplica o custo de mana e registra o cooldown
      */
     private void applyCost(RPGPlayer caster) {
-        // Remove a mana
-        int newMana = caster.getCurrentMana() - manaCost;
-        caster.setCurrentMana(newMana);
-
-        // Registra o momento do uso para cooldown
+        caster.setCurrentMana(caster.getCurrentMana() - manaCost);
         lastUsed.put(caster.getUniqueId(), System.currentTimeMillis());
+    }
+
+    public String getName() {
+        return name;
     }
 }

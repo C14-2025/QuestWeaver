@@ -5,13 +5,8 @@ import br.dev.projetoc14.player.RPGPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
-
-import java.util.Objects;
 
 public class WarriorPlayer extends RPGPlayer {
 

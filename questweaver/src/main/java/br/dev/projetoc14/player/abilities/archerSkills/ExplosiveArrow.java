@@ -32,8 +32,6 @@ public class ExplosiveArrow extends Ability {
 
         caster.getWorld().playSound(loc, Sound.ENTITY_ARROW_SHOOT, 1f, 1.2f);
         caster.getWorld().spawnParticle(Particle.CRIT, loc, 10, 0.2, 0.2, 0.2, 0.01);
-
-        caster.sendMessage("🏹 Você disparou uma Flecha Explosiva!");
     }
 
     public void onHit(ProjectileHitEvent event, RPGPlayer caster, RPGPlayer target) {

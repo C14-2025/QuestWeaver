@@ -38,13 +38,11 @@ public class AbilityUtil {
         String abilityName = abilities.get(index);
 
         Ability ability = abilityMap.get(abilityName);
-
-        if (ability != null) {
-            if (ability.canCast(rpgPlayer)) {
-                ability.cast(rpgPlayer);
-            } else {
-                sendCooldownMessage(player);
-            }
+        CastResult result = ability.canCast(rpgPlayer);
+        switch(result) {
+            case SUCCESS -> ability.cast(rpgPlayer);
+            case COOLDOWN -> sendCooldownMessage(player);
+            case NO_MANA -> {} // canCast já mostra o resultado da falta de mana.
         }
     }
 

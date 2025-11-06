@@ -1,5 +1,6 @@
 package br.dev.projetoc14.player.classes;
 
+import br.dev.projetoc14.items.MagicBow;
 import br.dev.projetoc14.player.PlayerClass;
 import br.dev.projetoc14.player.RPGPlayer;
 import org.bukkit.ChatColor;
@@ -42,30 +43,11 @@ public class ArcherPlayer extends RPGPlayer {
     @Override
     public void getStartingEquipment() {
         // Cria o arco mágico
-        ItemStack magicBow = createMagicBow();
+        MagicBow bow = new MagicBow();
+        ItemStack magicBow = bow.createMagicBow();
 
         ClassUtil.equipPlayer(this, magicBow, Color.fromRGB(0, 150, 0)); // Verde floresta
         // Adiciona flechas iniciais
         player.getInventory().addItem(new ItemStack(Material.ARROW, 16));
-    }
-
-    // Arco mágico do arqueiro com habilidades especiais
-    private ItemStack createMagicBow() {
-        ItemStack bow = new ItemStack(Material.BOW, 1);
-        ItemMeta meta = bow.getItemMeta();
-
-        if (meta != null) {
-            meta.setDisplayName(ChatColor.GOLD + "Arco Mágico");
-            meta.setLore(List.of(
-                    ChatColor.GRAY + "Clique esquerdo no ar para alternar o tipo de flecha.",
-                    ChatColor.GRAY + "Clique direito para disparar a habilidade atual.",
-                    "",
-                    ChatColor.DARK_GRAY + "Classe: " + ChatColor.GREEN + "Arqueiro"
-            ));
-            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-            bow.setItemMeta(meta);
-        }
-
-        return bow;
     }
 }
