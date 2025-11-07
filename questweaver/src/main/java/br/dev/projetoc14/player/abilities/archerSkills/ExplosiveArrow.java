@@ -10,7 +10,7 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 
-public class ExplosiveArrow extends Ability {
+public class ExplosiveArrow extends Ability implements arrows {
 
     private final int damage = 20;
     private final Plugin plugin;
