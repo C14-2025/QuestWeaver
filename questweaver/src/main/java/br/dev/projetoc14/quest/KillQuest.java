@@ -2,23 +2,30 @@ package br.dev.projetoc14.quest;
 
 import org.bukkit.Location;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.*;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class KillQuest extends Quest {
     private final String targetMob;
     private final int targetCount;
     private int currentCount;
     private final Location spawnLocation;
+    private final List<Material> validWeapons;
 
     // Construtor completo
     public KillQuest(String id, String name, String description, int experienceReward,
-                     String targetMob, int targetCount, int currentCount, Location spawnLocation) {
+                     String targetMob, int targetCount, int currentCount, Location spawnLocation, List<Material> validWeapons) {
         super(id, name, description, experienceReward);
         this.targetMob = targetMob;
         this.targetCount = targetCount;
         this.currentCount = currentCount;
         this.spawnLocation = spawnLocation;
+        this.validWeapons = validWeapons != null ? validWeapons : new ArrayList<>();
     }
 
     public void spawnTargetEntities(Player player) {
@@ -58,7 +65,12 @@ public class KillQuest extends Quest {
         }
     }
 
+    @Override
+    public ItemStack[] getRewardItems() {
+        return new ItemStack[0];
+    }
 
+    @Override
     public void assignToPlayer(Player player) {
         spawnTargetEntities(player);
     }
@@ -70,10 +82,14 @@ public class KillQuest extends Quest {
 
     @Override
     public void updateProgress(Object... params) {
-        if (params.length > 0 && params[0] instanceof String mobType) {
-            if (mobType.equalsIgnoreCase(targetMob)) {
+        if (params.length >= 2 && params[0] instanceof String mobType && params[1] instanceof Material weapon) {
+            if (mobType.equalsIgnoreCase(targetMob) && (validWeapons.isEmpty() || validWeapons.contains(weapon))) {
                 currentCount++;
                 completed = checkCompletion();
+
+                if (completed && params.length >= 3 && params[2] instanceof Player player) {
+                        giveRewards(player);
+                }
             }
         }
     }
@@ -97,5 +113,9 @@ public class KillQuest extends Quest {
 
     public String getProgressText() {
         return String.format("%d/%d %s eliminados", currentCount, targetCount, targetMob);
+    }
+
+    public boolean isValidWeapon(Material weapon) {
+        return validWeapons.isEmpty() || validWeapons.contains(weapon);
     }
 }

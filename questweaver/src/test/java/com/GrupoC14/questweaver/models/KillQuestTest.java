@@ -2,17 +2,24 @@ package com.GrupoC14.questweaver.models;
 
 import br.dev.projetoc14.quest.KillQuest;
 
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.mockito.Mock;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class KillQuestTest {
     private KillQuest killQuest;
 
+    @Mock
+    private Player mockPlayer;
+
     @BeforeEach
     void setUp() {
         killQuest = new KillQuest("kill_001", "Caçador de Zumbis",
-                "Mate 5 zumbis", 100, "ZOMBIE", 5, 0, null);
+                "Mate 5 zumbis", 100, "ZOMBIE", 5, 0, null, null);
     }
 
     @Test
@@ -25,7 +32,7 @@ public class KillQuestTest {
 
     @Test
     void testProgressUpdate() {
-        killQuest.updateProgress("ZOMBIE");
+        killQuest.updateProgress("ZOMBIE", Material.IRON_SWORD, mockPlayer);
         assertEquals(1, killQuest.getCurrentCount());
         assertFalse(killQuest.isCompleted());
     }
@@ -34,7 +41,7 @@ public class KillQuestTest {
     void testQuestCompletion() {
         // Simula matar 5 zumbis
         for (int i = 0; i < 5; i++) {
-            killQuest.updateProgress("ZOMBIE");
+            killQuest.updateProgress("ZOMBIE", Material.IRON_SWORD, mockPlayer);
         }
 
         assertTrue(killQuest.isCompleted());

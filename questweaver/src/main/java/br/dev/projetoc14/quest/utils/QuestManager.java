@@ -7,6 +7,7 @@ package br.dev.projetoc14.quest.utils;
 
 import br.dev.projetoc14.quest.KillQuest;
 import br.dev.projetoc14.quest.Quest;
+import br.dev.projetoc14.quest.warrior.FirstBlood;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.bukkit.Location;
@@ -21,9 +22,102 @@ import java.util.UUID;
 public class QuestManager {
 
     private Map<UUID, PlayerQuestData> playerQuests;
+    private Map<UUID, QuestLineType> playerQuestLines;
 
     public QuestManager() {
         this.playerQuests = new HashMap<>();
+        this.playerQuestLines = new HashMap<>();
+    }
+
+    public void startClassQuestLine(Player player, String className) {
+        QuestLineType questLine = switch (className.toLowerCase()) {
+            case "guerreiro" -> QuestLineType.WARRIOR;
+            case "mago" -> QuestLineType.MAGE;
+            case "arqueiro" -> QuestLineType.ARCHER;
+            case "assassino" -> QuestLineType.ASSASSIN;
+            default -> null;
+        };
+
+        if (questLine == null) {
+            return;
+        }
+
+        playerQuestLines.put(player.getUniqueId(), questLine);
+        giveNextQuest(player);
+    }
+
+    private void giveNextQuest(Player player) {
+        UUID playerId = player.getUniqueId();
+        QuestLineType questLine = playerQuestLines.get(playerId);
+        PlayerQuestData questData = getOrCreatePlayerQuestData(player);
+
+        if (questLine == null || questData == null) return;
+
+        // Verifica quantas quests já foram completadas
+        int completedQuests = questData.getCompletedQuests().size();
+
+        // Cria a próxima quest baseada na classe e progresso
+        Quest nextQuest = createQuestForClass(questLine, completedQuests, player.getLocation());
+        if (nextQuest != null) {
+            questData.addQuest(nextQuest);
+            notifyNewQuest(player, nextQuest);
+            nextQuest.assignToPlayer(player);
+        }
+    }
+
+    private Quest createQuestForClass(QuestLineType type, int questProgress, Location playerLoc) {
+        return switch (type) {
+            case WARRIOR -> createWarriorQuest(questProgress, playerLoc);
+            case MAGE -> createMageQuest(questProgress, playerLoc);
+            case ARCHER -> createArcherQuest(questProgress, playerLoc);
+            case ASSASSIN -> createAssassinQuest(questProgress, playerLoc);
+        };
+    }
+
+    private Quest createWarriorQuest(int progress, Location playerLoc) {
+        return switch (progress) {
+            case 0 -> new FirstBlood(playerLoc); // Primeira quest do guerreiro
+            // TODO: Adicione mais quests aqui...
+            default -> null;
+        };
+    }
+
+    // Implemente métodos similares para outras classes...
+    private Quest createMageQuest(int progress, Location playerLoc) {
+        // TODO: Implemente as quests do mago
+        return null;
+    }
+
+    private Quest createArcherQuest(int progress, Location playerLoc) {
+        // TODO: Implemente as quests do arqueiro
+        return null;
+    }
+
+    private Quest createAssassinQuest(int progress, Location playerLoc) {
+        // TODO: Implemente as quests do assassino
+        return null;
+    }
+
+    private void notifyNewQuest(Player player, Quest quest) {
+        player.sendMessage("§6═══════════════════════════");
+        player.sendMessage("§e✦ §6Nova Quest Recebida!");
+        player.sendMessage("§f" + quest.getName());
+        player.sendMessage("§7" + quest.getDescription());
+        player.sendMessage("§6═══════════════════════════");
+    }
+
+    private PlayerQuestData getOrCreatePlayerQuestData(Player player) {
+        return playerQuests.computeIfAbsent(player.getUniqueId(),
+                k -> new PlayerQuestData(player));
+    }
+
+    public void onQuestComplete(Player player, String questId) {
+        PlayerQuestData questData = getPlayerQuests(player);
+        if (questData != null) {
+            questData.completeQuest(questId);
+            // Dá a próxima quest da linha
+            giveNextQuest(player);
+        }
     }
 
     /*
@@ -31,47 +125,6 @@ public class QuestManager {
      */
     public boolean hasQuests(Player player) {
         return playerQuests.containsKey(player.getUniqueId());
-    }
-
-    /*
-     * Cria a primeira quest quando jogador entra pela primeira vez
-     */
-    public void createFirstQuest(Player player) {
-        UUID playerId = player.getUniqueId();
-
-        Location playerLoc = player.getLocation();
-        Location spawnLocation = playerLoc.clone();
-        Vector direction = playerLoc.getDirection().setY(0).normalize(); // remove componente Y e normaliza
-        spawnLocation.add(direction.multiply(12)); // 12 blocos na direção que o ‘player’ olha
-        spawnLocation.setY(spawnLocation.getWorld().getHighestBlockYAt(spawnLocation));
-
-        // Cria a KillQuest inicial
-        KillQuest firstQuest = new KillQuest(
-                "first_kill_quest",
-                "Primeira Caçada",
-                "Mate 5 zumbis para começar sua jornada",
-                50,
-                "ZOMBIE",
-                5,
-                0,
-                spawnLocation
-        );
-
-        // Cria dados do jogador
-        PlayerQuestData questData = new PlayerQuestData(player);
-        questData.addQuest(firstQuest);
-
-        // Salva
-        playerQuests.put(playerId, questData);
-
-        // Mensagem para o jogador
-        player.sendMessage("§6═══════════════════════════");
-        player.sendMessage("§e✦ §6Nova Quest Recebida!");
-        player.sendMessage("§f" + firstQuest.getName());
-        player.sendMessage("§7" + firstQuest.getDescription());
-        player.sendMessage("§6═══════════════════════════");
-
-        firstQuest.assignToPlayer(player);
     }
 
     /*

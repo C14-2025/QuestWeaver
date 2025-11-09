@@ -1,5 +1,12 @@
 package br.dev.projetoc14.quest;
 
+import br.dev.projetoc14.QuestWeaver;
+import br.dev.projetoc14.player.RPGPlayer;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.HashMap;
+
 public abstract class Quest {
     protected String id;
     protected String name;
@@ -31,8 +38,35 @@ public abstract class Quest {
      */
     public abstract void updateProgress(Object... params);
 
-    //Getters e Setters criados serão criados conforme necessidade
+    public abstract ItemStack[] getRewardItems();
 
+    public abstract void assignToPlayer(Player player);
+
+    // Entrega as recompensas ao jogador
+    public void giveRewards(Player player) {
+        // Dá a experiência
+        RPGPlayer rpgPlayer = ((QuestWeaver) QuestWeaver.getInstance()).getRPGPlayer(player);
+        if (rpgPlayer != null) {
+            rpgPlayer.addExperience(experienceReward);
+        }
+
+        // Dá os itens
+        ItemStack[] rewards = getRewardItems();
+        if (rewards != null && rewards.length > 0) {
+            HashMap<Integer, ItemStack> leftover = player.getInventory().addItem(rewards);
+
+            // Se o inventário estiver cheio, dropa os itens no chão
+            if (!leftover.isEmpty()) {
+                for (ItemStack item : leftover.values()) {
+                    player.getWorld().dropItem(player.getLocation(), item);
+                }
+                player.sendMessage("§cSeu inventário está cheio! Alguns itens foram dropados no chão!");
+            }
+
+            // Mensagem de recompensa
+            player.sendMessage("§aVocê recebeu suas recompensas!");
+        }
+    }
 
     public String getId() {
         return id;

@@ -58,8 +58,6 @@ public final class QuestWeaver extends JavaPlugin {
         this.statsManager = new PlayerStatsManager();
         QuestManager questManager = new QuestManager();
         this.questBook = new QuestBook(questManager);
-        questManager = new QuestManager();
-
 
         // player join & disconnect listener
         Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
