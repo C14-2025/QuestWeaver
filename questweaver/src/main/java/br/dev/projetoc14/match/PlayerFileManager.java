@@ -36,6 +36,8 @@ public class PlayerFileManager {
         config.set("name", player.getName());
         config.set("kills", 0);
         config.set("class", "Nenhum");
+        config.set("level", 0);
+        config.set("isSpec", "false");
 
         config.save(playerFile);
 
@@ -121,6 +123,19 @@ public class PlayerFileManager {
 
     }
 
+    public void setPlayerSpec(Player player, boolean spec) {
+        File playerFile = new File(dataFolder, player.getUniqueId() + ".yml");
+        FileConfiguration config = getPlayerConfig(player);
+
+        config.set("isSpec", spec);
+
+        try {
+            config.save(playerFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public String getPlayerClassName(Player player) {
         FileConfiguration config = getPlayerConfig(player);
 
@@ -131,6 +146,12 @@ public class PlayerFileManager {
         FileConfiguration config = getPlayerConfig(player);
 
         return config.getInt("kills");
+    }
+
+    public boolean isPlayerSpec(Player player) {
+        FileConfiguration config = getPlayerConfig(player);
+
+        return config.getBoolean("isSpec");
     }
 
 
