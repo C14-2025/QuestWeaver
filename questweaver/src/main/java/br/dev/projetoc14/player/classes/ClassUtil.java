@@ -11,6 +11,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
+import java.util.Objects;
+
 public class ClassUtil {
 
     public static void equipPlayer(RPGPlayer rpgPlayer, ItemStack weapon, Color color) {
@@ -36,7 +38,7 @@ public class ClassUtil {
         Bukkit.getScheduler().runTaskLater(QuestWeaver.getInstance(), () -> {
             // Define vida máxima do Bukkit
             int maxHealth = rpgPlayer.getMaxHealth();
-            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(maxHealth);
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(maxHealth);
 
             // Define vida atual - cheia
             player.setHealth(maxHealth);

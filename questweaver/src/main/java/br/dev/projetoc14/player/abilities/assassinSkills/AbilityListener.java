@@ -117,7 +117,7 @@ public class AbilityListener implements Listener {
 
         String displayName = PlainTextComponentSerializer.plainText()
                 .serialize(Objects.requireNonNull(meta.displayName()));
-        return displayName.equalsIgnoreCase("Iron Sword");
+        return displayName.equalsIgnoreCase("Lâmina Sombria");
     }
 
     public String formatName(String nome) {

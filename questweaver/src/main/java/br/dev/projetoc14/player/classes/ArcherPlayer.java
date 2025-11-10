@@ -3,15 +3,13 @@ package br.dev.projetoc14.player.classes;
 import br.dev.projetoc14.items.MagicBow;
 import br.dev.projetoc14.player.PlayerClass;
 import br.dev.projetoc14.player.RPGPlayer;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.List;
 
 public class ArcherPlayer extends RPGPlayer {
 
@@ -37,7 +35,12 @@ public class ArcherPlayer extends RPGPlayer {
         stats.setHealth(stats.getHealth() + 10);
         stats.setMana(stats.getMana() + 5);
         refreshHealth();
-        player.sendMessage(ChatColor.GREEN + "🏹 Arqueiro subiu para o nível " + ChatColor.GOLD + level + ChatColor.GREEN + "!");
+        player.sendActionBar(Component.text("🏹 Arqueiro subiu para o nível ")
+                .color(NamedTextColor.RED)
+                    .append(Component.text(level)
+                            .color(NamedTextColor.GOLD)
+                                .append(Component.text("!")
+                                    .color(NamedTextColor.GREEN))));
     }
 
     @Override
