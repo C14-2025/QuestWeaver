@@ -183,26 +183,40 @@ pipeline {
 }
 
         stage('Update server.properties') {
-            steps {
-                script {
-                    def resourcePackPath = "${env.MINECRAFT_RESOURCEPACK_DIR}/QuestWeaver_ResourcePack.zip"
-                    def resourcePackUrl = "http://100.107.48.45:8080/QuestWeaver_ResourcePack.zip"
+    steps {
+        script {
+            // URL pública do GitHub Release
+            def resourcePackUrl = "https://github.com/C14-2025/QuestWeaver/releases/download/v1.0/QuestWeaver_ResourcePack.zip"
+            
+            echo "Atualizando server.properties para apontar para o resource pack do GitHub..."
 
-                    echo "Atualizando server.properties para apontar para o novo resource pack..."
-
-                    sh """
-                        if [ -f "${SERVER_PROPERTIES}" ]; then
-                            sed -i '/^resource-pack=/c\\resource-pack=${resourcePackUrl}' ${SERVER_PROPERTIES}
-                            sed -i '/^require-resource-pack=/c\\require-resource-pack=true' ${SERVER_PROPERTIES}
-                            sed -i '/^resource-pack-prompt=/c\\resource-pack-prompt=§eBaixar o pacote de texturas do QuestWeaver?' ${SERVER_PROPERTIES}
-                            echo "server.properties atualizado com sucesso!"
-                        else
-                            echo "AVISO: server.properties não encontrado em ${SERVER_PROPERTIES}"
-                        fi
-                    """
-                }
-            }
+            sh """
+                if [ -f "${SERVER_PROPERTIES}" ]; then
+                    # Remove linhas malformadas
+                    sed -i '/^https=/d' ${SERVER_PROPERTIES}
+                    
+                    # Atualiza as configurações corretas
+                    sed -i 's|^resource-pack=.*|resource-pack=${resourcePackUrl}|' ${SERVER_PROPERTIES}
+                    sed -i 's|^require-resource-pack=.*|require-resource-pack=true|' ${SERVER_PROPERTIES}
+                    sed -i 's|^resource-pack-prompt=.*|resource-pack-prompt=§eBaixar o pacote de texturas do QuestWeaver?|' ${SERVER_PROPERTIES}
+                    
+                    # Calcular SHA1 do resource pack
+                    RESOURCE_PACK_FILE="${env.MINECRAFT_RESOURCEPACK_DIR}/QuestWeaver_ResourcePack.zip"
+                    if [ -f "\$RESOURCE_PACK_FILE" ]; then
+                        SHA1=\$(sha1sum "\$RESOURCE_PACK_FILE" | cut -d' ' -f1)
+                        sed -i "s|^resource-pack-sha1=.*|resource-pack-sha1=\$SHA1|" ${SERVER_PROPERTIES}
+                        echo "SHA1 do resource pack: \$SHA1"
+                    fi
+                    
+                    echo "server.properties atualizado com sucesso!"
+                    grep "resource-pack" ${SERVER_PROPERTIES}
+                else
+                    echo "AVISO: server.properties não encontrado em ${SERVER_PROPERTIES}"
+                fi
+            """
         }
+    }
+}
 
 
     }
