@@ -173,7 +173,7 @@ pipeline {
 
             Deploy e reinício do servidor foram executados.
             """,
-                to: "matheus.maciel@gec.inatel.br"
+                to: ""
             )
         }
     }
