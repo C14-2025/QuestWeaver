@@ -5,12 +5,16 @@ import br.dev.projetoc14.player.RPGPlayer;
 import br.dev.projetoc14.player.abilities.Ability;
 import br.dev.projetoc14.player.abilities.AbilityUtil;
 import br.dev.projetoc14.player.classes.MagePlayer;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.*;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
@@ -55,7 +59,8 @@ public class MagicWandListener implements Listener {
 
         MagePlayer mage = getMagePlayer(p);
         if (mage == null) {
-            p.sendActionBar(ChatColor.RED + "❌ Apenas magos podem usar este cajado!");
+            p.sendActionBar(Component.text("❌ Apenas magos podem usar este cajado!")
+                .color(NamedTextColor.RED));
             return;
         }
 
@@ -71,8 +76,11 @@ public class MagicWandListener implements Listener {
     private boolean isWand(ItemStack item) {
         if (item == null || item.getType() != Material.BLAZE_ROD) return false;
         if (!item.hasItemMeta()) return false;
-        return ChatColor.stripColor(item.getItemMeta().getDisplayName())
-                .equalsIgnoreCase("Cajado Mágico");
+        ItemMeta meta = item.getItemMeta();
+        if (meta.displayName() == null) return false;
+        String displayName = PlainTextComponentSerializer.plainText()
+                .serialize(Objects.requireNonNull(meta.displayName()));
+        return displayName.equalsIgnoreCase("Cajado Mágico");
     }
 
     public String formatName(String nome) {

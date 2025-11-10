@@ -2,7 +2,9 @@ package br.dev.projetoc14.player.classes;
 
 import br.dev.projetoc14.player.PlayerClass;
 import br.dev.projetoc14.player.RPGPlayer;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -36,7 +38,14 @@ public class AssassinPlayer extends RPGPlayer {
         stats.setHealth(stats.getHealth() + 12);
         stats.setMana(stats.getMana() + 5);
         refreshHealth();
-        player.sendMessage(ChatColor.DARK_GRAY + "☠ O Assassino subiu para o nível " + ChatColor.LIGHT_PURPLE + level + ChatColor.DARK_GRAY + "!");
+        player.sendActionBar(
+                Component.text("☠ O Assassino subiu para o nível ")
+                        .color(NamedTextColor.DARK_GRAY)
+                            .append(Component.text(level)
+                                .color(NamedTextColor.LIGHT_PURPLE))
+                                    .append(Component.text("!")
+                                        .color(NamedTextColor.DARK_GRAY))
+        );
     }
 
     @Override
@@ -46,12 +55,23 @@ public class AssassinPlayer extends RPGPlayer {
         ItemMeta swordMeta = sword.getItemMeta();
 
         if (swordMeta != null) {
-            swordMeta.setDisplayName(ChatColor.DARK_GRAY + "Lâmina Sombria");
-            swordMeta.setLore(List.of(
-                    ChatColor.GRAY + "Uma lâmina leve e precisa, feita para matar em silêncio.",
-                    "",
-                    ChatColor.DARK_GRAY + "Classe: " + ChatColor.LIGHT_PURPLE + "Assassino"
+            swordMeta.displayName(
+                    Component.text("Lâmina Sombria")
+                            .color(NamedTextColor.DARK_GRAY)
+                            .decoration(TextDecoration.ITALIC, false)
+            );
+
+            swordMeta.lore(List.of(
+                    Component.text("Uma lâmina leve e precisa, feita para matar em silêncio.")
+                            .color(NamedTextColor.GRAY)
+                            .decoration(TextDecoration.ITALIC, false),
+                    Component.empty(),
+                    Component.text("Classe: ")
+                            .color(NamedTextColor.DARK_GRAY)
+                            .append(Component.text("Assassino").color(NamedTextColor.LIGHT_PURPLE))
+                            .decoration(TextDecoration.ITALIC, false)
             ));
+
             swordMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
             sword.setItemMeta(swordMeta);
         }
@@ -69,14 +89,29 @@ public class AssassinPlayer extends RPGPlayer {
         ItemMeta meta = potion.getItemMeta();
 
         if (meta != null) {
-            meta.setDisplayName(ChatColor.DARK_PURPLE + "Poção das Sombras");
-            meta.setLore(List.of(
-                    ChatColor.GRAY + "Use enquanto agachado (Shift + botão direito)",
-                    ChatColor.GRAY + "para alternar entre habilidades.",
-                    ChatColor.GRAY + "Use normalmente para ativar a habilidade atual.",
-                    "",
-                    ChatColor.DARK_GRAY + "Classe: " + ChatColor.LIGHT_PURPLE + "Assassino"
+            meta.displayName(
+                    Component.text("Poção das Sombras")
+                            .color(NamedTextColor.DARK_PURPLE)
+                            .decoration(TextDecoration.ITALIC, false)
+            );
+
+            meta.lore(List.of(
+                    Component.text("Use enquanto agachado (Shift + botão direito)")
+                            .color(NamedTextColor.GRAY)
+                            .decoration(TextDecoration.ITALIC, false),
+                    Component.text("para alternar entre habilidades.")
+                            .color(NamedTextColor.GRAY)
+                            .decoration(TextDecoration.ITALIC, false),
+                    Component.text("Use normalmente para ativar a habilidade atual.")
+                            .color(NamedTextColor.GRAY)
+                            .decoration(TextDecoration.ITALIC, false),
+                    Component.empty(),
+                    Component.text("Classe: ")
+                            .color(NamedTextColor.DARK_GRAY)
+                            .append(Component.text("Assassino").color(NamedTextColor.LIGHT_PURPLE))
+                            .decoration(TextDecoration.ITALIC, false)
             ));
+
             meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
             potion.setItemMeta(meta);
         }
