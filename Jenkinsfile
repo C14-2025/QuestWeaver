@@ -10,7 +10,7 @@ pipeline {
         
         // Configuração do GitHub Release
         GITHUB_REPO = "C14-2025/QuestWeaver"
-        RELEASE_TAG = "v1.0"
+        RELEASE_TAG = "v1.0.1"
         RESOURCE_PACK_NAME = "QuestWeaver_ResourcePack.zip"
     }
 
