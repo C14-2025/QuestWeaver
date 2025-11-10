@@ -1,2 +1,4 @@
 server-conf:
-  server-name: "§f[§Quest§fWeaver]"
+  server-name: "§f[§5Quest§fWeaver]"
+match-conf:
+  isMatch-running: false

@@ -28,7 +28,7 @@ public class ClassReadyManager {
 
         if (playersReady.containsAll(onlinePlayers)) {
             // Todos prontos, iniciar a partida
-            StartMatch match = new StartMatch(plugin.getPlayerFileManager(), plugin.getStatsManager(), plugin);
+            StartMatch match = new StartMatch(plugin.getPlayerFileManager(), plugin.getMatchManager(), plugin.getStatsManager(), plugin);
             match.execute();
 
             // Limpa para a próxima partida
