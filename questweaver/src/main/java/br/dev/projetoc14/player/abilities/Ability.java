@@ -1,7 +1,8 @@
 package br.dev.projetoc14.player.abilities;
 
 import br.dev.projetoc14.player.RPGPlayer;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
@@ -38,8 +39,8 @@ public abstract class Ability {
 
         // Verifica mana
         if (caster.getCurrentMana() < manaCost) {
-            player.sendActionBar(ChatColor.RED + "❌ Mana insuficiente! (" +
-                    caster.getCurrentMana() + "/" + manaCost + ")");
+            player.sendActionBar(Component.text("❌ Mana insuficiente! (" +
+                    caster.getCurrentMana() + "/" + manaCost + ")").color(NamedTextColor.RED));
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1f, 0.8f);
             return CastResult.NO_MANA;
         }
@@ -51,7 +52,8 @@ public abstract class Ability {
             long timeRemaining = cooldown - timeElapsed;
 
             if (timeRemaining > 0) {
-                player.sendActionBar(ChatColor.RED + "⏳ Aguarde " + timeRemaining + "s para usar " + name + " novamente!");
+                player.sendActionBar(Component.text("⏳ Aguarde " + timeRemaining + "s para usar " + name + " novamente!")
+                        .color(NamedTextColor.RED));
                 player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1f);
                 return CastResult.COOLDOWN;
             }

@@ -134,6 +134,9 @@ public class PlayerStats {
         return Math.max(1, incomingDamage - reduction);
     }
 
+
+    // Métodos para testes de stats:
+
     public int setCurrentHealth(int i) {
         return 20;
     }

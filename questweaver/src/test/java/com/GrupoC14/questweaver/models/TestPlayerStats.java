@@ -3,10 +3,8 @@ package com.GrupoC14.questweaver.models;
 import br.dev.projetoc14.player.PlayerStats;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 public class TestPlayerStats {
 
@@ -29,7 +27,7 @@ public class TestPlayerStats {
         assertEquals(20, stats.getCurrentMana());
     }
 
-    // ✅ Teste do construtor customizado
+    // Teste do construtor customizado
     @Test
     public void testPlayerConstructor() {
         PlayerStats customStats = new PlayerStats(15, 12, 8, 5, 120, 30);

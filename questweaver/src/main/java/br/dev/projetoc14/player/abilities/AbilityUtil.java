@@ -1,7 +1,8 @@
 package br.dev.projetoc14.player.abilities;
 
 import br.dev.projetoc14.player.RPGPlayer;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -23,7 +24,10 @@ public class AbilityUtil {
         abilityIndex.put(player.getUniqueId(), index);
 
         String nova = abilities.get(index);
-        player.sendActionBar(ChatColor.AQUA + "✨ Habilidade: " + ChatColor.GOLD + formatter.format(nova));
+        player.sendActionBar(Component.text( "✨ Habilidade: ")
+                .color(NamedTextColor.AQUA)
+                    .append(Component.text(formatter.format(nova))
+                            .color(NamedTextColor.GOLD)));
         player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1.5f);
     }
 
@@ -47,7 +51,7 @@ public class AbilityUtil {
     }
 
     private static void sendCooldownMessage(Player player) {
-        player.sendActionBar(ChatColor.RED + "⏳ Habilidade em cooldown!");
+        player.sendActionBar(Component.text("⏳ Habilidade em cooldown!").color(NamedTextColor.DARK_GREEN));
         player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1f);
     }
 

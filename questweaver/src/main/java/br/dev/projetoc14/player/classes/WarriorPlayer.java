@@ -2,7 +2,8 @@ package br.dev.projetoc14.player.classes;
 
 import br.dev.projetoc14.player.PlayerClass;
 import br.dev.projetoc14.player.RPGPlayer;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -31,7 +32,15 @@ public class WarriorPlayer extends RPGPlayer {
         stats.setDefense(stats.getDefense() + 2);
         stats.setHealth(stats.getHealth() + 15);
         refreshHealth();
-        player.sendMessage(ChatColor.RED + "⚔ Guerreiro subiu para o nível " + level + "!");
+        player.sendActionBar(
+                Component.text("⚔ Guerreiro subiu para o nível ")
+                        .color(NamedTextColor.RED)
+                            .append(Component.text(level)
+                                .color(NamedTextColor.GOLD))
+                                    .append(Component.text("!")
+                                         .color(NamedTextColor.RED))
+        );
+
     }
 
     @Override
