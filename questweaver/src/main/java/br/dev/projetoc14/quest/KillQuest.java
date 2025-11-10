@@ -11,11 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class KillQuest extends Quest {
-    private final String targetMob;
-    private final int targetCount;
-    private int currentCount;
-    private final Location spawnLocation;
-    private final List<Material> validWeapons;
+    protected final String targetMob;
+    protected final int targetCount;
+    protected int currentCount;
+    protected final Location spawnLocation;
+    protected final List<Material> validWeapons;
 
     // Construtor completo
     public KillQuest(String id, String name, String description, int experienceReward,
@@ -87,7 +87,7 @@ public class KillQuest extends Quest {
                 currentCount++;
                 completed = checkCompletion();
 
-                if (completed && params.length >= 3 && params[2] instanceof Player player) {
+                if (completed && params[2] instanceof Player player) {
                         giveRewards(player);
                 }
             }

@@ -7,6 +7,7 @@ package br.dev.projetoc14.quest.utils;
 
 import br.dev.projetoc14.quest.KillQuest;
 import br.dev.projetoc14.quest.Quest;
+import br.dev.projetoc14.quest.mage.ElementalMaster;
 import br.dev.projetoc14.quest.warrior.FirstBlood;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -82,10 +83,13 @@ public class QuestManager {
         };
     }
 
-    // Implemente métodos similares para outras classes...
+
     private Quest createMageQuest(int progress, Location playerLoc) {
-        // TODO: Implemente as quests do mago
-        return null;
+        return switch (progress) {
+            case 0 -> new ElementalMaster(playerLoc); // Primeira quest do mago
+            // TODO: Adicione mais quests aqui...
+            default -> null;
+        };
     }
 
     private Quest createArcherQuest(int progress, Location playerLoc) {

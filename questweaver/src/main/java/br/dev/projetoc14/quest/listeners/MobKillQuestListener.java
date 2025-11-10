@@ -45,7 +45,7 @@ public class MobKillQuestListener implements Listener {
         // Atualiza todas as KillQuests ativas do jogador
         for (Quest quest : questData.getActiveQuests().values()) {
             if (quest instanceof KillQuest killQuest) {
-                killQuest.updateProgress(entityType, weaponUsed, killer);
+                killQuest.updateProgress(entityType, weaponUsed, killer, entity);
             }
         }
 

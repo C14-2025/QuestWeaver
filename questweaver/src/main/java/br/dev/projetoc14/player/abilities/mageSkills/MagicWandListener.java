@@ -25,7 +25,7 @@ public class MagicWandListener implements Listener {
     public MagicWandListener(QuestWeaver plugin) {
         this.plugin = plugin;
 
-        abilityMap.put("FIREBALL", new Fireball());
+        abilityMap.put("FIREBALL", new Fireball(this.plugin));
         abilityMap.put("CURE", new Healing());
     }
 
