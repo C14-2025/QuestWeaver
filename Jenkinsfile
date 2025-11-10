@@ -148,14 +148,35 @@ pipeline {
             }
         }
 
-        stage('Resource Pack') {
+                stage('Resource Pack') {
             steps {
                 script {
                     def resourcePackDir = 'questweaver/resourcepack'
                     def resourcePackName = 'QuestWeaver_ResourcePack.zip'
+                    def resourcePackDest = '/minecraft-servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/resourcepacks'
+                    def serverProperties = '/minecraft-servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/server.properties'
+                    def resourcePackUrl = 'https://seudominio.com/QuestWeaver_ResourcePack.zip'
 
-                    echo "Iniciando empacotamento do Resource Pack..."
+                    echo "🔧 Iniciando empacotamento do Resource Pack..."
 
+                    // Garante que o utilitário 'zip' está instalado
+                    sh """
+                        if ! command -v zip &> /dev/null; then
+                            echo "'zip' não encontrado — instalando..."
+                            if [ -f /etc/alpine-release ]; then
+                                apk add --no-cache zip
+                            elif [ -f /etc/debian_version ]; then
+                                apt-get update && apt-get install -y zip
+                            elif [ -f /etc/redhat-release ]; then
+                                yum install -y zip
+                            else
+                                echo "Sistema desconhecido. Instale 'zip' manualmente no agente Jenkins."
+                                exit 1
+                            fi
+                        fi
+                    """
+
+                    // Compacta o resource pack se existir
                     sh """
                         if [ ! -d "${resourcePackDir}" ]; then
                             echo "Nenhum resource pack encontrado em ${resourcePackDir}, pulando etapa."
@@ -168,30 +189,33 @@ pipeline {
                         echo "Resource Pack compactado: ${resourcePackName}"
                     """
 
-                    echo "Enviando Resource Pack para o servidor..."
+                    // Copia para o servidor
+                    echo "📦 Enviando Resource Pack para o servidor..."
                     sh """
-                        mkdir -p ${MINECRAFT_RESOURCEPACK_DIR}
-                        cp questweaver/${resourcePackName} ${MINECRAFT_RESOURCEPACK_DIR}/
+                        mkdir -p ${resourcePackDest}
+                        cp questweaver/${resourcePackName} ${resourcePackDest}/
                     """
 
+                    // Calcula o SHA1
                     echo "Calculando SHA1..."
                     def sha1 = sh(
-                        script: "sha1sum ${MINECRAFT_RESOURCEPACK_DIR}/${resourcePackName} | cut -d' ' -f1",
+                        script: "sha1sum ${resourcePackDest}/${resourcePackName} | cut -d' ' -f1",
                         returnStdout: true
                     ).trim()
 
                     echo "SHA1: ${sha1}"
 
+                    // Atualiza o server.properties
                     echo "Atualizando server.properties..."
                     sh """
-                        sed -i '/^resource-pack=/d' ${SERVER_PROPERTIES} || true
-                        sed -i '/^resource-pack-sha1=/d' ${SERVER_PROPERTIES} || true
-                        echo "resource-pack=${RESOURCEPACK_URL}" >> ${SERVER_PROPERTIES}
-                        echo "resource-pack-sha1=${sha1}" >> ${SERVER_PROPERTIES}
+                        sed -i '/^resource-pack=/d' ${serverProperties} || true
+                        sed -i '/^resource-pack-sha1=/d' ${serverProperties} || true
+                        echo "resource-pack=${resourcePackUrl}" >> ${serverProperties}
+                        echo "resource-pack-sha1=${sha1}" >> ${serverProperties}
                     """
 
                     echo "Resource Pack configurado no servidor com sucesso!"
-                    echo "URL: ${RESOURCEPACK_URL}"
+                    echo "URL: ${resourcePackUrl}"
                     echo "SHA1: ${sha1}"
                 }
             }
