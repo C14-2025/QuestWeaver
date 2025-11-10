@@ -7,7 +7,6 @@ pipeline {
         MINECRAFT_PLUGIN_DIR = "/minecraft-servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/plugins"
         MINECRAFT_RESOURCEPACK_DIR = "/minecraft-servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/resourcepacks"
         SERVER_PROPERTIES = "/minecraft-servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/server.properties"
-        RESOURCEPACK_URL = "https://seudominio.com/QuestWeaver_ResourcePack.zip"  // altere para seu domínio real
     }
 
     stages {
@@ -149,77 +148,63 @@ pipeline {
         }
 
                 stage('Resource Pack') {
+    steps {
+        script {
+            // Caminhos configuráveis
+            def resourcePackDir = 'questweaver/resourcepack'
+            def resourcePackName = 'QuestWeaver_ResourcePack.zip'
+            def resourcePackDest = '/minecraft-servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/resourcepacks'
+
+            echo "Iniciando empacotamento do Resource Pack..."
+
+            sh """
+                if [ ! -d "${resourcePackDir}" ]; then
+                    echo "Nenhum resource pack encontrado em ${resourcePackDir}, pulando etapa."
+                    exit 0
+                fi
+
+                cd ${resourcePackDir}
+                echo "Compactando com o comando JAR (sem zip)..."
+                jar cf ../${resourcePackName} .
+                cd ..
+                echo "Resource Pack compactado: ${resourcePackName}"
+            """
+
+            echo "Enviando Resource Pack para o servidor..."
+            sh """
+                mkdir -p ${resourcePackDest}
+                cp questweaver/${resourcePackName} ${resourcePackDest}/
+            """
+
+            echo "Resource Pack enviado com sucesso para: ${resourcePackDest}/${resourcePackName}"
+            echo "Dica: aponte o campo 'resource-pack=' no server.properties para um link de download público desse arquivo."
+        }
+    }
+}
+
+        stage('Update server.properties') {
             steps {
                 script {
-                    def resourcePackDir = 'questweaver/resourcepack'
-                    def resourcePackName = 'QuestWeaver_ResourcePack.zip'
-                    def resourcePackDest = '/minecraft-servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/resourcepacks'
-                    def serverProperties = '/minecraft-servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/server.properties'
-                    def resourcePackUrl = 'https://seudominio.com/QuestWeaver_ResourcePack.zip'
+                    def resourcePackPath = "${env.MINECRAFT_RESOURCEPACK_DIR}/QuestWeaver_ResourcePack.zip"
+                    def resourcePackUrl = "http://100.107.48.45:8080/QuestWeaver_ResourcePack.zip"
 
-                    echo "🔧 Iniciando empacotamento do Resource Pack..."
+                    echo "Atualizando server.properties para apontar para o novo resource pack..."
 
-                    // Garante que o utilitário 'zip' está instalado
                     sh """
-                        if ! command -v zip &> /dev/null; then
-                            echo "'zip' não encontrado — instalando..."
-                            if [ -f /etc/alpine-release ]; then
-                                apk add --no-cache zip
-                            elif [ -f /etc/debian_version ]; then
-                                apt-get update && apt-get install -y zip
-                            elif [ -f /etc/redhat-release ]; then
-                                yum install -y zip
-                            else
-                                echo "Sistema desconhecido. Instale 'zip' manualmente no agente Jenkins."
-                                exit 1
-                            fi
+                        if [ -f "${SERVER_PROPERTIES}" ]; then
+                            sed -i '/^resource-pack=/c\\resource-pack=${resourcePackUrl}' ${SERVER_PROPERTIES}
+                            sed -i '/^require-resource-pack=/c\\require-resource-pack=true' ${SERVER_PROPERTIES}
+                            sed -i '/^resource-pack-prompt=/c\\resource-pack-prompt=§eBaixar o pacote de texturas do QuestWeaver?' ${SERVER_PROPERTIES}
+                            echo "server.properties atualizado com sucesso!"
+                        else
+                            echo "AVISO: server.properties não encontrado em ${SERVER_PROPERTIES}"
                         fi
                     """
-
-                    // Compacta o resource pack se existir
-                    sh """
-                        if [ ! -d "${resourcePackDir}" ]; then
-                            echo "Nenhum resource pack encontrado em ${resourcePackDir}, pulando etapa."
-                            exit 0
-                        fi
-
-                        cd ${resourcePackDir}
-                        zip -r ../${resourcePackName} . > /dev/null
-                        cd ..
-                        echo "Resource Pack compactado: ${resourcePackName}"
-                    """
-
-                    // Copia para o servidor
-                    echo "📦 Enviando Resource Pack para o servidor..."
-                    sh """
-                        mkdir -p ${resourcePackDest}
-                        cp questweaver/${resourcePackName} ${resourcePackDest}/
-                    """
-
-                    // Calcula o SHA1
-                    echo "Calculando SHA1..."
-                    def sha1 = sh(
-                        script: "sha1sum ${resourcePackDest}/${resourcePackName} | cut -d' ' -f1",
-                        returnStdout: true
-                    ).trim()
-
-                    echo "SHA1: ${sha1}"
-
-                    // Atualiza o server.properties
-                    echo "Atualizando server.properties..."
-                    sh """
-                        sed -i '/^resource-pack=/d' ${serverProperties} || true
-                        sed -i '/^resource-pack-sha1=/d' ${serverProperties} || true
-                        echo "resource-pack=${resourcePackUrl}" >> ${serverProperties}
-                        echo "resource-pack-sha1=${sha1}" >> ${serverProperties}
-                    """
-
-                    echo "Resource Pack configurado no servidor com sucesso!"
-                    echo "URL: ${resourcePackUrl}"
-                    echo "SHA1: ${sha1}"
                 }
             }
         }
+
+
     }
 
     post {
