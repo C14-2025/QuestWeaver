@@ -21,7 +21,7 @@ public class StartMatchCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         QuestWeaver plugin = (QuestWeaver) QuestWeaver.getInstance();
-        StartMatch match = new StartMatch(plugin.getPlayerFileManager(), plugin.getStatsManager(), plugin);
+        StartMatch match = new StartMatch(plugin.getPlayerFileManager(),plugin.getMatchManager() , plugin.getStatsManager(), plugin);
 
         // verify if sender is not a player, so is the console
         if (!(sender instanceof Player)) {

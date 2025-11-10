@@ -72,6 +72,9 @@ public class AbilityListener implements Listener {
         // Evita ativar enquanto agachado (shift)
         if (p.isSneaking()) return;
 
+        // Evita que outros itens possam conflitar com o assassino
+        if (!isPotion(item) || !isSword(item)) return;
+
         // Só assassinos podem usar
         AssassinPlayer assassin = getAssassinPlayer(p);
         if (assassin == null) {
