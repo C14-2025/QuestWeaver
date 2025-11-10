@@ -15,6 +15,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -71,7 +72,8 @@ public class VampireKnives extends Ability {
         float LIFESTEAL_PERCENT = 0.25f;
         double heal = damage * LIFESTEAL_PERCENT;
 
-        double newHealth = Math.min(player.getHealth() + heal, Attribute.GENERIC_MAX_HEALTH.ordinal());
+        double maxHealth = Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue();
+        double newHealth = Math.min(player.getHealth() + heal, maxHealth);
         player.setHealth(newHealth);
 
         player.getWorld().spawnParticle(
