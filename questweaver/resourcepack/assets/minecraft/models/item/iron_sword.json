@@ -5,8 +5,8 @@
   },
   "overrides": [
     {
-      "predicate": { "custom_model_data": 1001},
-      "model": "item/punhal"
+      "predicate": { "custom_model_data": 1001 },
+      "model": "item/dagger"
     }
   ]
 }
