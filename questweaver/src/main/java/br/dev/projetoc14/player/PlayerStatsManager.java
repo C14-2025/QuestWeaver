@@ -1,7 +1,8 @@
 package br.dev.projetoc14.player;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -11,6 +12,7 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
 
 public class PlayerStatsManager {
@@ -36,19 +38,19 @@ public class PlayerStatsManager {
         PlayerStats stats = getStats(player);
 
         // Manager de vida:
-        player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(stats.getHealth());
+        Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(stats.getHealth());
         double currentHealth = Math.min(player.getHealth(), stats.getHealth());
         player.setHealth(currentHealth);
 
         // Manager de dano físico:
-        player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(stats.getStrength());
+        Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)).setBaseValue(stats.getStrength());
 
         // Manager de defesa/armadura:
-        player.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(stats.getDefense());
+        Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ARMOR)).setBaseValue(stats.getDefense());
 
         // Manager de agilidade/velocidade de movimento:
         double baseSpeed = 0.1; // default do Minecraft
-        player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(baseSpeed + (stats.getAgility() * 0.001));
+        Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)).setBaseValue(baseSpeed + (stats.getAgility() * 0.001));
     }
 
     public boolean hasStats(Player player) {
@@ -125,7 +127,8 @@ public class PlayerStatsManager {
         // Limpa o inventário
         player.getInventory().clear();
 
-        player.sendMessage(ChatColor.YELLOW + "Seus stats foram resetados!");
+        player.sendMessage(Component.text("Seus stats foram resetados!")
+                .color(NamedTextColor.YELLOW));
     }
 
     // ========== SISTEMA DE REGENERAÇÃO DE MANA ========== //

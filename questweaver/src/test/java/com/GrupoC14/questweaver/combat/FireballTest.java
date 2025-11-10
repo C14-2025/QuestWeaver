@@ -20,7 +20,6 @@ public class FireballTest {
     private RPGPlayer target;
     private Player mockCaster;
     private Player mockTarget;
-    private PlayerStatsManager statsManager;
 
     @BeforeEach
     public void setUp() {
@@ -48,7 +47,11 @@ public class FireballTest {
 
         // Configura o mock do caster
         when(mockCaster.getHealth()).thenReturn(20.0);
-        when(mockCaster.getMaxHealth()).thenReturn(20.0);
+        AttributeInstance attribute = mock(AttributeInstance.class);
+        when(attribute.getBaseValue()).thenReturn(20.0);
+
+        Player player = mock(Player.class);
+        when(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).thenReturn(attribute);
         doAnswer(invocation -> {
             double newHealth = invocation.getArgument(0);
             when(mockCaster.getHealth()).thenReturn(newHealth);
@@ -57,7 +60,8 @@ public class FireballTest {
 
         // Configura o mock do target (começa com 80 HP no sistema RPG)
         when(mockTarget.getHealth()).thenReturn(20.0);
-        when(mockTarget.getMaxHealth()).thenReturn(20.0);
+        when(attribute.getBaseValue()).thenReturn(20.0);
+        when(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).thenReturn(attribute);
         doAnswer(invocation -> {
             double newHealth = invocation.getArgument(0);
             when(mockTarget.getHealth()).thenReturn(newHealth);
@@ -71,7 +75,7 @@ public class FireballTest {
         target = new MagePlayer(mockTarget);
 
         // Cria e seta o statsManager (CRÍTICO)
-        statsManager = new PlayerStatsManager();
+        PlayerStatsManager statsManager = new PlayerStatsManager();
         caster.setStatsManager(statsManager);
         target.setStatsManager(statsManager);
 

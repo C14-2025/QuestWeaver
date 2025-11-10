@@ -25,13 +25,15 @@ public class ArchListener implements Listener {
 
     private final QuestWeaver plugin;
     private final Map<UUID, Integer> abilityIndex = new HashMap<>();
-    private final List<String> abilities = Arrays.asList("NORMALARROW", "EXPLOSIVEARROW");
+    private final List<String> abilities = Arrays.asList("NORMALARROW", "EXPLOSIVEARROW", "KNOCKBACKARROW", "POISONARROW");
 
     private final Map<String, Ability> abilityMap = new HashMap<>();
 
     public ArchListener(QuestWeaver plugin) {
         this.plugin = plugin;
         abilityMap.put("EXPLOSIVEARROW", new ExplosiveArrow(plugin));
+        abilityMap.put("KNOCKBACKARROW", new KnockbackArrow(plugin));
+        abilityMap.put("POISONARROW", new PoisonArrow(plugin));
         // NORMALARROW é disparo padrão, então não requer instância
     }
 
@@ -81,33 +83,46 @@ public class ArchListener implements Listener {
     public void onProjectileHit(ProjectileHitEvent event) {
         if (!(event.getEntity() instanceof Arrow arrow)) return;
 
-        // Verificar se a flecha tem a metadata de explosiva
-        if (!arrow.hasMetadata("explosive_arrow")) return;
+        Map<String, String> arrowMetaToAbility = Map.of(
+                "explosive_arrow", "EXPLOSIVEARROW",
+                "knockback_arrow", "KNOCKBACKARROW",
+                "poison_arrow", "POISONARROW"
+        );
 
-        // Obter o atirador
+        for (var entry : arrowMetaToAbility.entrySet()) {
+            String meta = entry.getKey();
+            String abilityKey = entry.getValue();
+
+            if (arrow.hasMetadata(meta)) {
+                handleArrowHit(event, arrow, meta, abilityKey);
+                break;
+            }
+        }
+    }
+
+    private void handleArrowHit(ProjectileHitEvent event, Arrow arrow, String metaKey, String abilityKey) {
         UUID shooterUUID = null;
-        if (arrow.hasMetadata("explosive_arrow_shooter")) {
-            shooterUUID = (UUID) arrow.getMetadata("explosive_arrow_shooter").get(0).value();
+        if (arrow.hasMetadata(metaKey + "_shooter")) {
+            shooterUUID = (UUID) arrow.getMetadata(metaKey + "_shooter").getFirst().value();
         }
 
         if (shooterUUID == null) return;
-
         Player shooter = Bukkit.getPlayer(shooterUUID);
         if (shooter == null) return;
 
         RPGPlayer rpgShooter = plugin.getRPGPlayer(shooter);
 
-        // Verificar se acertou um jogador
+        // Identifica o alvo, se houver
         RPGPlayer target = null;
         Entity hitEntity = event.getHitEntity();
         if (hitEntity instanceof Player hitPlayer) {
             target = plugin.getRPGPlayer(hitPlayer);
         }
 
-        // Obter a instância da habilidade ExplosiveArrow e executar o efeito
-        Ability ability = abilityMap.get("EXPLOSIVEARROW");
-        if (ability instanceof ExplosiveArrow explosiveArrow) {
-            explosiveArrow.onHit(event, rpgShooter, target);
+        // Executa a habilidade, se ela suportar impacto
+        Ability ability = abilityMap.get(abilityKey);
+        if (ability instanceof arrows hitAbility) {
+            hitAbility.onHit(event, rpgShooter, target);
         }
     }
 
@@ -127,6 +142,8 @@ public class ArchListener implements Listener {
         return switch (nome.toUpperCase()) {
             case "EXPLOSIVEARROW" -> "Flecha Explosiva 💥";
             case "NORMALARROW" -> "Flecha Normal 🏹";
+            case "KNOCKBACKARROW" -> "Flecha Repulsora ";
+            case "POISONARROW" -> "Flecha Venenosa ";
             default -> nome;
         };
     }
