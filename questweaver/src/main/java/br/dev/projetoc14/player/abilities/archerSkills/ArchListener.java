@@ -103,7 +103,7 @@ public class ArchListener implements Listener {
     private void handleArrowHit(ProjectileHitEvent event, Arrow arrow, String metaKey, String abilityKey) {
         UUID shooterUUID = null;
         if (arrow.hasMetadata(metaKey + "_shooter")) {
-            shooterUUID = (UUID) arrow.getMetadata(metaKey + "_shooter").getFirst().value();
+            shooterUUID = (UUID) arrow.getMetadata(metaKey + "_shooter").get(0).value();
         }
 
         if (shooterUUID == null) return;
@@ -119,10 +119,10 @@ public class ArchListener implements Listener {
             target = plugin.getRPGPlayer(hitPlayer);
         }
 
-        // Executa a habilidade, se ela suportar impacto
+        // Executa a habilidade se ela implementa arrows
         Ability ability = abilityMap.get(abilityKey);
-        if (ability instanceof arrows hitAbility) {
-            hitAbility.onHit(event, rpgShooter, target);
+        if (ability instanceof arrows arrowAbility) {
+            arrowAbility.onHit(event, rpgShooter, target);
         }
     }
 
