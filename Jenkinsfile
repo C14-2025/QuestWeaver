@@ -7,6 +7,11 @@ pipeline {
         MINECRAFT_PLUGIN_DIR = "/minecraft-servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/plugins"
         MINECRAFT_RESOURCEPACK_DIR = "/minecraft-servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/resourcepacks"
         SERVER_PROPERTIES = "/minecraft-servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/server.properties"
+        
+        // Configuração do GitHub Release
+        GITHUB_REPO = "C14-2025/QuestWeaver"
+        RELEASE_TAG = "v1.0"
+        RESOURCE_PACK_NAME = "QuestWeaver_ResourcePack.zip"
     }
 
     stages {
@@ -147,78 +152,107 @@ pipeline {
             }
         }
 
-                stage('Resource Pack') {
-    steps {
-        script {
-            // Caminhos configuráveis
-            def resourcePackDir = 'questweaver/resourcepack'
-            def resourcePackName = 'QuestWeaver_ResourcePack.zip'
-            def resourcePackDest = '/minecraft-servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/resourcepacks'
+        stage('Resource Pack') {
+            steps {
+                script {
+                    def resourcePackDir = 'questweaver/resourcepack'
+                    def resourcePackName = env.RESOURCE_PACK_NAME
+                    def resourcePackDest = env.MINECRAFT_RESOURCEPACK_DIR
 
-            echo "Iniciando empacotamento do Resource Pack..."
+                    echo "Iniciando empacotamento do Resource Pack..."
 
-            sh """
-                if [ ! -d "${resourcePackDir}" ]; then
-                    echo "Nenhum resource pack encontrado em ${resourcePackDir}, pulando etapa."
-                    exit 0
-                fi
+                    sh """
+                        if [ ! -d "${resourcePackDir}" ]; then
+                            echo "Nenhum resource pack encontrado em ${resourcePackDir}, pulando etapa."
+                            exit 0
+                        fi
 
-                cd ${resourcePackDir}
-                echo "Compactando com o comando JAR (sem zip)..."
-                jar cf ../${resourcePackName} .
-                cd ..
-                echo "Resource Pack compactado: ${resourcePackName}"
-            """
+                        cd ${resourcePackDir}
+                        echo "Compactando com o comando JAR..."
+                        jar cf ../${resourcePackName} .
+                        cd ..
+                        echo "Resource Pack compactado: ${resourcePackName}"
+                        
+                        # Calcula SHA1 do resource pack
+                        SHA1=\$(sha1sum ${resourcePackName} | cut -d' ' -f1)
+                        echo "SHA1 do Resource Pack: \$SHA1"
+                        echo "\$SHA1" > ${resourcePackName}.sha1
+                    """
 
-            echo "Enviando Resource Pack para o servidor..."
-            sh """
-                mkdir -p ${resourcePackDest}
-                cp questweaver/${resourcePackName} ${resourcePackDest}/
-            """
+                    echo "Copiando Resource Pack para backup local..."
+                    sh """
+                        mkdir -p ${resourcePackDest}
+                        cp questweaver/${resourcePackName} ${resourcePackDest}/
+                        cp questweaver/${resourcePackName}.sha1 ${resourcePackDest}/
+                    """
 
-            echo "Resource Pack enviado com sucesso para: ${resourcePackDest}/${resourcePackName}"
-            echo "Dica: aponte o campo 'resource-pack=' no server.properties para um link de download público desse arquivo."
+                    echo "Resource Pack salvo localmente em: ${resourcePackDest}/${resourcePackName}"
+                }
+            }
         }
-    }
-}
 
         stage('Update server.properties') {
-    steps {
-        script {
-            // URL pública do GitHub Release
-            def resourcePackUrl = "https://github.com/C14-2025/QuestWeaver/releases/download/v1.0/QuestWeaver_ResourcePack.zip"
-            
-            echo "Atualizando server.properties para apontar para o resource pack do GitHub..."
+            steps {
+                script {
+                    def resourcePackUrl = "https://github.com/${env.GITHUB_REPO}/releases/download/${env.RELEASE_TAG}/${env.RESOURCE_PACK_NAME}"
+                    
+                    echo "Atualizando server.properties..."
+                    echo "URL do Resource Pack: ${resourcePackUrl}"
 
-            sh """
-                if [ -f "${SERVER_PROPERTIES}" ]; then
-                    # Remove linhas malformadas
-                    sed -i '/^https=/d' ${SERVER_PROPERTIES}
-                    
-                    # Atualiza as configurações corretas
-                    sed -i 's|^resource-pack=.*|resource-pack=${resourcePackUrl}|' ${SERVER_PROPERTIES}
-                    sed -i 's|^require-resource-pack=.*|require-resource-pack=true|' ${SERVER_PROPERTIES}
-                    sed -i 's|^resource-pack-prompt=.*|resource-pack-prompt=§eBaixar o pacote de texturas do QuestWeaver?|' ${SERVER_PROPERTIES}
-                    
-                    # Calcular SHA1 do resource pack
-                    RESOURCE_PACK_FILE="${env.MINECRAFT_RESOURCEPACK_DIR}/QuestWeaver_ResourcePack.zip"
-                    if [ -f "\$RESOURCE_PACK_FILE" ]; then
-                        SHA1=\$(sha1sum "\$RESOURCE_PACK_FILE" | cut -d' ' -f1)
+                    sh """
+                        if [ ! -f "${SERVER_PROPERTIES}" ]; then
+                            echo "ERRO: server.properties não encontrado em ${SERVER_PROPERTIES}"
+                            exit 1
+                        fi
+
+                        # Remove linhas malformadas que podem existir
+                        sed -i '/^https=/d' ${SERVER_PROPERTIES}
+                        
+                        # Lê o SHA1 gerado
+                        SHA1=\$(cat ${MINECRAFT_RESOURCEPACK_DIR}/${RESOURCE_PACK_NAME}.sha1)
+                        echo "Usando SHA1: \$SHA1"
+                        
+                        # Atualiza as configurações do resource pack
+                        sed -i 's|^resource-pack=.*|resource-pack=${resourcePackUrl}|' ${SERVER_PROPERTIES}
+                        sed -i 's|^require-resource-pack=.*|require-resource-pack=true|' ${SERVER_PROPERTIES}
+                        sed -i 's|^resource-pack-prompt=.*|resource-pack-prompt=§eBaixar o pacote de texturas do QuestWeaver?|' ${SERVER_PROPERTIES}
                         sed -i "s|^resource-pack-sha1=.*|resource-pack-sha1=\$SHA1|" ${SERVER_PROPERTIES}
-                        echo "SHA1 do resource pack: \$SHA1"
-                    fi
-                    
-                    echo "server.properties atualizado com sucesso!"
-                    grep "resource-pack" ${SERVER_PROPERTIES}
-                else
-                    echo "AVISO: server.properties não encontrado em ${SERVER_PROPERTIES}"
-                fi
-            """
+                        
+                        echo ""
+                        echo "=== Configurações atualizadas ==="
+                        grep "resource-pack" ${SERVER_PROPERTIES}
+                        echo "================================="
+                        echo ""
+                        echo "server.properties atualizado com sucesso!"
+                    """
+                }
+            }
         }
-    }
-}
 
-
+        stage('Verify Configuration') {
+            steps {
+                script {
+                    echo "Verificando configuração final..."
+                    
+                    sh """
+                        echo ""
+                        echo "=== RESUMO DO DEPLOY ==="
+                        echo "Plugin: \$(ls -lh ${MINECRAFT_PLUGIN_DIR}/questweaver*.jar | awk '{print \$9, \$5}')"
+                        echo "Resource Pack: \$(ls -lh ${MINECRAFT_RESOURCEPACK_DIR}/${RESOURCE_PACK_NAME} | awk '{print \$9, \$5}')"
+                        echo ""
+                        echo "=== CONFIGURAÇÃO DO RESOURCE PACK ==="
+                        grep "resource-pack" ${SERVER_PROPERTIES} | sed 's/^/  /'
+                        echo "========================="
+                        echo ""
+                        echo "  IMPORTANTE: Para aplicar as mudanças, você precisa:"
+                        echo "   1. Fazer upload do ${RESOURCE_PACK_NAME} para o GitHub Release ${RELEASE_TAG}"
+                        echo "   2. Reiniciar o servidor Minecraft"
+                        echo "   3. Os jogadores devem limpar cache (pasta .minecraft/server-resource-packs/)"
+                        echo ""
+                    """
+                }
+            }
+        }
     }
 
     post {
@@ -235,10 +269,24 @@ pipeline {
             Resultado: ${currentBuild.currentResult}
             Detalhes: ${env.BUILD_URL}
 
-            Deploy e atualização do Resource Pack concluídos com sucesso!
+            Deploy concluído!
+            
+            Resource Pack URL: https://github.com/${env.GITHUB_REPO}/releases/download/${env.RELEASE_TAG}/${env.RESOURCE_PACK_NAME}
+            
+            Próximos passos:
+            1. Fazer upload do resource pack para o GitHub Release
+            2. Reiniciar o servidor Minecraft
             """,
                 to: ""
             )
+        }
+        
+        success {
+            echo "✓ Build e deploy concluídos com sucesso!"
+        }
+        
+        failure {
+            echo "✗ Build falhou. Verifique os logs acima."
         }
     }
 }
