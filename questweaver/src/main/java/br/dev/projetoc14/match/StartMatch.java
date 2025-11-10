@@ -19,12 +19,14 @@ public class StartMatch {
     private final PlayerStatsManager statsManager;
     private final Plugin plugin;
     private StartMatchItems start;
+    private MatchManager matchManager;
 
-    public StartMatch(PlayerFileManager fileManager, PlayerStatsManager statsManager, Plugin plugin) {
+    public StartMatch(PlayerFileManager fileManager, MatchManager matchManager, PlayerStatsManager statsManager, Plugin plugin) {
         this.fileManager = fileManager;
         this.statsManager = statsManager;
         this.plugin = plugin;
         this.start =  new StartMatchItems(fileManager, statsManager, (QuestWeaver) plugin);
+        this.matchManager = matchManager;
     }
 
     /*
@@ -35,32 +37,25 @@ public class StartMatch {
         - set 1 min 45 sec invencibility (can be changed)
         - author: sno0s
      */
-
     public void execute() {
         Collection<? extends Player> jogadores = Bukkit.getOnlinePlayers();
 
-        // players initial configs, in invincibility
         for (Player p : jogadores) {
             p.setInvulnerable(true);
             p.setGameMode(GameMode.SURVIVAL);
             p.getInventory().clear();
-
-            /*
-                TODO: aqui, chamar o método para cada item que deve ser dado ao player no inicio da partida
-                TODO: teleportá-los para perto de suas estruturas para que não se enfrentem de início
-                tempo de invencibilidade pode ser ajustado
-             */
             start.setItems(p);
             p.getInventory().setItem(8, SkillTree.create());
+            matchManager.addPlayer(p);
         }
-
+        QuestWeaver.setMatchRunning(true);
         // invincibility countdown
         new BukkitRunnable() {
-            int countdown = 105; // 1m45s
+            int countdown = 45;
 
             @Override
             public void run() {
-                if (countdown == 105 || countdown == 30 || countdown == 15
+                if (countdown == 45 || countdown == 30 || countdown == 15
                         || (countdown <= 5 && countdown > 0)) {
                     Bukkit.broadcast(Component.text("§eFaltam " + countdown + " segundos de invencibilidade."));
                 }
@@ -72,11 +67,11 @@ public class StartMatch {
                         p.setInvulnerable(false);
 
                     }
-                    cancel(); // Para o contador
+                    cancel();
                     return;
                 }
 
-                countdown--; // decrementa a cada segundo
+                countdown--;
             }
         }.runTaskTimer(plugin, 0L, 20L); // 20 ticks = 1 segundo
     }
