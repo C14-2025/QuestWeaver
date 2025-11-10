@@ -8,9 +8,9 @@ pipeline {
         MINECRAFT_RESOURCEPACK_DIR = "/minecraft-servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/resourcepacks"
         SERVER_PROPERTIES = "/minecraft-servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/server.properties"
         
-        // Configuração do GitHub Release
+        // Configuração do GitHub Pages
         GITHUB_REPO = "C14-2025/QuestWeaver"
-        RELEASE_TAG = "v1.0.1"
+        GITHUB_USERNAME = "C14-2025"
         RESOURCE_PACK_NAME = "QuestWeaver_ResourcePack.zip"
     }
 
@@ -194,10 +194,11 @@ pipeline {
         stage('Update server.properties') {
             steps {
                 script {
-                    def resourcePackUrl = "https://github.com/${env.GITHUB_REPO}/releases/download/${env.RELEASE_TAG}/${env.RESOURCE_PACK_NAME}"
+                    // URL do GitHub Pages
+                    def resourcePackUrl = "https://${env.GITHUB_USERNAME}.github.io/QuestWeaver/${env.RESOURCE_PACK_NAME}"
                     
                     echo "Atualizando server.properties..."
-                    echo "URL do Resource Pack: ${resourcePackUrl}"
+                    echo "URL do Resource Pack (GitHub Pages): ${resourcePackUrl}"
 
                     sh """
                         if [ ! -f "${SERVER_PROPERTIES}" ]; then
@@ -245,9 +246,12 @@ pipeline {
                         echo "========================="
                         echo ""
                         echo "  IMPORTANTE: Para aplicar as mudanças, você precisa:"
-                        echo "   1. Fazer upload do ${RESOURCE_PACK_NAME} para o GitHub Release ${RELEASE_TAG}"
-                        echo "   2. Reiniciar o servidor Minecraft"
-                        echo "   3. Os jogadores devem limpar cache (pasta .minecraft/server-resource-packs/)"
+                        echo "   1. Fazer commit do ${RESOURCE_PACK_NAME} para a branch 'gh-pages' ou 'resourcePack'"
+                        echo "   2. Ativar GitHub Pages no repositório"
+                        echo "   3. Reiniciar o servidor Minecraft"
+                        echo "   4. Os jogadores devem limpar cache (pasta .minecraft/server-resource-packs/)"
+                        echo ""
+                        echo "URL do GitHub Pages será: https://${GITHUB_USERNAME}.github.io/QuestWeaver/${RESOURCE_PACK_NAME}"
                         echo ""
                     """
                 }
@@ -271,10 +275,10 @@ pipeline {
 
             Deploy concluído!
             
-            Resource Pack URL: https://github.com/${env.GITHUB_REPO}/releases/download/${env.RELEASE_TAG}/${env.RESOURCE_PACK_NAME}
+            Resource Pack URL (GitHub Pages): https://${env.GITHUB_USERNAME}.github.io/QuestWeaver/${env.RESOURCE_PACK_NAME}
             
             Próximos passos:
-            1. Fazer upload do resource pack para o GitHub Release
+            1. Fazer commit do resource pack para a branch do GitHub Pages
             2. Reiniciar o servidor Minecraft
             """,
                 to: ""
