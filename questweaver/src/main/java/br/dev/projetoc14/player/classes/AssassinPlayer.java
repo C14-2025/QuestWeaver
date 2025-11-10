@@ -51,17 +51,17 @@ public class AssassinPlayer extends RPGPlayer {
     @Override
     public void getStartingEquipment() {
         // Cria a arma do assassino
-        ItemStack sword = new ItemStack(Material.IRON_SWORD);
-        ItemMeta swordMeta = sword.getItemMeta();
+        ItemStack dagger = new ItemStack(Material.IRON_SWORD);
+        ItemMeta daggerMeta = dagger.getItemMeta();
 
-        if (swordMeta != null) {
-            swordMeta.displayName(
-                    Component.text("Lâmina Sombria")
+        if (daggerMeta != null) {
+            daggerMeta.displayName(
+                    Component.text("Punhal Sombrio")
                             .color(NamedTextColor.DARK_GRAY)
                             .decoration(TextDecoration.ITALIC, false)
             );
 
-            swordMeta.lore(List.of(
+            daggerMeta.lore(List.of(
                     Component.text("Uma lâmina leve e precisa, feita para matar em silêncio.")
                             .color(NamedTextColor.GRAY)
                             .decoration(TextDecoration.ITALIC, false),
@@ -72,12 +72,14 @@ public class AssassinPlayer extends RPGPlayer {
                             .decoration(TextDecoration.ITALIC, false)
             ));
 
-            swordMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-            sword.setItemMeta(swordMeta);
+            daggerMeta.setCustomModelData(1001); // Modelo Modificado
+
+            daggerMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+            dagger.setItemMeta(daggerMeta);
         }
 
         // Usa a ClassUtil para equipar armadura e o livro
-        ClassUtil.equipPlayer(this, sword, Color.fromRGB(25, 25, 25)); // Preto escuro
+        ClassUtil.equipPlayer(this, dagger, Color.fromRGB(25, 25, 25)); // Preto escuro
 
         // Adiciona a poção exclusiva do assassino
         player.getInventory().addItem(createAssassinPotion());

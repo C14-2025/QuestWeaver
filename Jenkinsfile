@@ -5,6 +5,8 @@ pipeline {
         JAVA_HOME = "/opt/java/openjdk"
         PATH = "${env.JAVA_HOME}/:${env.PATH}"
         MINECRAFT_PLUGIN_DIR = "/minecraft-servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/plugins"
+        MINECRAFT_RESOURCEPACK_DIR = "/minecraft-servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/resourcepacks"
+        SERVER_PROPERTIES = "/minecraft-servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/server.properties"
     }
 
     stages {
@@ -88,9 +90,7 @@ pipeline {
                     sh '''
                         echo "Iniciando Validação do JAR"
 
-                        # Localiza o JAR
                         JAR_FILE=$(ls build/libs/*.jar | grep -v "plain" | head -n 1)
-
                         if [ -z "$JAR_FILE" ]; then
                             echo "ERRO: JAR não encontrado!"
                             exit 1
@@ -100,63 +100,113 @@ pipeline {
                         JAR_SIZE=$(du -h "$JAR_FILE" | cut -f1)
                         echo "JAR: $JAR_NAME ($JAR_SIZE)"
 
-                        # Valida integridade e plugin.yml
                         if ! jar tf "$JAR_FILE" > /dev/null 2>&1; then
                             echo "ERRO: JAR corrompido"
                             exit 1
                         fi
 
-                        # Verifica plugin.yml (Obrigatório para Minecraft)
                         if ! jar tf "$JAR_FILE" | grep -q "^plugin.yml$"; then
                             echo "ERRO: plugin.yml não encontrado - falha no Minecraft!"
                             exit 1
                         fi
 
-                        # Extrai e exibe informações essenciais
                         jar xf "$JAR_FILE" plugin.yml
                         echo "Informações Plugin:"
                         grep -E "^(name|version):" plugin.yml | sed 's/^/  /'
                         rm plugin.yml
 
-                        # Checksum (Importante para deploy/cache)
                         echo "MD5: $(md5sum "$JAR_FILE" | cut -d' ' -f1)"
-
                         echo "Validação concluída com sucesso!"
                     '''
                 }
             }
         }
 
-            stage('Deploy') {
-                steps {
-                    script {
-                        echo "Iniciando deploy para a pasta: ${env.MINECRAFT_PLUGIN_DIR}"
+        stage('Deploy') {
+            steps {
+                script {
+                    echo "Iniciando deploy para a pasta: ${env.MINECRAFT_PLUGIN_DIR}"
 
-                        def jarFile = sh(
-                            script: 'ls questweaver/build/libs/*.jar | grep -v "plain" | head -n 1',
-                            returnStdout: true
-                        ).trim()
+                    def jarFile = sh(
+                        script: 'ls questweaver/build/libs/*.jar | grep -v "plain" | head -n 1',
+                        returnStdout: true
+                    ).trim()
 
-                        if (jarFile) {
-                            echo "Arquivo do plugin encontrado: ${jarFile}"
+                    if (jarFile) {
+                        echo "Arquivo do plugin encontrado: ${jarFile}"
 
-                            // removendo versões antigas do plugin
-                            echo "Removendo versões antigas do plugin..."
-                            sh "rm -f ${env.MINECRAFT_PLUGIN_DIR}/questweaver*.jar"
-                            sh "rm -rf ${env.MINECRAFT_PLUGIN_DIR}/QuestWeaver"
+                        sh "rm -f ${env.MINECRAFT_PLUGIN_DIR}/questweaver*.jar"
+                        sh "rm -rf ${env.MINECRAFT_PLUGIN_DIR}/QuestWeaver"
 
-                            // Comando para copiar o arquivo para a pasta de plugins do servidor
-                            sh "cp ${jarFile} ${env.MINECRAFT_PLUGIN_DIR}"
-                            echo "Plugin copiado com sucesso!"
-                            
-                        } else {
-                            // Falha o build se o .jar não for encontrado
-                            error "Nenhum arquivo .jar foi encontrado no workspace! O job de 'Package' precisa rodar primeiro."
-                        }
+                        sh "cp ${jarFile} ${env.MINECRAFT_PLUGIN_DIR}"
+                        echo "Plugin copiado com sucesso!"
+                    } else {
+                        error "Nenhum arquivo .jar foi encontrado no workspace!"
                     }
                 }
             }
+        }
+
+                stage('Resource Pack') {
+    steps {
+        script {
+            // Caminhos configuráveis
+            def resourcePackDir = 'questweaver/resourcepack'
+            def resourcePackName = 'QuestWeaver_ResourcePack.zip'
+            def resourcePackDest = '/minecraft-servers/a70ef6f2-570f-46b1-9a13-adc1b0a32793/resourcepacks'
+
+            echo "Iniciando empacotamento do Resource Pack..."
+
+            sh """
+                if [ ! -d "${resourcePackDir}" ]; then
+                    echo "Nenhum resource pack encontrado em ${resourcePackDir}, pulando etapa."
+                    exit 0
+                fi
+
+                cd ${resourcePackDir}
+                echo "Compactando com o comando JAR (sem zip)..."
+                jar cf ../${resourcePackName} .
+                cd ..
+                echo "Resource Pack compactado: ${resourcePackName}"
+            """
+
+            echo "Enviando Resource Pack para o servidor..."
+            sh """
+                mkdir -p ${resourcePackDest}
+                cp questweaver/${resourcePackName} ${resourcePackDest}/
+            """
+
+            echo "Resource Pack enviado com sucesso para: ${resourcePackDest}/${resourcePackName}"
+            echo "Dica: aponte o campo 'resource-pack=' no server.properties para um link de download público desse arquivo."
+        }
     }
+}
+
+        stage('Update server.properties') {
+            steps {
+                script {
+                    def resourcePackPath = "${env.MINECRAFT_RESOURCEPACK_DIR}/QuestWeaver_ResourcePack.zip"
+                    def resourcePackUrl = "http://100.107.48.45:8080/QuestWeaver_ResourcePack.zip"
+
+                    echo "Atualizando server.properties para apontar para o novo resource pack..."
+
+                    sh """
+                        if [ -f "${SERVER_PROPERTIES}" ]; then
+                            sed -i '/^resource-pack=/c\\resource-pack=${resourcePackUrl}' ${SERVER_PROPERTIES}
+                            sed -i '/^require-resource-pack=/c\\require-resource-pack=true' ${SERVER_PROPERTIES}
+                            sed -i '/^resource-pack-prompt=/c\\resource-pack-prompt=§eBaixar o pacote de texturas do QuestWeaver?' ${SERVER_PROPERTIES}
+                            echo "server.properties atualizado com sucesso!"
+                        else
+                            echo "AVISO: server.properties não encontrado em ${SERVER_PROPERTIES}"
+                        fi
+                    """
+                }
+            }
+        }
+
+
+    }
+
     post {
         always {
             emailext(
@@ -171,7 +221,7 @@ pipeline {
             Resultado: ${currentBuild.currentResult}
             Detalhes: ${env.BUILD_URL}
 
-            Deploy e reinício do servidor foram executados.
+            Deploy e atualização do Resource Pack concluídos com sucesso!
             """,
                 to: ""
             )
