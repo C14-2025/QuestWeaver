@@ -21,7 +21,7 @@ import java.util.*;
 
 public class AbilityListener implements Listener {
     private final QuestWeaver plugin;
-    
+
     private final Map<UUID, Integer> potionAbilityIndex = new HashMap<>();
     private final Map<UUID, Integer> swordAbilityIndex = new HashMap<>();
 
