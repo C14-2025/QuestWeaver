@@ -1,7 +1,7 @@
 {
   "parent": "item/handheld",
   "textures": {
-    "layer0": "item/punhal"
+    "layer0": "item/dagger"
   },
   "display": {
     "thirdperson_righthand": {
