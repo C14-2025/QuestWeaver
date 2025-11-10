@@ -15,8 +15,8 @@ public class KnockbackArrow extends Ability implements arrows {
     private final int damage = 15;
     private final Plugin plugin;
 
-    public KnockbackArrow(String name, int manaCost, int cooldown, Plugin plugin) {
-        super(name, manaCost, cooldown);
+    public KnockbackArrow(Plugin plugin) {
+        super("Flecha Repulsora", 15, 4);
         this.plugin = plugin;
     }
 

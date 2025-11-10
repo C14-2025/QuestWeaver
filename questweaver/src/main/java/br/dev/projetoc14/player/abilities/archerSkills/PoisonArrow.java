@@ -15,8 +15,8 @@ public class PoisonArrow extends Ability implements arrows{
     private final Plugin plugin;
     private final int damage = 12;
 
-    public PoisonArrow(String name, int manaCost, int cooldown, Plugin plugin) {
-        super(name, manaCost, cooldown);
+    public PoisonArrow(Plugin plugin) {
+        super("Flecha Venenosa", 20, 9);
         this.plugin = plugin;
     }
 
