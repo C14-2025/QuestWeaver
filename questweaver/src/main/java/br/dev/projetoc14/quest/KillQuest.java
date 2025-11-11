@@ -1,11 +1,12 @@
 package br.dev.projetoc14.quest;
 
-import org.bukkit.Location;
+import br.dev.projetoc14.QuestWeaver;
+import br.dev.projetoc14.quest.utils.QuestCompletedEvent;
+import org.bukkit.*;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,15 +51,17 @@ public class KillQuest extends Quest {
 
             Entity entity = world.spawnEntity(randomLocation, entityType);
             if (entity instanceof Zombie zombie) {
-                // Garante que não queime no sol
+                // Garante que nao queime no sol
                 zombie.setShouldBurnInDay(false);
             }
 
             if (entity instanceof Skeleton skeleton) {
-                // Garante que não queime no sol
+                // Garante que nao queime no sol
                 skeleton.setShouldBurnInDay(false);
             }
 
+            NamespacedKey key = new NamespacedKey(QuestWeaver.getInstance(), "quest_target");
+            entity.getPersistentDataContainer().set(key, PersistentDataType.BYTE, (byte) 1);
             // Usando o novo metodo com Component
             entity.customName(Component.text("Quest Target"));
             entity.setCustomNameVisible(true);
@@ -83,12 +86,12 @@ public class KillQuest extends Quest {
     @Override
     public void updateProgress(Object... params) {
         if (params.length >= 2 && params[0] instanceof String mobType && params[1] instanceof Material weapon) {
-            if (mobType.equalsIgnoreCase(targetMob) && (validWeapons.isEmpty() || validWeapons.contains(weapon))) {
+            if (mobType.equalsIgnoreCase(targetMob) && isValidWeapon(weapon)) {
                 currentCount++;
-                completed = checkCompletion();
 
-                if (completed && params[2] instanceof Player player) {
-                        giveRewards(player);
+                if (checkCompletion() && params[2] instanceof Player player) {
+                    QuestCompletedEvent customEvent = new QuestCompletedEvent(player, this);
+                    Bukkit.getServer().getPluginManager().callEvent(customEvent);
                 }
             }
         }
@@ -99,23 +102,15 @@ public class KillQuest extends Quest {
         return currentCount;
     }
 
-    public String getTargetMob() {
-        return targetMob;
-    }
-
     public int getTargetCount() {
         return targetCount;
-    }
-
-    public Location getSpawnLocation() {
-        return spawnLocation;
     }
 
     public String getProgressText() {
         return String.format("%d/%d %s eliminados", currentCount, targetCount, targetMob);
     }
 
-    public boolean isValidWeapon(Material weapon) {
+    private boolean isValidWeapon(Material weapon) {
         return validWeapons.isEmpty() || validWeapons.contains(weapon);
     }
 }

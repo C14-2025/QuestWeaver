@@ -6,11 +6,14 @@ import br.dev.projetoc14.quest.Quest;
 import br.dev.projetoc14.quest.utils.QuestManager;
 import br.dev.projetoc14.quest.KillQuest;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 /*
  * Atualiza progresso das KillQuests quando jogador mata mobs
@@ -18,16 +21,22 @@ import org.bukkit.event.entity.EntityDeathEvent;
 public class MobKillQuestListener implements Listener {
 
     private final QuestManager questManager;
-    private final QuestWeaver plugin;
+    private final NamespacedKey noDropsKey = new NamespacedKey(QuestWeaver.getInstance(), "quest_target");
 
-    public MobKillQuestListener(QuestManager questManager, QuestWeaver plugin) {
+    public MobKillQuestListener(QuestManager questManager) {
         this.questManager = questManager;
-        this.plugin = plugin;
     }
 
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
         LivingEntity entity = event.getEntity();
+        PersistentDataContainer container = entity.getPersistentDataContainer();
+
+        if (container.has(noDropsKey, PersistentDataType.BYTE)) {
+            event.getDrops().clear();
+            event.setDroppedExp(0);
+        }
+
         Player killer = entity.getKiller();
 
         if (killer == null) return;

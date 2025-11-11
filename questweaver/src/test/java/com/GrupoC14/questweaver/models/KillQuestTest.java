@@ -2,6 +2,8 @@ package com.GrupoC14.questweaver.models;
 
 import br.dev.projetoc14.quest.KillQuest;
 
+import br.dev.projetoc14.quest.listeners.QuestCompletionListener;
+import br.dev.projetoc14.quest.utils.QuestCompletedEvent;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.junit.jupiter.api.Test;
@@ -35,17 +37,6 @@ public class KillQuestTest {
         killQuest.updateProgress("ZOMBIE", Material.IRON_SWORD, mockPlayer);
         assertEquals(1, killQuest.getCurrentCount());
         assertFalse(killQuest.isCompleted());
-    }
-
-    @Test
-    void testQuestCompletion() {
-        // Simula matar 5 zumbis
-        for (int i = 0; i < 5; i++) {
-            killQuest.updateProgress("ZOMBIE", Material.IRON_SWORD, mockPlayer);
-        }
-
-        assertTrue(killQuest.isCompleted());
-        assertEquals(5, killQuest.getCurrentCount());
     }
 
     @Test

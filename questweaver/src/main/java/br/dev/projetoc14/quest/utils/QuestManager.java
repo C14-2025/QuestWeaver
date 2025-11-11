@@ -10,7 +10,6 @@ import br.dev.projetoc14.quest.Quest;
 import br.dev.projetoc14.quest.mage.ElementalMaster;
 import br.dev.projetoc14.quest.warrior.FirstBlood;
 import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
 import org.bukkit.Location;
 
 import java.util.HashMap;
@@ -57,7 +56,7 @@ public class QuestManager {
         // Verifica quantas quests já foram completadas
         int completedQuests = questData.getCompletedQuests().size();
 
-        // Cria a próxima quest baseada na classe e progresso
+        // Cria a proxima quest baseada na classe e progresso
         Quest nextQuest = createQuestForClass(questLine, completedQuests, player.getLocation());
         if (nextQuest != null) {
             questData.addQuest(nextQuest);
@@ -115,11 +114,12 @@ public class QuestManager {
                 k -> new PlayerQuestData(player));
     }
 
-    public void onQuestComplete(Player player, String questId) {
+    public void onQuestComplete(Player player, Quest quest) {
         PlayerQuestData questData = getPlayerQuests(player);
         if (questData != null) {
-            questData.completeQuest(questId);
-            // Dá a próxima quest da linha
+            quest.giveRewards(player);
+            questData.completeQuest(quest.getId());
+            // Da a proxima quest da linha
             giveNextQuest(player);
         }
     }

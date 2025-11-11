@@ -2,6 +2,8 @@ package br.dev.projetoc14.quest.mage;
 
 import br.dev.projetoc14.QuestWeaver;
 import br.dev.projetoc14.quest.KillQuest;
+import br.dev.projetoc14.quest.utils.QuestCompletedEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -36,7 +38,8 @@ public final class ElementalMaster extends KillQuest {
                 }
 
                 if (completed && params[2] instanceof Player player) {
-                    giveRewards(player);
+                    QuestCompletedEvent customEvent = new QuestCompletedEvent(player, this);
+                    Bukkit.getServer().getPluginManager().callEvent(customEvent);
                 }
             }
         }

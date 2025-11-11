@@ -2,6 +2,8 @@ package br.dev.projetoc14.quest;
 
 import br.dev.projetoc14.QuestWeaver;
 import br.dev.projetoc14.player.RPGPlayer;
+import br.dev.projetoc14.quest.utils.QuestCompletedEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -65,6 +67,7 @@ public abstract class Quest {
 
             // Mensagem de recompensa
             player.sendMessage("§aVocê recebeu suas recompensas!");
+            completed = true;
         }
     }
 

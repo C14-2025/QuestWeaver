@@ -2,11 +2,13 @@ package br.dev.projetoc14;
 
 import br.dev.projetoc14.commands.HelpCommand;
 import br.dev.projetoc14.commands.QuestsCommand;
+import br.dev.projetoc14.items.ItemProtectionListener;
 import br.dev.projetoc14.items.SkillTree;
 import br.dev.projetoc14.player.abilities.warriorSkills.CrimsonBladeListener;
 import br.dev.projetoc14.player.listeners.*;
 import br.dev.projetoc14.player.abilities.archerSkills.ArchListener;
 import br.dev.projetoc14.player.abilities.assassinSkills.AbilityListener;
+import br.dev.projetoc14.quest.listeners.QuestCompletionListener;
 import br.dev.projetoc14.skilltree.ExperienceSystem;
 import br.dev.projetoc14.match.ClassReadyManager;
 import br.dev.projetoc14.match.PlayerFileManager;
@@ -39,7 +41,7 @@ public final class QuestWeaver extends JavaPlugin {
     private static Plugin instance;
     private PlayerFileManager playerFileManager;
     private final Map<UUID, RPGPlayer> rpgPlayers = new HashMap<>();
-
+    private QuestManager questmanager;
 
     @Override
     public void onEnable() {
@@ -56,8 +58,8 @@ public final class QuestWeaver extends JavaPlugin {
         // Inicializa PlayerStatsManager e PlayerDataManager
         PlayerDataManager dataManager = new PlayerDataManager(this);
         this.statsManager = new PlayerStatsManager();
-        QuestManager questManager = new QuestManager();
-        this.questBook = new QuestBook(questManager);
+        this.questmanager = new QuestManager();
+        this.questBook = new QuestBook(questmanager);
 
         // player join & disconnect listener
         Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
@@ -68,7 +70,7 @@ public final class QuestWeaver extends JavaPlugin {
         getServer().getPluginManager().registerEvents(playerListener, this);
 
         // Listener de Escolha de Classe
-        ClassSelectListener classSelectListener = new ClassSelectListener(statsManager, playerFileManager, (JavaPlugin) instance, readyManager, questManager);
+        ClassSelectListener classSelectListener = new ClassSelectListener(statsManager, playerFileManager, (JavaPlugin) instance, readyManager, questmanager);
         getServer().getPluginManager().registerEvents(classSelectListener, this);
 
         // Listener de persistência JSON
@@ -79,13 +81,14 @@ public final class QuestWeaver extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ExperienceSystem(), this);
 
         //Listeners das quests começa aqui
-        PlayerQuestJoinListener questJoinListener = new PlayerQuestJoinListener(questManager);
+        PlayerQuestJoinListener questJoinListener = new PlayerQuestJoinListener(questmanager);
         getServer().getPluginManager().registerEvents(questJoinListener, this);
+        getServer().getPluginManager().registerEvents(new QuestCompletionListener(), this);
 
-        MobKillQuestListener mobKillListener = new MobKillQuestListener(questManager, this);
+        MobKillQuestListener mobKillListener = new MobKillQuestListener(questmanager);
         getServer().getPluginManager().registerEvents(mobKillListener, this);
 
-        QuestBookInteractListener bookListener = new QuestBookInteractListener(questManager);
+        QuestBookInteractListener bookListener = new QuestBookInteractListener(questmanager);
         getServer().getPluginManager().registerEvents(bookListener, this);
         //Termina aqui
 
@@ -111,6 +114,9 @@ public final class QuestWeaver extends JavaPlugin {
 
         // skill tree listener
         getServer().getPluginManager().registerEvents(new SkillTree(playerFileManager), this);
+
+        // item drop protection listener
+        getServer().getPluginManager().registerEvents(new ItemProtectionListener(this), this);
 
         // ativação dos comandos
         getCommand("quests").setExecutor(new QuestsCommand(questBook));
@@ -143,6 +149,10 @@ public final class QuestWeaver extends JavaPlugin {
 
     public static Plugin getInstance() {
         return instance;
+    }
+
+    public QuestManager getQuestManager() {
+        return questmanager;
     }
 
     public QuestBook getQuestBook() {
