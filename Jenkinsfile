@@ -251,7 +251,7 @@ pipeline {
                         echo "   3. Reiniciar o servidor Minecraft"
                         echo "   4. Os jogadores devem limpar cache (pasta .minecraft/server-resource-packs/)"
                         echo ""
-                        echo "URL do GitHub Pages será: https://${GITHUB_USERNAME}.github.io/QuestWeaver/${RESOURCE_PACK_NAME}"
+                        echo "URL do GitHub Pages será: https://${GITHUB_USERNAME}.github.io/QuestWeaver/resourcepack/${RESOURCE_PACK_NAME}"
                         echo ""
                     """
                 }
