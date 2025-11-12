@@ -1,24 +1,32 @@
 package br.dev.projetoc14.quest;
 
-import org.bukkit.Location;
+import br.dev.projetoc14.QuestWeaver;
+import br.dev.projetoc14.quest.utils.QuestCompletedEvent;
+import org.bukkit.*;
 import net.kyori.adventure.text.Component;
-import org.bukkit.World;
 import org.bukkit.entity.*;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class KillQuest extends Quest {
-    private final String targetMob;
-    private final int targetCount;
-    private int currentCount;
-    private final Location spawnLocation;
+    protected final String targetMob;
+    protected final int targetCount;
+    protected int currentCount;
+    protected final Location spawnLocation;
+    protected final List<Material> validWeapons;
 
     // Construtor completo
     public KillQuest(String id, String name, String description, int experienceReward,
-                     String targetMob, int targetCount, int currentCount, Location spawnLocation) {
+                     String targetMob, int targetCount, int currentCount, Location spawnLocation, List<Material> validWeapons) {
         super(id, name, description, experienceReward);
         this.targetMob = targetMob;
         this.targetCount = targetCount;
         this.currentCount = currentCount;
         this.spawnLocation = spawnLocation;
+        this.validWeapons = validWeapons != null ? validWeapons : new ArrayList<>();
     }
 
     public void spawnTargetEntities(Player player) {
@@ -43,22 +51,29 @@ public class KillQuest extends Quest {
 
             Entity entity = world.spawnEntity(randomLocation, entityType);
             if (entity instanceof Zombie zombie) {
-                // Garante que não queime no sol
+                // Garante que nao queime no sol
                 zombie.setShouldBurnInDay(false);
             }
 
             if (entity instanceof Skeleton skeleton) {
-                // Garante que não queime no sol
+                // Garante que nao queime no sol
                 skeleton.setShouldBurnInDay(false);
             }
 
+            NamespacedKey key = new NamespacedKey(QuestWeaver.getInstance(), "quest_target");
+            entity.getPersistentDataContainer().set(key, PersistentDataType.BYTE, (byte) 1);
             // Usando o novo metodo com Component
             entity.customName(Component.text("Quest Target"));
             entity.setCustomNameVisible(true);
         }
     }
 
+    @Override
+    public ItemStack[] getRewardItems() {
+        return new ItemStack[0];
+    }
 
+    @Override
     public void assignToPlayer(Player player) {
         spawnTargetEntities(player);
     }
@@ -70,10 +85,14 @@ public class KillQuest extends Quest {
 
     @Override
     public void updateProgress(Object... params) {
-        if (params.length > 0 && params[0] instanceof String mobType) {
-            if (mobType.equalsIgnoreCase(targetMob)) {
+        if (params.length >= 2 && params[0] instanceof String mobType && params[1] instanceof Material weapon) {
+            if (mobType.equalsIgnoreCase(targetMob) && isValidWeapon(weapon)) {
                 currentCount++;
-                completed = checkCompletion();
+
+                if (checkCompletion() && params[2] instanceof Player player) {
+                    QuestCompletedEvent customEvent = new QuestCompletedEvent(player, this);
+                    Bukkit.getServer().getPluginManager().callEvent(customEvent);
+                }
             }
         }
     }
@@ -83,19 +102,15 @@ public class KillQuest extends Quest {
         return currentCount;
     }
 
-    public String getTargetMob() {
-        return targetMob;
-    }
-
     public int getTargetCount() {
         return targetCount;
     }
 
-    public Location getSpawnLocation() {
-        return spawnLocation;
-    }
-
     public String getProgressText() {
         return String.format("%d/%d %s eliminados", currentCount, targetCount, targetMob);
+    }
+
+    private boolean isValidWeapon(Material weapon) {
+        return validWeapons.isEmpty() || validWeapons.contains(weapon);
     }
 }

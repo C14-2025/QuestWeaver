@@ -1,6 +1,7 @@
 package br.dev.projetoc14.quest;
 
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 /*
 
@@ -30,5 +31,16 @@ public class LevelBasedQuest extends Quest {
     @Override
     public void updateProgress(Object... params) {
 
+    }
+
+    @Override
+    public ItemStack[] getRewardItems() {
+        return new ItemStack[0];
+    }
+
+    @Override
+    public void assignToPlayer(Player player) {
+        // TODO: Adicionar esse metodo para esse tipo de quest
+        return;
     }
 }

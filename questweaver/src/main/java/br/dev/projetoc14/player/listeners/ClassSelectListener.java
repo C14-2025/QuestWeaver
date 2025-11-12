@@ -147,44 +147,28 @@ public class ClassSelectListener implements Listener {
                 player.sendMessage(ChatColor.DARK_PURPLE + "Você escolheu a classe " + ChatColor.BOLD + "Mago" + ChatColor.DARK_PURPLE + "!");
                 player.closeInventory();
                 readyManager.markPlayerReady(player);
-                if (!questManager.hasQuests(player)) {
-                    //Se o player não tiver nenhuma quest no momento
-                    //começa a primeira quest de matar zumbis
-                    questManager.createFirstQuest(player);
-                }
+                questManager.startClassQuestLine(player, "Mago");
             }
             case BOW -> {
                 fileManager.setPlayerClass(player, "Arqueiro");
                 player.sendMessage(ChatColor.GREEN + "Você escolheu a classe " + ChatColor.BOLD + "Arqueiro" + ChatColor.GREEN + "!");
                 player.closeInventory();
                 readyManager.markPlayerReady(player);
-                if (!questManager.hasQuests(player)) {
-                    //Se o player não tiver nenhuma quest no momento
-                    //começa a primeira quest de matar zumbis
-                    questManager.createFirstQuest(player);
-                }
+                questManager.startClassQuestLine(player, "Arqueiro");
             }
             case IRON_AXE -> {
                 fileManager.setPlayerClass(player, "Guerreiro");
                 player.sendMessage(ChatColor.RED + "Você escolheu a classe " + ChatColor.BOLD + "Guerreiro" + ChatColor.RED + "!");
                 player.closeInventory();
                 readyManager.markPlayerReady(player);
-                if (!questManager.hasQuests(player)) {
-                    //Se o player não tiver nenhuma quest no momento
-                    //começa a primeira quest de matar zumbis
-                    questManager.createFirstQuest(player);
-                }
+                questManager.startClassQuestLine(player, "Guerreiro");
             }
             case IRON_SWORD -> {
                 fileManager.setPlayerClass(player, "Assassino");
                 player.sendMessage(ChatColor.DARK_GRAY + "Você escolheu a classe " + ChatColor.BOLD + "Assassino" + ChatColor.DARK_GRAY + "!");
                 player.closeInventory();
                 readyManager.markPlayerReady(player);
-                if (!questManager.hasQuests(player)) {
-                    //Se o player não tiver nenhuma quest no momento
-                    //começa a primeira quest de matar zumbis
-                    questManager.createFirstQuest(player);
-                }
+                questManager.startClassQuestLine(player, "Assassino");
             }
             default -> {
                 player.sendMessage(ChatColor.GRAY + "Classe inválida!");

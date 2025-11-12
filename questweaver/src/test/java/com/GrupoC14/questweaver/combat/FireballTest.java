@@ -1,12 +1,15 @@
 package com.GrupoC14.questweaver.combat;
 
+import br.dev.projetoc14.QuestWeaver;
 import br.dev.projetoc14.player.abilities.mageSkills.Fireball;
 import br.dev.projetoc14.player.classes.MagePlayer;
 import br.dev.projetoc14.player.RPGPlayer;
 import br.dev.projetoc14.player.PlayerStatsManager;
+import org.bukkit.Server;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,10 +23,25 @@ public class FireballTest {
     private RPGPlayer target;
     private Player mockCaster;
     private Player mockTarget;
+    private PlayerStatsManager statsManager;
+    private QuestWeaver mockedPlugin;
+    private Server mockedServer;
+    private PluginManager mockedPluginManager;
 
     @BeforeEach
     public void setUp() {
-        fireball = new Fireball();
+
+        this.mockedPlugin = mock(QuestWeaver.class);
+        this.mockedServer = mock(Server.class);
+        this.mockedPluginManager = mock(PluginManager.class);
+
+        {
+            when(mockedPlugin.getServer()).thenReturn(mockedServer);
+            when(mockedServer.getPluginManager()).thenReturn(mockedPluginManager);
+            when(mockedPlugin.getName()).thenReturn("questweaver");
+        }
+
+        fireball = new Fireball(mockedPlugin);
 
         // Mocks dos Players do Bukkit
         mockCaster = mock(Player.class);
@@ -88,7 +106,7 @@ public class FireballTest {
     @Test
     public void testAbilityProperties() {
         assertEquals("Bola de Fogo", fireball.getName());
-        assertEquals(20, fireball.getManaCost());
+        assertEquals(15, fireball.getManaCost());
         assertEquals(5, fireball.getCooldown());
         assertEquals(25, fireball.getDamage());
     }
