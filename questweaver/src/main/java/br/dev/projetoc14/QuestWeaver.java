@@ -4,6 +4,7 @@ import br.dev.projetoc14.commands.HelpCommand;
 import br.dev.projetoc14.commands.QuestsCommand;
 import br.dev.projetoc14.items.ItemProtectionListener;
 import br.dev.projetoc14.items.SkillTree;
+import br.dev.projetoc14.match.*;
 import br.dev.projetoc14.player.abilities.warriorSkills.CrimsonBladeListener;
 import br.dev.projetoc14.player.listeners.*;
 import br.dev.projetoc14.player.abilities.archerSkills.ArchListener;
@@ -23,6 +24,8 @@ import br.dev.projetoc14.quest.listeners.PlayerQuestJoinListener;
 import br.dev.projetoc14.playerData.PlayerDataManager;
 import br.dev.projetoc14.quest.listeners.QuestBookInteractListener;
 import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -42,6 +45,9 @@ public final class QuestWeaver extends JavaPlugin {
     private PlayerFileManager playerFileManager;
     private final Map<UUID, RPGPlayer> rpgPlayers = new HashMap<>();
     private QuestManager questmanager;
+    private MatchManager matchManager = new MatchManager();
+
+
 
     @Override
     public void onEnable() {
@@ -62,8 +68,9 @@ public final class QuestWeaver extends JavaPlugin {
         this.questBook = new QuestBook(questmanager);
 
         // player join & disconnect listener
-        Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(playerFileManager,(QuestWeaver) instance), this);
         Bukkit.getPluginManager().registerEvents(new PlayerDisconnectListener(playerFileManager, statsManager, dataManager), this);
+        Bukkit.getPluginManager().registerEvents(new BlockBreak(playerFileManager, (QuestWeaver) instance), this);
 
         // Listener de mecânica (mana, barra, regeneração)
         PlayerListener playerListener = new PlayerListener(statsManager, this);
@@ -118,11 +125,24 @@ public final class QuestWeaver extends JavaPlugin {
         // item drop protection listener
         getServer().getPluginManager().registerEvents(new ItemProtectionListener(this), this);
 
+        // death listener
+        getServer().getPluginManager().registerEvents(new PlayerDeathListener(playerFileManager, this), this);
+
+        // finalização da partida
+        Bukkit.getPluginManager().registerEvents(new EndMatch(this, matchManager), this);
+
         // ativação dos comandos
         getCommand("quests").setExecutor(new QuestsCommand(questBook));
         getCommand("help").setExecutor(new HelpCommand());
 
+        // desabilita as conquistas no mundo
+        for (World w : Bukkit.getWorlds()) {
+            w.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+        }
+
         getLogger().info("[QuestWeaver] Plugin iniciado com sucesso!");
+
+        setMatchRunning(false);
     }
 
     @Override
@@ -146,6 +166,16 @@ public final class QuestWeaver extends JavaPlugin {
     public static String getServerName(){
         return config.getString("server-conf.server-name");
     }
+
+    public static Boolean isMatchRunning(){
+        return config.getBoolean("match-conf.isMatch-running");
+    }
+    public static void setMatchRunning(boolean value) {
+        config.set("match-conf.isMatch-running", value);
+        QuestWeaver.getInstance().saveConfig();
+    }
+
+
 
     public static Plugin getInstance() {
         return instance;
@@ -171,5 +201,9 @@ public final class QuestWeaver extends JavaPlugin {
 
     public void addRPGPlayer(@NotNull UUID uniqueId, RPGPlayer rpgPlayer) {
         this.rpgPlayers.put(uniqueId, rpgPlayer);
+    }
+
+    public MatchManager getMatchManager() {
+        return matchManager;
     }
 }

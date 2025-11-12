@@ -52,14 +52,58 @@ public class SkillTree implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (event.getView().getTitle().equalsIgnoreCase("Árvore de Habilidades")) {
-            event.setCancelled(true);
-            if (event.getClickedInventory() != null &&
-                    event.getClickedInventory().equals(event.getWhoClicked().getInventory())) {
-                event.setCancelled(true);
+        if (!event.getView().getTitle().equalsIgnoreCase("Árvore de habilidades"))
+            return;
+
+        event.setCancelled(true);
+        Player player = (Player) event.getWhoClicked();
+        ItemStack clicked = event.getCurrentItem();
+        if (clicked == null || !clicked.hasItemMeta()) return;
+
+        ItemMeta meta = clicked.getItemMeta();
+        String name = meta.getDisplayName();
+
+        // custo fixo por nível (pode variar depois)
+        int cost = 25;
+        int playerXP = player.getTotalExperience();
+
+        if (playerXP < cost) {
+            player.sendMessage("§cXP insuficiente para melhorar essa habilidade!");
+            return;
+        }
+
+        List<String> lore = meta.getLore();
+        if (lore == null || lore.isEmpty()) return;
+
+        int currentLevel = getCurrentLevel(lore);
+        if (currentLevel >= 4) {
+            player.sendMessage("§7Essa habilidade já está no nível máximo!");
+            return;
+        }
+
+        // desconta XP
+        player.giveExp(-cost);
+
+        // aumenta nível
+        currentLevel++;
+        lore.set(0, "§7♦ Nível: " + currentLevel);
+        meta.setLore(lore);
+        clicked.setItemMeta(meta);
+
+        player.sendMessage("§a" + name + " melhorada para o nível " + currentLevel + "!");
+    }
+
+    private int getCurrentLevel(List<String> lore) {
+        for (String line : lore) {
+            if (line.contains("Nível:")) {
+                try {
+                    return Integer.parseInt(line.replaceAll("[^0-9]", ""));
+                } catch (NumberFormatException ignored) {}
             }
         }
+        return 0;
     }
+
 
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent event) {

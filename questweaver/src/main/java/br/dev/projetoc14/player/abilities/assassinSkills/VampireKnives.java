@@ -66,29 +66,30 @@ public class VampireKnives extends Ability {
     }
 
     @EventHandler
-    public void onDamage(EntityDamageByEntityEvent event){
+    public void onHit(EntityDamageByEntityEvent event){
         if (!(event.getDamager() instanceof Player player)) return;
         if (!(event.getEntity() instanceof LivingEntity)) return;
-
         if (!activePlayers.contains(player.getUniqueId())) return;
 
-        // Obtém o RPGPlayer para usar o sistema de vida customizado
-        RPGPlayer rpgPlayer = ((QuestWeaver) QuestWeaver.getInstance()).getRPGPlayer(player);
-        if (rpgPlayer == null) return;
+        RPGPlayer caster = ((QuestWeaver) QuestWeaver.getInstance()).getRPGPlayer(player);
+        if (caster == null) return;
 
         double damage = event.getFinalDamage();
+        int damageInt = (int) Math.ceil(damage);
+
+        // Cancela o dano do Bukkit
+        event.setCancelled(true);
+
+        // Aplica dano
+        caster.damage(damageInt);
+
+        // Aplica lifesteal
         float LIFESTEAL_PERCENT = 0.25f;
-        int heal = (int) Math.ceil(damage * LIFESTEAL_PERCENT);
+        int cure = (int) Math.ceil(damage * LIFESTEAL_PERCENT);
+        caster.heal(cure);
 
-        // Usa o método heal() que já gerencia tudo automaticamente
-        rpgPlayer.heal(heal);
-
-        // Spawna partículas de coração
-        player.getWorld().spawnParticle(
-                org.bukkit.Particle.HEART,
-                player.getLocation().add(0, 2, 0),
-                3,
-                0.5, 0.3, 0.5
-        );
+        // Partículas
+        player.getWorld().spawnParticle(Particle.HEART, player.getLocation().add(0,2,0),3,0.5,0.3,0.5);
     }
+
 }
