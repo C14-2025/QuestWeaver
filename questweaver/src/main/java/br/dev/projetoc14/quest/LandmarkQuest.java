@@ -9,6 +9,8 @@ package br.dev.projetoc14.quest;
 
 import br.dev.projetoc14.quest.utils.LandmarkType;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class LandmarkQuest extends Quest {
     private final LandmarkType targetType;
@@ -47,6 +49,17 @@ public class LandmarkQuest extends Quest {
                 completed = true;
             }
         }
+    }
+
+    @Override
+    public ItemStack[] getRewardItems() {
+        return new ItemStack[0];
+    }
+
+    @Override
+    public void assignToPlayer(Player player) {
+        // TODO: Adicionar esse metodo para esse tipo de quest
+        return;
     }
 
     public LandmarkType getTargetType() {

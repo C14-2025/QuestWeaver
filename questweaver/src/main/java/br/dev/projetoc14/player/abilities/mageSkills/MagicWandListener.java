@@ -29,7 +29,7 @@ public class MagicWandListener implements Listener {
     public MagicWandListener(QuestWeaver plugin) {
         this.plugin = plugin;
 
-        Fireball fireball = new Fireball();
+        Fireball fireball = new Fireball(plugin);
         Healing healing = new Healing();
 
         fireball.setCooldownListener(plugin.getCooldownListener());
