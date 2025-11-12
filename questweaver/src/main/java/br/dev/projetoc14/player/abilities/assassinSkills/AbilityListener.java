@@ -9,6 +9,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,10 +17,13 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.*;
 
 public class AbilityListener implements Listener {
+
     private final QuestWeaver plugin;
 
     private final Map<UUID, Integer> potionAbilityIndex = new HashMap<>();
@@ -32,80 +36,98 @@ public class AbilityListener implements Listener {
 
     public AbilityListener(QuestWeaver plugin) {
         this.plugin = plugin;
-
-        // Registra habilidades do assassino
         abilityMap.put("ShadowMove", new ShadowMove());
         abilityMap.put("VampireKnives", new VampireKnives());
     }
 
     @EventHandler
     public void onItemSwitch(PlayerInteractEvent e) {
-        if (!isRightClick(e.getAction())) return;
-
         Player player = e.getPlayer();
+        Action action = e.getAction();
+        ItemStack item = player.getInventory().getItemInMainHand();
+
         if (!player.isSneaking()) return;
+        if (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK) return;
 
         AssassinPlayer assassin = getAssassinPlayer(player);
         if (assassin == null) return;
 
-        ItemStack item = player.getInventory().getItemInMainHand();
-
-        // Alterna habilidades com shift + botão direito
-        if (isCustomItem(item, Material.POTION, "Poção das Sombras")) {
+        if (isPotion(item)) {
             AbilityUtil.switchAbility(player, e, potionAbilityIndex, potionAbilities, this::formatName);
-        } else if (isCustomItem(item, Material.IRON_SWORD, "Punhal Sombrio")) {
+        } else if (isSword(item)) {
             AbilityUtil.switchAbility(player, e, swordAbilityIndex, swordAbilities, this::formatName);
         }
     }
 
     @EventHandler
     public void onClick(PlayerInteractEvent e) {
-        if (!isRightClick(e.getAction())) return;
+        Player p = e.getPlayer();
+        Action a = e.getAction();
 
-        Player player = e.getPlayer();
-        if (player.isSneaking()) return; // Evita conflito com troca de habilidade
+        if (a != Action.RIGHT_CLICK_AIR && a != Action.RIGHT_CLICK_BLOCK) return;
+        if (p.isSneaking()) return;
 
-        ItemStack item = player.getInventory().getItemInMainHand();
+        ItemStack item = p.getInventory().getItemInMainHand();
+        if (!isPotion(item) && !isSword(item)) return;
 
-        // Só assassinos podem usar habilidades
-        AssassinPlayer assassin = getAssassinPlayer(player);
+        AssassinPlayer assassin = getAssassinPlayer(p);
         if (assassin == null) {
-            player.sendActionBar(Component.text("❌ Apenas assassinos podem usar esta habilidade!")
+            p.sendActionBar(Component.text("❌ Apenas assassinos podem usar esta habilidade!")
                     .color(NamedTextColor.RED));
             return;
         }
 
-        // Executa a habilidade correta com base no item
-        if (isCustomItem(item, Material.POTION, "Poção das Sombras")) {
-            AbilityUtil.executeAbility(player, e, potionAbilityIndex, potionAbilities, abilityMap, assassin);
-        } else if (isCustomItem(item, Material.IRON_SWORD, "Punhal Sombrio")) {
-            AbilityUtil.executeAbility(player, e, swordAbilityIndex, swordAbilities, abilityMap, assassin);
+        if (isPotion(item)) {
+            AbilityUtil.executeAbility(p, e, potionAbilityIndex, potionAbilities, abilityMap, assassin);
+        } else if (isSword(item)) {
+            AbilityUtil.executeAbility(p, e, swordAbilityIndex, swordAbilities, abilityMap, assassin);
         }
     }
 
-    // ==============================
-    // 🔹 Métodos utilitários
-    // ==============================
-
-    private AssassinPlayer getAssassinPlayer(Player player) {
-        RPGPlayer rpgPlayer = plugin.getRPGPlayer(player);
-        return (rpgPlayer instanceof AssassinPlayer assassin) ? assassin : null;
+    private AssassinPlayer getAssassinPlayer(Player p) {
+        RPGPlayer rpgPlayer = plugin.getRPGPlayer(p);
+        if (rpgPlayer instanceof AssassinPlayer assassin) return assassin;
+        return null;
     }
 
-    private boolean isRightClick(Action action) {
-        return action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK;
-    }
-
-    private boolean isCustomItem(ItemStack item, Material material, String nomeEsperado) {
-        if (item == null || item.getType() != material || !item.hasItemMeta()) return false;
+    private boolean isPotion(ItemStack item) {
+        if (item == null || item.getType() != Material.POTION) return false;
+        if (!item.hasItemMeta()) return false;
 
         ItemMeta meta = item.getItemMeta();
-        if (meta.displayName() == null) return false;
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        NamespacedKey key = new NamespacedKey(plugin, "custom_item");
 
+        if (data.has(key, PersistentDataType.STRING)) {
+            String id = data.get(key, PersistentDataType.STRING);
+            return "shadow_potion".equals(id);
+        }
+
+        // fallback: compatibilidade com itens antigos
+        if (meta.displayName() == null) return false;
         String displayName = PlainTextComponentSerializer.plainText()
                 .serialize(Objects.requireNonNull(meta.displayName()));
+        return displayName.equalsIgnoreCase("Poção das Sombras");
+    }
 
-        return displayName.equalsIgnoreCase(nomeEsperado);
+    private boolean isSword(ItemStack item) {
+        if (item == null || item.getType() != Material.IRON_SWORD) return false;
+        if (!item.hasItemMeta()) return false;
+
+        ItemMeta meta = item.getItemMeta();
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        NamespacedKey key = new NamespacedKey(plugin, "custom_item");
+
+        if (data.has(key, PersistentDataType.STRING)) {
+            String id = data.get(key, PersistentDataType.STRING);
+            return "shadow_dagger".equals(id);
+        }
+
+        // fallback: compatibilidade com itens antigos
+        if (meta.displayName() == null) return false;
+        String displayName = PlainTextComponentSerializer.plainText()
+                .serialize(Objects.requireNonNull(meta.displayName()));
+        return displayName.equalsIgnoreCase("Punhal Sombrio");
     }
 
     public String formatName(String nome) {
