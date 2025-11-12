@@ -2,13 +2,14 @@ package br.dev.projetoc14;
 
 import br.dev.projetoc14.commands.HelpCommand;
 import br.dev.projetoc14.commands.QuestsCommand;
-import br.dev.projetoc14.items.ItemProtectionListener;
+//import br.dev.projetoc14.items.ItemProtectionListener;
 import br.dev.projetoc14.items.SkillTree;
 import br.dev.projetoc14.match.*;
 import br.dev.projetoc14.player.abilities.warriorSkills.CrimsonBladeListener;
 import br.dev.projetoc14.player.listeners.*;
 import br.dev.projetoc14.player.abilities.archerSkills.ArchListener;
 import br.dev.projetoc14.player.abilities.assassinSkills.AbilityListener;
+import br.dev.projetoc14.quest.archer.RangedCombatQuestListener;
 import br.dev.projetoc14.quest.listeners.QuestCompletionListener;
 import br.dev.projetoc14.skilltree.ExperienceSystem;
 import br.dev.projetoc14.match.ClassReadyManager;
@@ -114,6 +115,9 @@ public final class QuestWeaver extends JavaPlugin {
         // Arch listener (habilidades do arqueiro)
         ArchListener archListener = new ArchListener(this);
         getServer().getPluginManager().registerEvents(archListener, this);
+        //Listener da quest do archer
+        RangedCombatQuestListener rangedCombatQuestListener = new RangedCombatQuestListener(new QuestManager());
+        getServer().getPluginManager().registerEvents(rangedCombatQuestListener, this);
 
         // Assassin listener
         AbilityListener assassinlistener = new AbilityListener(this);
@@ -123,7 +127,7 @@ public final class QuestWeaver extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new SkillTree(playerFileManager), this);
 
         // item drop protection listener
-        getServer().getPluginManager().registerEvents(new ItemProtectionListener(this), this);
+        //getServer().getPluginManager().registerEvents(new ItemProtectionListener(this), this);
 
         // death listener
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(playerFileManager, this), this);
