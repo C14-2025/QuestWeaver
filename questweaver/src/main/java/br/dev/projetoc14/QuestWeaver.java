@@ -4,6 +4,7 @@ import br.dev.projetoc14.commands.HelpCommand;
 import br.dev.projetoc14.commands.QuestsCommand;
 import br.dev.projetoc14.items.SkillTree;
 import br.dev.projetoc14.match.*;
+import br.dev.projetoc14.player.abilities.CooldownListener;
 import br.dev.projetoc14.player.abilities.warriorSkills.CrimsonBladeListener;
 import br.dev.projetoc14.player.listeners.*;
 import br.dev.projetoc14.player.abilities.archerSkills.ArchListener;
@@ -41,6 +42,7 @@ public final class QuestWeaver extends JavaPlugin {
     private PlayerFileManager playerFileManager;
     private final Map<UUID, RPGPlayer> rpgPlayers = new HashMap<>();
     private MatchManager matchManager = new MatchManager();
+    private CooldownListener cooldownListener;
 
 
 
@@ -107,7 +109,11 @@ public final class QuestWeaver extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new HungerDurabilityListener(), this);
         getLogger().info("QuestWeaver enabled — hunger and durability disabled!");
 
-        // Arch listener (habilidades do arqueiro)
+        // Cooldoown Bar
+        cooldownListener = new CooldownListener(this);
+        getServer().getPluginManager().registerEvents(cooldownListener, this);
+
+        // Archer listener (habilidades do arqueiro)
         ArchListener archListener = new ArchListener(this);
         getServer().getPluginManager().registerEvents(archListener, this);
 
@@ -145,6 +151,10 @@ public final class QuestWeaver extends JavaPlugin {
         if (statsManager != null) {
             statsManager.stopAllRegeneration();
             getLogger().info("[QuestWeaver] Regeneração de mana finalizada para todos os jogadores.");
+        }
+
+        if (cooldownListener != null) {
+            cooldownListener.cleanupAll();
         }
 
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -194,5 +204,9 @@ public final class QuestWeaver extends JavaPlugin {
 
     public MatchManager getMatchManager() {
         return matchManager;
+    }
+
+    public CooldownListener getCooldownListener() {
+        return cooldownListener;
     }
 }

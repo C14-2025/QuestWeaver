@@ -1,5 +1,6 @@
 package br.dev.projetoc14.player.abilities;
 
+import br.dev.projetoc14.QuestWeaver;
 import br.dev.projetoc14.player.RPGPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -15,10 +16,16 @@ public abstract class Ability {
     private final int cooldown;
     private final Map<UUID, Long> lastUsed = new HashMap<>();
 
+    private CooldownListener cooldownListener;
+
     public Ability(String name, int manaCost, int cooldown) {
         this.name = name;
         this.manaCost = manaCost;
         this.cooldown = cooldown;
+    }
+
+    public void setCooldownListener(CooldownListener cooldownListener) {
+        this.cooldownListener = cooldownListener;
     }
 
     protected abstract void onCast(RPGPlayer caster);
@@ -52,8 +59,6 @@ public abstract class Ability {
             long timeRemaining = cooldown - timeElapsed;
 
             if (timeRemaining > 0) {
-                player.sendActionBar(Component.text("⏳ Aguarde " + timeRemaining + "s para usar " + name + " novamente!")
-                        .color(NamedTextColor.RED));
                 player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1f);
                 return CastResult.COOLDOWN;
             }
@@ -68,9 +73,31 @@ public abstract class Ability {
     private void applyCost(RPGPlayer caster) {
         caster.setCurrentMana(caster.getCurrentMana() - manaCost);
         lastUsed.put(caster.getUniqueId(), System.currentTimeMillis());
+
+        if (cooldownListener != null && cooldown > 0) {
+            cooldownListener.startCooldown(caster.getPlayer(), name, cooldown);
+        }
     }
 
     public String getName() {
         return name;
+    }
+
+    public int getCooldown() {
+        return cooldown;
+    }
+
+    public int getManaCost() {
+        return manaCost;
+    }
+    public long getRemainingCooldown(UUID playerId) {
+        if (!lastUsed.containsKey(playerId)) {
+            return 0;
+        }
+
+        long timeElapsed = (System.currentTimeMillis() - lastUsed.get(playerId)) / 1000;
+        long timeRemaining = cooldown - timeElapsed;
+
+        return Math.max(0, timeRemaining);
     }
 }
