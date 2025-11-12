@@ -1,5 +1,7 @@
 package br.dev.projetoc14.player.classes;
 
+import br.dev.projetoc14.QuestWeaver;
+import br.dev.projetoc14.items.ItemRegistry;
 import br.dev.projetoc14.player.PlayerClass;
 import br.dev.projetoc14.player.RPGPlayer;
 import net.kyori.adventure.text.Component;
@@ -51,7 +53,8 @@ public class AssassinPlayer extends RPGPlayer {
     @Override
     public void getStartingEquipment() {
         // Cria a arma do assassino
-        ItemStack dagger = new ItemStack(Material.IRON_SWORD);
+        ItemRegistry registry = new ItemRegistry((QuestWeaver) QuestWeaver.getInstance());
+        ItemStack dagger = registry.createShadowDagger();
         ItemMeta daggerMeta = dagger.getItemMeta();
 
         if (daggerMeta != null) {
