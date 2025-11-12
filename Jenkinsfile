@@ -195,7 +195,7 @@ pipeline {
             steps {
                 script {
                     // URL do GitHub Pages
-                    def resourcePackUrl = "https://${env.GITHUB_USERNAME}.github.io/QuestWeaver/${env.RESOURCE_PACK_NAME}"
+                    def resourcePackUrl = "https://${env.GITHUB_USERNAME}.github.io/QuestWeaver/resourcepack/${env.RESOURCE_PACK_NAME}"
                     
                     echo "Atualizando server.properties..."
                     echo "URL do Resource Pack (GitHub Pages): ${resourcePackUrl}"
@@ -275,7 +275,7 @@ pipeline {
 
             Deploy concluído!
             
-            Resource Pack URL (GitHub Pages): https://${env.GITHUB_USERNAME}.github.io/QuestWeaver/${env.RESOURCE_PACK_NAME}
+            Resource Pack URL (GitHub Pages): https://${env.GITHUB_USERNAME}.github.io/QuestWeaver/resourcepack/${env.RESOURCE_PACK_NAME}
             
             Próximos passos:
             1. Fazer commit do resource pack para a branch do GitHub Pages
