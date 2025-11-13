@@ -92,6 +92,7 @@ public class QuestBook {
                     .color(TextColor.color(0x555555)));
         } else {
             for (Quest quest : activeQuests.values()) {
+                // Suporta qualquer KillQuest (incluindo RangedCombatQuest)
                 if (quest instanceof KillQuest killQuest) {
                     page.append(createQuestEntry(killQuest));
                 }
