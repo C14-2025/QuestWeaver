@@ -27,8 +27,15 @@ public class CrimsonBladeListener implements Listener {
 
     public CrimsonBladeListener(QuestWeaver plugin) {
         this.plugin = plugin;
-        abilityMap.put("POWERCHARGE", new PowerCharge(plugin));
-        abilityMap.put("BLOODBLADE", new BloodBlade());
+
+        BloodBlade bloodBlade = new BloodBlade();
+        PowerCharge powerCharge = new PowerCharge(plugin);
+
+        bloodBlade.setCooldownListener(plugin.getCooldownListener());
+        powerCharge.setCooldownListener(plugin.getCooldownListener());
+
+        abilityMap.put("POWERCHARGE", powerCharge);
+        abilityMap.put("BLOODBLADE", bloodBlade);
     }
 
     @EventHandler
