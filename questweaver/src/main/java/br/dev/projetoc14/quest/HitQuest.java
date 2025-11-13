@@ -15,7 +15,7 @@ import java.util.List;
  * Quest que conta acertos (hits) em entidades, não mortes
  */
 public class HitQuest extends Quest {
-    protected final String targetMob;
+    public final String targetMob;
     protected final int targetCount;
     protected int currentCount;
     protected final Location spawnLocation;
