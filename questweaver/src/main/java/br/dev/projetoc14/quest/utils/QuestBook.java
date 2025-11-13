@@ -1,7 +1,7 @@
 package br.dev.projetoc14.quest.utils;
 
-import br.dev.projetoc14.quest.KillQuest;
 import br.dev.projetoc14.quest.HitQuest;
+import br.dev.projetoc14.quest.KillQuest;
 import br.dev.projetoc14.quest.Quest;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -93,9 +93,11 @@ public class QuestBook {
                     .color(TextColor.color(0x555555)));
         } else {
             for (Quest quest : activeQuests.values()) {
-                // Suporta qualquer KillQuest (incluindo RangedCombatQuest)
+                // Suporta KillQuest e HitQuest
                 if (quest instanceof KillQuest killQuest) {
-                    page.append(createQuestEntry(killQuest));
+                    page.append(createKillQuestEntry(killQuest));
+                } else if (quest instanceof HitQuest hitQuest) {
+                    page.append(createHitQuestEntry(hitQuest));
                 }
             }
         }
@@ -103,7 +105,7 @@ public class QuestBook {
         return page.build();
     }
 
-    private Component createQuestEntry(KillQuest quest) {
+    private Component createKillQuestEntry(KillQuest quest) {
         return Component.text()
                 .append(Component.text(quest.getName() + "\n")
                         .color(TextColor.color(0xFFAA00)))
@@ -115,7 +117,7 @@ public class QuestBook {
                 .build();
     }
 
-    private Component createHitQuestEntry(br.dev.projetoc14.quest.HitQuest quest) {
+    private Component createHitQuestEntry(HitQuest quest) {
         return Component.text()
                 .append(Component.text(quest.getName() + "\n")
                         .color(TextColor.color(0xFFAA00)))
@@ -125,6 +127,37 @@ public class QuestBook {
                 .append(Component.text(quest.getProgressText() + "\n\n")
                         .color(TextColor.color(0xAAAAAA)))
                 .build();
+    }
+
+
+    private Component createHitProgressBar(HitQuest quest) {
+        int progress = quest.getCurrentCount();
+        int total = quest.getTargetCount();
+
+        final String EMPTY = "□";
+        final String FILLED = "■";
+
+        int maxBars = 16;
+        int filledBars = Math.min(maxBars, (int) Math.round((double) progress / total * maxBars));
+
+        TextComponent.Builder progressBar = Component.text();
+
+        progressBar.append(Component.text(String.format("%d/%d ", progress, total))
+                .color(TextColor.color(0xAAAAAA)));
+
+        for (int i = 0; i < maxBars; i++) {
+            String symbol = i < filledBars ? FILLED : EMPTY;
+            progressBar.append(Component.text(symbol)
+                    .color(i < filledBars ? TextColor.color(0x55FF55) : TextColor.color(0x555555)));
+        }
+
+        int percentage = (int) ((double) progress / total * 100);
+        progressBar.append(Component.text(String.format(" %d%%", percentage))
+                .color(TextColor.color(0xAAAAAA)));
+
+        progressBar.append(Component.text("\n"));
+
+        return progressBar.build();
     }
 
     private Component createKillProgressBar(KillQuest quest) {
@@ -159,37 +192,6 @@ public class QuestBook {
 
         return progressBar.build();
     }
-
-    private Component createHitProgressBar(br.dev.projetoc14.quest.HitQuest quest) {
-        int progress = quest.getCurrentCount();
-        int total = quest.getTargetCount();
-
-        final String EMPTY = "□";
-        final String FILLED = "■";
-
-        int maxBars = 16;
-        int filledBars = Math.min(maxBars, (int) Math.round((double) progress / total * maxBars));
-
-        TextComponent.Builder progressBar = Component.text();
-
-        progressBar.append(Component.text(String.format("%d/%d ", progress, total))
-                .color(TextColor.color(0xAAAAAA)));
-
-        for (int i = 0; i < maxBars; i++) {
-            String symbol = i < filledBars ? FILLED : EMPTY;
-            progressBar.append(Component.text(symbol)
-                    .color(i < filledBars ? TextColor.color(0x55FF55) : TextColor.color(0x555555)));
-        }
-
-        int percentage = (int) ((double) progress / total * 100);
-        progressBar.append(Component.text(String.format(" %d%%", percentage))
-                .color(TextColor.color(0xAAAAAA)));
-
-        progressBar.append(Component.text("\n"));
-
-        return progressBar.build();
-    }
-
 
     private Component createCompletedQuestsPage(PlayerQuestData questData) {
         TextComponent.Builder page = Component.text()
