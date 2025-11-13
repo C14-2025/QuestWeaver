@@ -1,12 +1,10 @@
 package br.dev.projetoc14.quest.archer;
 
-import br.dev.projetoc14.QuestWeaver;
 import br.dev.projetoc14.quest.Quest;
 import br.dev.projetoc14.quest.utils.PlayerQuestData;
 import br.dev.projetoc14.quest.utils.QuestBook;
 import br.dev.projetoc14.quest.utils.QuestManager;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -14,7 +12,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.persistence.PersistentDataType;
 
 public class RangedCombatQuestListener implements Listener {
 
@@ -39,9 +36,8 @@ public class RangedCombatQuestListener implements Listener {
         }
 
         // Verifica se é um esqueleto
-        NamespacedKey key = new NamespacedKey(QuestWeaver.getInstance(), "quest_target");
-        if (!entity.getPersistentDataContainer().has(key, PersistentDataType.BYTE)) {
-            return; // Não é um alvo de quest marcado
+        if (!entity.getType().name().equalsIgnoreCase("SKELETON")) {
+            return;
         }
 
         // Verifica se o dano foi causado por uma flecha
@@ -72,9 +68,6 @@ public class RangedCombatQuestListener implements Listener {
         // Procura pela RangedCombatQuest nas quests ativas
         for (Quest quest : questData.getActiveQuests().values()) {
             if (quest instanceof RangedCombatQuest rangedQuest) {
-                if (!entity.getType().name().equalsIgnoreCase(rangedQuest.targetMob)) {
-                    continue; // Se for um alvo de outra quest, pula para a próxima
-                }
                 // Atualiza o progresso da quest passando a arrow como parâmetro
                 String mobType = entity.getType().name();
                 Material weapon = Material.BOW;
