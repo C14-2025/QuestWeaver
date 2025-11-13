@@ -9,6 +9,7 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
@@ -22,21 +23,35 @@ public class RangedCombatQuestListener implements Listener {
         this.questBook = new QuestBook(questManager);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onEntityDamage(EntityDamageByEntityEvent event) {
+        // Ignora se o evento foi cancelado
+        if (event.isCancelled()) {
+            return;
+        }
+
         // Verifica se quem tomou dano é uma entidade viva
         if (!(event.getEntity() instanceof LivingEntity entity)) {
             return;
         }
 
-        // Verifica se é um zumbi
-        if (!entity.getType().name().equalsIgnoreCase("ZOMBIE")) {
+        // Verifica se é um esqueleto
+        if (!entity.getType().name().equalsIgnoreCase("SKELETON")) {
             return;
         }
 
         // Verifica se o dano foi causado por uma flecha
         if (!(event.getDamager() instanceof Arrow arrow)) {
             return;
+        }
+
+        // IMPORTANTE: Verifica se a flecha tem uma das metadata especiais
+        boolean isSpecialArrow = arrow.hasMetadata("explosive_arrow") ||
+                arrow.hasMetadata("knockback_arrow") ||
+                arrow.hasMetadata("poison_arrow");
+
+        if (!isSpecialArrow) {
+            return; // Ignora flechas normais
         }
 
         // Verifica se a flecha foi atirada por um jogador
