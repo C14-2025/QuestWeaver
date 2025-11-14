@@ -132,6 +132,12 @@ public class ArchListener implements Listener {
         Ability ability = abilityMap.get(abilityKey);
         if (ability instanceof arrows arrowAbility) {
             arrowAbility.onHit(event, rpgShooter, target);
+
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                if (arrow.isValid()) {
+                    arrow.remove();
+                }
+            }, 2L); // 2 ticks de delay para garantir que o dano seja processado
         }
     }
 
