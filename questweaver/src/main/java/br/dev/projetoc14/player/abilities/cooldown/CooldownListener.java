@@ -1,4 +1,4 @@
-package br.dev.projetoc14.player.abilities;
+package br.dev.projetoc14.player.abilities.cooldown;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

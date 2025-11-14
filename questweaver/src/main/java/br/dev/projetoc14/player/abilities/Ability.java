@@ -1,6 +1,7 @@
 package br.dev.projetoc14.player.abilities;
 
 import br.dev.projetoc14.player.RPGPlayer;
+import br.dev.projetoc14.player.abilities.cooldown.CooldownManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Sound;

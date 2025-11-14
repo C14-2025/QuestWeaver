@@ -1,4 +1,4 @@
-package br.dev.projetoc14.player.abilities;
+package br.dev.projetoc14.player.abilities.cooldown;
 
 import br.dev.projetoc14.QuestWeaver;
 import org.bukkit.Bukkit;
