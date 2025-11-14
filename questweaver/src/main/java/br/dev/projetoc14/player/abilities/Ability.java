@@ -1,6 +1,7 @@
 package br.dev.projetoc14.player.abilities;
 
 import br.dev.projetoc14.player.RPGPlayer;
+import br.dev.projetoc14.player.abilities.cooldown.CooldownManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Sound;
@@ -44,7 +45,7 @@ public abstract class Ability {
         if (caster.getCurrentMana() < manaCost) {
             player.sendActionBar(Component.text("❌ Mana insuficiente! (" +
                     caster.getCurrentMana() + "/" + manaCost + ")").color(NamedTextColor.RED));
-            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1f, 0.8f);
+            player.playSound(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 1f, 1f);
             return CastResult.NO_MANA;
         }
 
@@ -53,7 +54,7 @@ public abstract class Ability {
             int remaining = cooldownManager.getRemainingTime(player);
             player.sendActionBar(Component.text("⏱ Aguarde " + remaining + "s para usar " + name + "!")
                     .color(NamedTextColor.YELLOW));
-            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1f);
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1f, 0.8f);
             return CastResult.COOLDOWN;
         }
 
