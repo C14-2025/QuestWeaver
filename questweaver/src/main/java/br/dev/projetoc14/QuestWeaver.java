@@ -69,6 +69,9 @@ public final class QuestWeaver extends JavaPlugin {
         this.questmanager = new QuestManager();
         this.questBook = new QuestBook(questmanager);
 
+        // Inicializa o CooldownManager
+        cooldownManager = new CooldownManager(this);
+
         // player join & disconnect listener
         Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(playerFileManager,(QuestWeaver) instance), this);
         Bukkit.getPluginManager().registerEvents(new PlayerDisconnectListener(playerFileManager, statsManager, dataManager), this);
@@ -113,13 +116,14 @@ public final class QuestWeaver extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new HungerDurabilityListener(), this);
         getLogger().info("QuestWeaver enabled — hunger and durability disabled!");
 
-        // Cooldoown Bar
+        // Cooldown Listener
         CooldownListener cooldownListener = new CooldownListener(cooldownManager);
         getServer().getPluginManager().registerEvents(cooldownListener, this);
 
         // Archer listener (habilidades do arqueiro)
         ArchListener archListener = new ArchListener(this);
         getServer().getPluginManager().registerEvents(archListener, this);
+        
         //Listener da quest do archer
         RangedCombatQuestListener rangedCombatQuestListener = new RangedCombatQuestListener(new QuestManager());
         getServer().getPluginManager().registerEvents(rangedCombatQuestListener, this);
@@ -175,7 +179,6 @@ public final class QuestWeaver extends JavaPlugin {
         getLogger().info("[QuestWeaver] Plugin finalizado!");
     }
 
-
     public static String getServerName(){
         return config.getString("server-conf.server-name");
     }
@@ -183,12 +186,11 @@ public final class QuestWeaver extends JavaPlugin {
     public static Boolean isMatchRunning(){
         return config.getBoolean("match-conf.isMatch-running");
     }
+
     public static void setMatchRunning(boolean value) {
         config.set("match-conf.isMatch-running", value);
         QuestWeaver.getInstance().saveConfig();
     }
-
-
 
     public static Plugin getInstance() {
         return instance;
@@ -202,14 +204,16 @@ public final class QuestWeaver extends JavaPlugin {
         return questBook;
     }
 
-    public PlayerFileManager getPlayerFileManager() { return playerFileManager; }
+    public PlayerFileManager getPlayerFileManager() {
+        return playerFileManager;
+    }
 
     public RPGPlayer getRPGPlayer(Player player) {
         return rpgPlayers.get(player.getUniqueId());
     }
 
     public PlayerStatsManager getStatsManager() {
-        return  statsManager;
+        return statsManager;
     }
 
     public void addRPGPlayer(@NotNull UUID uniqueId, RPGPlayer rpgPlayer) {
