@@ -6,19 +6,22 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
-import java.util.*;
-
 public abstract class Ability {
 
     private final String name;
     private final int manaCost;
     private final int cooldown;
-    private final Map<UUID, Long> lastUsed = new HashMap<>();
+
+    private CooldownManager cooldownManager;
 
     public Ability(String name, int manaCost, int cooldown) {
         this.name = name;
         this.manaCost = manaCost;
         this.cooldown = cooldown;
+    }
+
+    public void setCooldownListener(CooldownManager cooldownManager) {
+        this.cooldownManager = cooldownManager;
     }
 
     protected abstract void onCast(RPGPlayer caster);
@@ -45,18 +48,13 @@ public abstract class Ability {
             return CastResult.NO_MANA;
         }
 
-        // Verifica cooldown
-        UUID playerId = caster.getUniqueId();
-        if (lastUsed.containsKey(playerId)) {
-            long timeElapsed = (System.currentTimeMillis() - lastUsed.get(playerId)) / 1000;
-            long timeRemaining = cooldown - timeElapsed;
-
-            if (timeRemaining > 0) {
-                player.sendActionBar(Component.text("⏳ Aguarde " + timeRemaining + "s para usar " + name + " novamente!")
-                        .color(NamedTextColor.RED));
-                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1f);
-                return CastResult.COOLDOWN;
-            }
+        // Verifica cooldown usando o CooldownManager
+        if (cooldownManager != null && cooldownManager.hasCooldown(player)) {
+            int remaining = cooldownManager.getRemainingTime(player);
+            player.sendActionBar(Component.text("⏱ Aguarde " + remaining + "s para usar " + name + "!")
+                    .color(NamedTextColor.YELLOW));
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1f);
+            return CastResult.COOLDOWN;
         }
 
         return CastResult.SUCCESS;
@@ -67,10 +65,31 @@ public abstract class Ability {
      */
     private void applyCost(RPGPlayer caster) {
         caster.setCurrentMana(caster.getCurrentMana() - manaCost);
-        lastUsed.put(caster.getUniqueId(), System.currentTimeMillis());
+
+        if (cooldownManager != null && cooldown > 0) {
+            cooldownManager.startCooldown(caster.getPlayer(), name, cooldown);
+        }
     }
 
     public String getName() {
         return name;
+    }
+
+    public int getCooldown() {
+        return cooldown;
+    }
+
+    public int getManaCost() {
+        return manaCost;
+    }
+
+    /**
+     * Obtém o cooldown restante diretamente do CooldownManager
+     */
+    public int getRemainingCooldown(Player player) {
+        if (cooldownManager != null) {
+            return cooldownManager.getRemainingTime(player);
+        }
+        return 0;
     }
 }

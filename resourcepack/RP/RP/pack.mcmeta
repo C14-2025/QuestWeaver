@@ -1,0 +1,10 @@
+{
+  "pack": {
+    "pack_format": 64,
+    "description": "Visit §2Texture-Packs.com §rfor the best packs & shaders!",
+    "supported_formats": {
+      "min_inclusive": 30,
+      "max_inclusive": 999
+    }
+  }
+}

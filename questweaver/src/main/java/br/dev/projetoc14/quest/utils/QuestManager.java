@@ -9,6 +9,7 @@ import br.dev.projetoc14.quest.KillQuest;
 import br.dev.projetoc14.quest.Quest;
 import br.dev.projetoc14.quest.mage.ElementalMaster;
 import br.dev.projetoc14.quest.warrior.FirstBlood;
+import br.dev.projetoc14.quest.archer.RangedCombatQuest;
 import org.bukkit.entity.Player;
 import org.bukkit.Location;
 
@@ -92,8 +93,11 @@ public class QuestManager {
     }
 
     private Quest createArcherQuest(int progress, Location playerLoc) {
-        // TODO: Implemente as quests do arqueiro
-        return null;
+        return switch (progress) {
+            case 0 -> new RangedCombatQuest(playerLoc); // Primeira quest do arqueiro
+            // TODO: Adicione mais quests aqui...
+            default -> null;
+        };
     }
 
     private Quest createAssassinQuest(int progress, Location playerLoc) {
