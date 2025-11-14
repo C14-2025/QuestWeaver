@@ -45,6 +45,9 @@ public class AbilityListener implements Listener {
 
         abilityMap.put("ShadowMove", shadowMove);
         abilityMap.put("VampireKnives", vampireKnives);
+
+        plugin.getServer().getPluginManager().registerEvents(shadowMove, plugin);
+        plugin.getServer().getPluginManager().registerEvents(vampireKnives, plugin);
     }
 
     @EventHandler

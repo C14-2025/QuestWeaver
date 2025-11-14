@@ -10,6 +10,7 @@ import org.bukkit.Particle;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -17,7 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class VampireKnives extends Ability {
+public class VampireKnives extends Ability implements Listener {
 
     private final int DURATION = 200; // 10 segundos (200 ticks)
     private final Set<UUID> activePlayers = new HashSet<>();
