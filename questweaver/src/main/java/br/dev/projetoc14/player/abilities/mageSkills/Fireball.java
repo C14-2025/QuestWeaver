@@ -3,7 +3,6 @@ package br.dev.projetoc14.player.abilities.mageSkills;
 import br.dev.projetoc14.QuestWeaver;
 import br.dev.projetoc14.player.RPGPlayer;
 import br.dev.projetoc14.player.abilities.Ability;
-import br.dev.projetoc14.player.abilities.CooldownListener;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;

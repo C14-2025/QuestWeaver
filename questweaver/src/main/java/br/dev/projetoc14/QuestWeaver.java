@@ -6,6 +6,7 @@ import br.dev.projetoc14.commands.QuestsCommand;
 import br.dev.projetoc14.items.SkillTree;
 import br.dev.projetoc14.match.*;
 import br.dev.projetoc14.player.abilities.CooldownListener;
+import br.dev.projetoc14.player.abilities.CooldownManager;
 import br.dev.projetoc14.player.abilities.warriorSkills.CrimsonBladeListener;
 import br.dev.projetoc14.player.listeners.*;
 import br.dev.projetoc14.player.abilities.archerSkills.ArchListener;
@@ -48,9 +49,7 @@ public final class QuestWeaver extends JavaPlugin {
     private final Map<UUID, RPGPlayer> rpgPlayers = new HashMap<>();
     private QuestManager questmanager;
     private final MatchManager matchManager = new MatchManager();
-    private CooldownListener cooldownListener;
-
-
+    private CooldownManager cooldownManager;
 
     @Override
     public void onEnable() {
@@ -115,7 +114,7 @@ public final class QuestWeaver extends JavaPlugin {
         getLogger().info("QuestWeaver enabled — hunger and durability disabled!");
 
         // Cooldoown Bar
-        cooldownListener = new CooldownListener(this);
+        CooldownListener cooldownListener = new CooldownListener(cooldownManager);
         getServer().getPluginManager().registerEvents(cooldownListener, this);
 
         // Archer listener (habilidades do arqueiro)
@@ -164,8 +163,8 @@ public final class QuestWeaver extends JavaPlugin {
             getLogger().info("[QuestWeaver] Regeneração de mana finalizada para todos os jogadores.");
         }
 
-        if (cooldownListener != null) {
-            cooldownListener.cleanupAll();
+        if (cooldownManager != null) {
+            cooldownManager.cleanupAll();
         }
 
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -221,7 +220,7 @@ public final class QuestWeaver extends JavaPlugin {
         return matchManager;
     }
 
-    public CooldownListener getCooldownListener() {
-        return cooldownListener;
+    public CooldownManager getCooldownListener() {
+        return cooldownManager;
     }
 }

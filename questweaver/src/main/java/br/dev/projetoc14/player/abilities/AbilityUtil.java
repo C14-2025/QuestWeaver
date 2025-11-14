@@ -44,15 +44,12 @@ public class AbilityUtil {
         Ability ability = abilityMap.get(abilityName);
         CastResult result = ability.canCast(rpgPlayer);
 
-        switch(result) {
+        // Só executamos a habilidade se o resultado for SUCCESS
+        switch (result) {
             case SUCCESS -> ability.cast(rpgPlayer);
-            case COOLDOWN -> {
-                long remaining = ability.getRemainingCooldown(player.getUniqueId());
-                player.sendActionBar(Component.text("⏳ Aguarde " + remaining + "s!")
-                        .color(NamedTextColor.RED));
-                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1f);
+            case COOLDOWN, NO_MANA -> {
+                // Feedback já foi dado por canCast().
             }
-            case NO_MANA -> {} // canCast já mostra o resultado da falta de mana.
         }
     }
 
