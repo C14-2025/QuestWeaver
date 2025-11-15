@@ -44,13 +44,67 @@ public class PoisonArrow extends Ability implements arrows{
         hitLoc.getWorld().spawnParticle(Particle.DAMAGE_INDICATOR, hitLoc, 20, 1, 1, 1, 0.05);
         hitLoc.getWorld().playSound(hitLoc, Sound.BLOCK_NOTE_BLOCK_BANJO, 1.2f, 1.0f);
 
-        // Dano direto no alvo, se houver
         if (target != null) {
+            // Dano inicial
             int newHealth = target.getCurrentHealth() - damage;
             if (newHealth < 0) newHealth = 0;
             target.setCurrentHealth(newHealth);
+
+            applyPoisonEffect(target);
         }
         arrow.remove();
+    }
+
+    private void applyPoisonEffect(RPGPlayer target) {
+        final org.bukkit.entity.Player p = target.getPlayer();
+
+        // Duração total: 4 segundos (80 ticks)
+        plugin.getServer().getScheduler().runTaskTimer(plugin, new Runnable() {
+            int ticks = 0;
+
+            @Override
+            public void run() {
+                if (ticks >= 80 || !p.isOnline()) {
+                    cancelTask(this);
+                    return;
+                }
+
+                if (ticks % 20 == 0) { // a cada 1 segundo
+                    applyPoisonTick(target);
+                }
+
+                spawnPoisonParticles(p);
+
+                ticks++;
+            }
+        }, 1L, 1L);
+    }
+
+    private void cancelTask(Runnable r) {
+        plugin.getServer().getScheduler().cancelTask(r.hashCode());
+    }
+
+    private void applyPoisonTick(RPGPlayer target) {
+        int newHealth = target.getCurrentHealth() - 3; // dano por tick
+        if (newHealth < 0) newHealth = 0;
+
+        target.setCurrentHealth(newHealth);
+
+        target.getPlayer().playSound(
+                target.getPlayer().getLocation(),
+                Sound.ENTITY_SILVERFISH_HURT,
+                0.7f, 0.6f
+        );
+    }
+
+    private void spawnPoisonParticles(org.bukkit.entity.Player p) {
+        p.getWorld().spawnParticle(
+                Particle.ENTITY_EFFECT,
+                p.getLocation().add(0, 1, 0),
+                8,
+                0.3, 0.6, 0.3,
+                0 // usa o verde padrão
+        );
     }
 
     @Override
