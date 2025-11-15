@@ -39,7 +39,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public final class QuestWeaver extends JavaPlugin {
+public class QuestWeaver extends JavaPlugin {
 
     private PlayerStatsManager statsManager;
     private QuestBook questBook;

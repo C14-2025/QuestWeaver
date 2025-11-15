@@ -225,7 +225,7 @@ public abstract class RPGPlayer {
     private void syncHealthWithBukkit() {
         if (getMaxHealth() <= 0) return; // Evita divisão por zero
 
-        double maxBukkitHealth = Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue();
+        double maxBukkitHealth = Objects.requireNonNull(player.getAttribute(Attribute.MAX_HEALTH)).getValue();
         double percentage = (double) currentHealth / getMaxHealth();
         double bukkitHealth = maxBukkitHealth * percentage;
 
@@ -237,7 +237,7 @@ public abstract class RPGPlayer {
         int maxHealth = stats.getHealth();
 
         // 1. Define o máximo de vida do Bukkit
-        Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(20.0);
+        Objects.requireNonNull(player.getAttribute(Attribute.MAX_HEALTH)).setBaseValue(20.0);
 
         // 2. Define a vida atual do RPG como máxima
         this.currentHealth = maxHealth;
