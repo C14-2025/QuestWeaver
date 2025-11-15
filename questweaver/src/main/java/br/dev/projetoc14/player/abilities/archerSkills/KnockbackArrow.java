@@ -6,14 +6,18 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Player;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 public class KnockbackArrow extends Ability implements arrows {
 
-    private final int damage = 15;
+    private final int damage = 4;
     private final Plugin plugin;
 
     public KnockbackArrow(Plugin plugin) {
@@ -45,11 +49,14 @@ public class KnockbackArrow extends Ability implements arrows {
 
         if (target != null) {
             applyDamage(target);
-            applySlowness(target);
-            applyNausea(target);
-            applyShockwaves(caster, target);
+
+            // Só aplica efeitos se o player existir
+            if (target.getPlayer() != null) {
+                applySlowness(target);
+                applyNausea(target);
+                applyShockwaves(caster, target);
+            }
         }
-        arrow.remove();
     }
 
     private void applyDamage(RPGPlayer target) {
@@ -63,10 +70,12 @@ public class KnockbackArrow extends Ability implements arrows {
     }
 
     private void applySlowness(RPGPlayer target) {
+        if (target.getPlayer() == null) return;
+
         target.getPlayer().addPotionEffect(
-                new org.bukkit.potion.PotionEffect(
+                new PotionEffect(
                         PotionEffectType.SLOWNESS,
-                        20, // 1 segundo
+                        20,
                         1,
                         false, false, false
                 )
@@ -74,38 +83,40 @@ public class KnockbackArrow extends Ability implements arrows {
     }
 
     private void applyNausea(RPGPlayer target) {
+        if (target.getPlayer() == null) return;
+
         target.getPlayer().addPotionEffect(
-                new org.bukkit.potion.PotionEffect(
+                new PotionEffect(
                         PotionEffectType.NAUSEA,
-                        16, // 0.8s
+                        16,
                         0,
                         false, false, false
                 )
         );
     }
 
-    private void applyShockwavePush(RPGPlayer caster, org.bukkit.entity.Player bukkitTarget) {
-        if (caster == null) return;
+    private void applyShockwavePush(RPGPlayer caster, Player bukkitTarget) {
+        if (caster == null || bukkitTarget == null || !bukkitTarget.isOnline()) return;
 
-        org.bukkit.util.Vector push =
-                bukkitTarget.getLocation().toVector()
-                        .subtract(caster.getLocation().toVector())
-                        .normalize()
-                        .multiply(0.3);
+        Vector push = bukkitTarget.getLocation().toVector()
+                .subtract(caster.getLocation().toVector())
+                .normalize()
+                .multiply(0.3);
 
         bukkitTarget.setVelocity(bukkitTarget.getVelocity().add(push));
     }
 
     private void applyShockwaves(RPGPlayer caster, RPGPlayer target) {
-        final org.bukkit.entity.Player bukkitTarget = target.getPlayer();
+        final Player bukkitTarget = target.getPlayer();
+        if (bukkitTarget == null || !bukkitTarget.isOnline()) return;
 
-        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+        new BukkitRunnable() {
             int ticks = 0;
 
             @Override
             public void run() {
                 if (ticks >= 16 || !bukkitTarget.isOnline()) {
-                    plugin.getServer().getScheduler().cancelTask(this.hashCode());
+                    this.cancel();
                     return;
                 }
 
@@ -118,10 +129,10 @@ public class KnockbackArrow extends Ability implements arrows {
 
                 ticks++;
             }
-        }, 1L, 1L);
+        }.runTaskTimer(plugin, 1L, 1L);
     }
 
-    private void playShockwaveParticles(org.bukkit.entity.Player bukkitTarget) {
+    private void playShockwaveParticles(Player bukkitTarget) {
         bukkitTarget.getWorld().spawnParticle(
                 Particle.CRIT,
                 bukkitTarget.getLocation().add(0, 1, 0),
@@ -129,7 +140,7 @@ public class KnockbackArrow extends Ability implements arrows {
         );
     }
 
-    private void playShockwaveSound(org.bukkit.entity.Player bukkitTarget) {
+    private void playShockwaveSound(Player bukkitTarget) {
         bukkitTarget.getWorld().playSound(
                 bukkitTarget.getLocation(),
                 Sound.BLOCK_ANVIL_LAND,

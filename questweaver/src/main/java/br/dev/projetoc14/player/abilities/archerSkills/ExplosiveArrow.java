@@ -12,7 +12,7 @@ import org.bukkit.plugin.Plugin;
 
 public class ExplosiveArrow extends Ability implements arrows {
 
-    private final int damage = 20;
+    private final int damage = 7;
     private final Plugin plugin;
 
     public ExplosiveArrow(Plugin plugin) {
@@ -50,7 +50,6 @@ public class ExplosiveArrow extends Ability implements arrows {
             if (newHealth < 0) newHealth = 0;
             target.setCurrentHealth(newHealth);
         }
-        arrow.remove();
     }
 
     public int getDamage() {
