@@ -18,14 +18,13 @@ import java.util.UUID;
 
 public class PlayerDataManagerTest {
 
-    private JavaPlugin pluginMock;
     private PlayerDataManager manager;
     private File tempFolder;
 
     @BeforeEach
     public void setUp() {
         // Mock do plugin
-        pluginMock = Mockito.mock(JavaPlugin.class);
+        JavaPlugin pluginMock = Mockito.mock(JavaPlugin.class);
 
         // Pasta temporária para simular getDataFolder()
         tempFolder = new File(System.getProperty("java.io.tmpdir"), "pluginTestData");

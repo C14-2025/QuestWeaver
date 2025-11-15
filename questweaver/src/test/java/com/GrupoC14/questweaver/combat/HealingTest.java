@@ -18,7 +18,6 @@ public class HealingTest {
     private Healing heal;
     private RPGPlayer player;
     private Player mockBukkitPlayer;
-    private PlayerStatsManager statsManager;
 
     @BeforeEach
     public void setUp() {
@@ -30,7 +29,7 @@ public class HealingTest {
         // Mock do AttributeInstance
         AttributeInstance maxHealthAttr = mock(AttributeInstance.class);
         when(maxHealthAttr.getValue()).thenReturn(20.0);
-        when(mockBukkitPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH)).thenReturn(maxHealthAttr);
+        when(mockBukkitPlayer.getAttribute(Attribute.MAX_HEALTH)).thenReturn(maxHealthAttr);
 
         // Configura comportamento de health
         when(mockBukkitPlayer.getHealth()).thenReturn(10.0);
@@ -41,7 +40,7 @@ public class HealingTest {
         player.setCurrentHealth(50); // 50% de vida
 
         // Configura PlayerStatsManager
-        statsManager = mock(PlayerStatsManager.class);
+        PlayerStatsManager statsManager = mock(PlayerStatsManager.class);
         player.setStatsManager(statsManager);
     }
 

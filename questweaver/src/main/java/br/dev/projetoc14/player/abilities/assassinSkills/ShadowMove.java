@@ -13,7 +13,7 @@ public class ShadowMove extends Ability implements Listener {
     }
 
     @Override
-    protected void onCast(RPGPlayer caster) {
+    public void onCast(RPGPlayer caster) {
 
         caster.getPlayer().addPotionEffect(
             new PotionEffect(

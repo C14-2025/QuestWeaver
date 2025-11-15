@@ -28,7 +28,7 @@ public class VampireKnives extends Ability implements Listener {
     }
 
     @Override
-    protected void onCast(RPGPlayer caster) {
+    public void onCast(RPGPlayer caster) {
         Player player = caster.getPlayer();
         UUID uuid = player.getUniqueId();
 
