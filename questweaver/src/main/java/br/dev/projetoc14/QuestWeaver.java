@@ -2,13 +2,20 @@ package br.dev.projetoc14;
 
 import br.dev.projetoc14.commands.HelpCommand;
 import br.dev.projetoc14.commands.QuestsCommand;
+//import br.dev.projetoc14.items.ItemProtectionListener;
 import br.dev.projetoc14.items.SkillTree;
 import br.dev.projetoc14.match.*;
+import br.dev.projetoc14.player.abilities.cooldown.CooldownListener;
+import br.dev.projetoc14.player.abilities.cooldown.CooldownManager;
 import br.dev.projetoc14.player.abilities.warriorSkills.CrimsonBladeListener;
 import br.dev.projetoc14.player.listeners.*;
 import br.dev.projetoc14.player.abilities.archerSkills.ArchListener;
 import br.dev.projetoc14.player.abilities.assassinSkills.AbilityListener;
+import br.dev.projetoc14.quest.archer.RangedCombatQuestListener;
+import br.dev.projetoc14.quest.listeners.QuestCompletionListener;
 import br.dev.projetoc14.skilltree.ExperienceSystem;
+import br.dev.projetoc14.match.ClassReadyManager;
+import br.dev.projetoc14.match.PlayerFileManager;
 import br.dev.projetoc14.player.*;
 import br.dev.projetoc14.player.abilities.mageSkills.MagicWandListener;
 import br.dev.projetoc14.skilltree.Texts;
@@ -32,7 +39,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public final class QuestWeaver extends JavaPlugin {
+public class QuestWeaver extends JavaPlugin {
 
     private PlayerStatsManager statsManager;
     private QuestBook questBook;
@@ -40,9 +47,9 @@ public final class QuestWeaver extends JavaPlugin {
     private static Plugin instance;
     private PlayerFileManager playerFileManager;
     private final Map<UUID, RPGPlayer> rpgPlayers = new HashMap<>();
-    private MatchManager matchManager = new MatchManager();
-
-
+    private QuestManager questmanager;
+    private final MatchManager matchManager = new MatchManager();
+    private CooldownManager cooldownManager;
 
     @Override
     public void onEnable() {
@@ -59,10 +66,11 @@ public final class QuestWeaver extends JavaPlugin {
         // Inicializa PlayerStatsManager e PlayerDataManager
         PlayerDataManager dataManager = new PlayerDataManager(this);
         this.statsManager = new PlayerStatsManager();
-        QuestManager questManager = new QuestManager();
-        this.questBook = new QuestBook(questManager);
-        questManager = new QuestManager();
+        this.questmanager = new QuestManager();
+        this.questBook = new QuestBook(questmanager);
 
+        // Inicializa o CooldownManager
+        cooldownManager = new CooldownManager(this);
 
         // player join & disconnect listener
         Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(playerFileManager,(QuestWeaver) instance), this);
@@ -74,7 +82,7 @@ public final class QuestWeaver extends JavaPlugin {
         getServer().getPluginManager().registerEvents(playerListener, this);
 
         // Listener de Escolha de Classe
-        ClassSelectListener classSelectListener = new ClassSelectListener(statsManager, playerFileManager, (JavaPlugin) instance, readyManager, questManager);
+        ClassSelectListener classSelectListener = new ClassSelectListener(statsManager, playerFileManager, (JavaPlugin) instance, readyManager, questmanager);
         getServer().getPluginManager().registerEvents(classSelectListener, this);
 
         // Listener de persistência JSON
@@ -85,13 +93,14 @@ public final class QuestWeaver extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ExperienceSystem(), this);
 
         //Listeners das quests começa aqui
-        PlayerQuestJoinListener questJoinListener = new PlayerQuestJoinListener(questManager);
+        PlayerQuestJoinListener questJoinListener = new PlayerQuestJoinListener(questmanager);
         getServer().getPluginManager().registerEvents(questJoinListener, this);
+        getServer().getPluginManager().registerEvents(new QuestCompletionListener(), this);
 
-        MobKillQuestListener mobKillListener = new MobKillQuestListener(questManager, this);
+        MobKillQuestListener mobKillListener = new MobKillQuestListener(questmanager);
         getServer().getPluginManager().registerEvents(mobKillListener, this);
 
-        QuestBookInteractListener bookListener = new QuestBookInteractListener(questManager);
+        QuestBookInteractListener bookListener = new QuestBookInteractListener(questmanager);
         getServer().getPluginManager().registerEvents(bookListener, this);
         //Termina aqui
 
@@ -107,9 +116,17 @@ public final class QuestWeaver extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new HungerDurabilityListener(), this);
         getLogger().info("QuestWeaver enabled — hunger and durability disabled!");
 
-        // Arch listener (habilidades do arqueiro)
+        // Cooldown Listener
+        CooldownListener cooldownListener = new CooldownListener(cooldownManager);
+        getServer().getPluginManager().registerEvents(cooldownListener, this);
+
+        // Archer listener (habilidades do arqueiro)
         ArchListener archListener = new ArchListener(this);
         getServer().getPluginManager().registerEvents(archListener, this);
+        
+        //Listener da quest do archer
+        RangedCombatQuestListener rangedCombatQuestListener = new RangedCombatQuestListener(new QuestManager());
+        getServer().getPluginManager().registerEvents(rangedCombatQuestListener, this);
 
         // Assassin listener
         AbilityListener assassinlistener = new AbilityListener(this);
@@ -117,6 +134,9 @@ public final class QuestWeaver extends JavaPlugin {
 
         // skill tree listener
         getServer().getPluginManager().registerEvents(new SkillTree(playerFileManager), this);
+
+        // item drop protection listener
+        //getServer().getPluginManager().registerEvents(new ItemProtectionListener(this), this);
 
         // death listener
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(playerFileManager, this), this);
@@ -147,6 +167,10 @@ public final class QuestWeaver extends JavaPlugin {
             getLogger().info("[QuestWeaver] Regeneração de mana finalizada para todos os jogadores.");
         }
 
+        if (cooldownManager != null) {
+            cooldownManager.cleanupAll();
+        }
+
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (statsManager != null) {
                 statsManager.removeManaBar(player);
@@ -155,7 +179,6 @@ public final class QuestWeaver extends JavaPlugin {
         getLogger().info("[QuestWeaver] Plugin finalizado!");
     }
 
-
     public static String getServerName(){
         return config.getString("server-conf.server-name");
     }
@@ -163,29 +186,34 @@ public final class QuestWeaver extends JavaPlugin {
     public static Boolean isMatchRunning(){
         return config.getBoolean("match-conf.isMatch-running");
     }
+
     public static void setMatchRunning(boolean value) {
         config.set("match-conf.isMatch-running", value);
         QuestWeaver.getInstance().saveConfig();
     }
 
-
-
     public static Plugin getInstance() {
         return instance;
+    }
+
+    public QuestManager getQuestManager() {
+        return questmanager;
     }
 
     public QuestBook getQuestBook() {
         return questBook;
     }
 
-    public PlayerFileManager getPlayerFileManager() { return playerFileManager; }
+    public PlayerFileManager getPlayerFileManager() {
+        return playerFileManager;
+    }
 
     public RPGPlayer getRPGPlayer(Player player) {
         return rpgPlayers.get(player.getUniqueId());
     }
 
     public PlayerStatsManager getStatsManager() {
-        return  statsManager;
+        return statsManager;
     }
 
     public void addRPGPlayer(@NotNull UUID uniqueId, RPGPlayer rpgPlayer) {
@@ -194,5 +222,9 @@ public final class QuestWeaver extends JavaPlugin {
 
     public MatchManager getMatchManager() {
         return matchManager;
+    }
+
+    public CooldownManager getCooldownListener() {
+        return cooldownManager;
     }
 }

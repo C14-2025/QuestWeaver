@@ -24,10 +24,10 @@ public class AbilityUtil {
         abilityIndex.put(player.getUniqueId(), index);
 
         String nova = abilities.get(index);
-        player.sendActionBar(Component.text( "✨ Habilidade: ")
+        player.sendActionBar(Component.text("✨ Habilidade: ")
                 .color(NamedTextColor.AQUA)
-                    .append(Component.text(formatter.format(nova))
-                            .color(NamedTextColor.GOLD)));
+                .append(Component.text(formatter.format(nova))
+                        .color(NamedTextColor.GOLD)));
         player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1.5f);
     }
 
@@ -43,16 +43,14 @@ public class AbilityUtil {
 
         Ability ability = abilityMap.get(abilityName);
         CastResult result = ability.canCast(rpgPlayer);
-        switch(result) {
-            case SUCCESS -> ability.cast(rpgPlayer);
-            case COOLDOWN -> sendCooldownMessage(player);
-            case NO_MANA -> {} // canCast já mostra o resultado da falta de mana.
-        }
-    }
 
-    private static void sendCooldownMessage(Player player) {
-        player.sendActionBar(Component.text("⏳ Habilidade em cooldown!").color(NamedTextColor.DARK_GREEN));
-        player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1f);
+        // Só executamos a habilidade se o resultado for SUCCESS
+        switch (result) {
+            case SUCCESS -> ability.cast(rpgPlayer);
+            case COOLDOWN, NO_MANA -> {
+                // Feedback já foi dado por canCast().
+            }
+        }
     }
 
     @FunctionalInterface

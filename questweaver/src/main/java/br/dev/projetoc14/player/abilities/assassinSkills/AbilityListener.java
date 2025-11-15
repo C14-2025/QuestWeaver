@@ -36,8 +36,18 @@ public class AbilityListener implements Listener {
 
     public AbilityListener(QuestWeaver plugin) {
         this.plugin = plugin;
-        abilityMap.put("ShadowMove", new ShadowMove());
-        abilityMap.put("VampireKnives", new VampireKnives());
+
+        ShadowMove shadowMove = new ShadowMove();
+        VampireKnives vampireKnives = new VampireKnives();
+
+        shadowMove.setCooldownListener(plugin.getCooldownListener());
+        vampireKnives.setCooldownListener(plugin.getCooldownListener());
+
+        abilityMap.put("ShadowMove", shadowMove);
+        abilityMap.put("VampireKnives", vampireKnives);
+
+        plugin.getServer().getPluginManager().registerEvents(shadowMove, plugin);
+        plugin.getServer().getPluginManager().registerEvents(vampireKnives, plugin);
     }
 
     @EventHandler

@@ -38,7 +38,7 @@ public class ClassUtil {
         Bukkit.getScheduler().runTaskLater(QuestWeaver.getInstance(), () -> {
             // Define vida máxima do Bukkit
             int maxHealth = rpgPlayer.getMaxHealth();
-            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(maxHealth);
+            Objects.requireNonNull(player.getAttribute(Attribute.MAX_HEALTH)).setBaseValue(maxHealth);
 
             // Define vida atual - cheia
             player.setHealth(maxHealth);

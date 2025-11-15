@@ -1,17 +1,28 @@
 package br.dev.projetoc14.player.abilities.mageSkills;
 
+import br.dev.projetoc14.QuestWeaver;
 import br.dev.projetoc14.player.RPGPlayer;
 import br.dev.projetoc14.player.abilities.Ability;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.persistence.PersistentDataType;
 
-public class Fireball extends Ability {
+public class Fireball extends Ability implements Listener {
 
     private final int damage = 25;
+    private final NamespacedKey magicDamageKey;
 
-    public Fireball() {
+    public Fireball(QuestWeaver plugin) {
         super("Bola de Fogo", 15, 5); // nome, custo de mana, cooldown em segundos
+        this.magicDamageKey = new NamespacedKey("questweaver", "magic_damage");
+        // Registra o listener
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @Override
@@ -28,12 +39,28 @@ public class Fireball extends Ability {
 
     }
 
+    @EventHandler
+    public void onEntityDamage(EntityDamageByEntityEvent event) {
+        if (!(event.getDamager() instanceof org.bukkit.entity.Fireball)) return;
+        if (!(event.getEntity() instanceof LivingEntity)) return;
+
+        org.bukkit.entity.Fireball fireball = (org.bukkit.entity.Fireball) event.getDamager();
+        LivingEntity target = (LivingEntity) event.getEntity();
+
+        // Marca a entidade atingida com a tag de dano mágico
+        target.getPersistentDataContainer().set(
+                magicDamageKey,
+                PersistentDataType.BOOLEAN,
+                true
+        );
+    }
+
     public String getName() {
         return "Bola de Fogo";
     }
 
     public int getManaCost() {
-        return 20;
+        return 15;
     }
 
     public int getCooldown() {

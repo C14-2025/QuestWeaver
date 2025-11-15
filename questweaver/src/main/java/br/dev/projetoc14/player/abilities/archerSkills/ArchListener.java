@@ -31,9 +31,18 @@ public class ArchListener implements Listener {
 
     public ArchListener(QuestWeaver plugin) {
         this.plugin = plugin;
-        abilityMap.put("EXPLOSIVEARROW", new ExplosiveArrow(plugin));
-        abilityMap.put("KNOCKBACKARROW", new KnockbackArrow(plugin));
-        abilityMap.put("POISONARROW", new PoisonArrow(plugin));
+
+        ExplosiveArrow explosiveArrow = new ExplosiveArrow(plugin);
+        KnockbackArrow knockbackArrow = new KnockbackArrow(plugin);
+        PoisonArrow poisonArrow = new PoisonArrow(plugin);
+
+        explosiveArrow.setCooldownListener(plugin.getCooldownListener());
+        knockbackArrow.setCooldownListener(plugin.getCooldownListener());
+        poisonArrow.setCooldownListener(plugin.getCooldownListener());
+
+        abilityMap.put("EXPLOSIVEARROW", explosiveArrow);
+        abilityMap.put("KNOCKBACKARROW", knockbackArrow);
+        abilityMap.put("POISONARROW", poisonArrow);
         // NORMALARROW é disparo padrão, então não requer instância
     }
 
@@ -103,7 +112,7 @@ public class ArchListener implements Listener {
     private void handleArrowHit(ProjectileHitEvent event, Arrow arrow, String metaKey, String abilityKey) {
         UUID shooterUUID = null;
         if (arrow.hasMetadata(metaKey + "_shooter")) {
-            shooterUUID = (UUID) arrow.getMetadata(metaKey + "_shooter").get(0).value();
+            shooterUUID = (UUID) arrow.getMetadata(metaKey + "_shooter").getFirst().value();
         }
 
         if (shooterUUID == null) return;
@@ -123,6 +132,12 @@ public class ArchListener implements Listener {
         Ability ability = abilityMap.get(abilityKey);
         if (ability instanceof arrows arrowAbility) {
             arrowAbility.onHit(event, rpgShooter, target);
+
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                if (arrow.isValid()) {
+                    arrow.remove();
+                }
+            }, 2L); // 2 ticks de delay para garantir que o dano seja processado
         }
     }
 
