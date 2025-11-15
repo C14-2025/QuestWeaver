@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -44,9 +45,9 @@ public class KnockbackArrow extends Ability implements arrows {
         if (!(event.getEntity() instanceof Arrow arrow)) return;
 
         Location hitLoc = arrow.getLocation();
-
         playHitEffects(hitLoc);
 
+        // Se atingiu um RPGPlayer
         if (target != null) {
             applyDamage(target);
 
@@ -75,9 +76,9 @@ public class KnockbackArrow extends Ability implements arrows {
         target.getPlayer().addPotionEffect(
                 new PotionEffect(
                         PotionEffectType.SLOWNESS,
-                        20,
-                        1,
-                        false, false, false
+                        60, // 3 segundos
+                        1,  // Slowness II
+                        false, false, true
                 )
         );
     }
@@ -88,9 +89,9 @@ public class KnockbackArrow extends Ability implements arrows {
         target.getPlayer().addPotionEffect(
                 new PotionEffect(
                         PotionEffectType.NAUSEA,
-                        16,
+                        100, // 5 segundos
                         0,
-                        false, false, false
+                        false, false, true
                 )
         );
     }
@@ -101,7 +102,7 @@ public class KnockbackArrow extends Ability implements arrows {
         Vector push = bukkitTarget.getLocation().toVector()
                 .subtract(caster.getLocation().toVector())
                 .normalize()
-                .multiply(0.3);
+                .multiply(0.08);
 
         bukkitTarget.setVelocity(bukkitTarget.getVelocity().add(push));
     }
