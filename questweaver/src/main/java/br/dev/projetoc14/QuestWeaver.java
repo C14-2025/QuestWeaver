@@ -11,7 +11,7 @@ import br.dev.projetoc14.player.abilities.warriorSkills.CrimsonBladeListener;
 import br.dev.projetoc14.player.listeners.*;
 import br.dev.projetoc14.player.abilities.archerSkills.ArchListener;
 import br.dev.projetoc14.player.abilities.assassinSkills.AbilityListener;
-import br.dev.projetoc14.quest.archer.RangedCombatQuestListener;
+import br.dev.projetoc14.quest.archer.ArcherQuestListener;
 import br.dev.projetoc14.quest.listeners.QuestCompletionListener;
 import br.dev.projetoc14.skilltree.ExperienceSystem;
 import br.dev.projetoc14.match.ClassReadyManager;
@@ -125,8 +125,8 @@ public class QuestWeaver extends JavaPlugin {
         getServer().getPluginManager().registerEvents(archListener, this);
         
         //Listener da quest do archer
-        RangedCombatQuestListener rangedCombatQuestListener = new RangedCombatQuestListener(new QuestManager());
-        getServer().getPluginManager().registerEvents(rangedCombatQuestListener, this);
+        ArcherQuestListener archerQuestListener = new ArcherQuestListener(questmanager);
+        getServer().getPluginManager().registerEvents(archerQuestListener, this);
 
         // Assassin listener
         AbilityListener assassinlistener = new AbilityListener(this);

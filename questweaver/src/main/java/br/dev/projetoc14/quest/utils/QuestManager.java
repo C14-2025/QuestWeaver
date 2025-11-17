@@ -95,7 +95,8 @@ public class QuestManager {
     private Quest createArcherQuest(int progress, Location playerLoc) {
         return switch (progress) {
             case 0 -> new RangedCombatQuest(playerLoc); // Primeira quest do arqueiro
-            // TODO: Adicione mais quests aqui...
+            case 1 -> new RangedCombatQuest(playerLoc);
+            case 2 -> new RangedCombatQuest(playerLoc);
             default -> null;
         };
     }
