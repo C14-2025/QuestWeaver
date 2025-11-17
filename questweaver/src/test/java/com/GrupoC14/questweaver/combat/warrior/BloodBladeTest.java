@@ -1,4 +1,4 @@
-package com.GrupoC14.questweaver.combat.warrior;
+package com.GrupoC14.questweaver.combat;
 
 import br.dev.projetoc14.QuestWeaver;
 import br.dev.projetoc14.player.RPGPlayer;
