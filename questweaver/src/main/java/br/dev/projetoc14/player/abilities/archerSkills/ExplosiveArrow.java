@@ -6,11 +6,12 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 
-public class ExplosiveArrow extends Ability implements arrows {
+public class ExplosiveArrow extends Ability implements arrows, Listener {
 
     private final int damage = 7;
     private final Plugin plugin;

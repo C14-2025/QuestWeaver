@@ -1,4 +1,4 @@
-package com.GrupoC14.questweaver.combat;
+package com.GrupoC14.questweaver.combat.mage;
 
 import br.dev.projetoc14.player.abilities.mageSkills.Healing;
 import br.dev.projetoc14.player.classes.MagePlayer;

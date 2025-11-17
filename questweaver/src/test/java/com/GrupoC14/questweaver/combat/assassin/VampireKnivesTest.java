@@ -1,4 +1,4 @@
-package com.GrupoC14.questweaver.combat;
+package com.GrupoC14.questweaver.combat.assassin;
 
 import br.dev.projetoc14.QuestWeaver;
 import br.dev.projetoc14.player.RPGPlayer;
