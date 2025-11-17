@@ -8,6 +8,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
@@ -16,7 +17,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-public class KnockbackArrow extends Ability implements arrows {
+public class KnockbackArrow extends Ability implements arrows, Listener {
 
     private final int damage = 4;
     private final Plugin plugin;
@@ -27,7 +28,7 @@ public class KnockbackArrow extends Ability implements arrows {
     }
 
     @Override
-    protected void onCast(RPGPlayer caster) {
+    public void onCast(RPGPlayer caster) {
         Location loc = caster.getEyeLocation();
         Arrow arrow = caster.launchProjectile(Arrow.class);
         arrow.setCritical(true);
