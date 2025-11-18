@@ -3,12 +3,9 @@ package br.dev.projetoc14.player.abilities.mageSkills;
 import br.dev.projetoc14.QuestWeaver;
 import br.dev.projetoc14.player.RPGPlayer;
 import br.dev.projetoc14.player.abilities.Ability;
-import org.bukkit.Color;
-import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -33,8 +30,7 @@ public class FrostRay extends Ability implements Listener {
     public FrostRay(QuestWeaver plugin) {
         super("Raio Gélido", 8, 2);
         this.plugin = plugin;
-        this.frostKey = new NamespacedKey("questweaver", "frost_ray");
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        this.frostKey = new NamespacedKey(plugin, "frost_ray");
     }
 
     @Override
@@ -42,31 +38,32 @@ public class FrostRay extends Ability implements Listener {
         Location eyeLoc = caster.getEyeLocation();
         Vector direction = eyeLoc.getDirection();
 
-        // Som inicial de gelo se formando
+        // Sons iniciais
         caster.getWorld().playSound(eyeLoc, Sound.BLOCK_GLASS_BREAK, 1.2f, 0.8f);
         caster.getWorld().playSound(eyeLoc, Sound.ENTITY_PLAYER_HURT_FREEZE, 1.0f, 1.2f);
 
-        // RayTrace para detectar o alvo (alcance de 20 blocos)
-        RayTraceResult result = caster.getWorld().rayTraceEntities(
+        // RayTrace melhorado
+        RayTraceResult result = caster.getWorld().rayTrace(
                 eyeLoc,
                 direction,
                 20.0,
-                0.5,
+                FluidCollisionMode.NEVER,
+                true,        // ignora blocos passáveis
+                0.2,
                 entity -> entity instanceof LivingEntity && entity != caster
         );
 
         LivingEntity target = null;
-        Location endLocation;
+        Location endLoc;
 
-        if (result != null && result.getHitEntity() != null) {
-            target = (LivingEntity) result.getHitEntity();
-            endLocation = target.getEyeLocation();
+        if (result != null && result.getHitEntity() instanceof LivingEntity ent) {
+            target = ent;
+            endLoc = ent.getEyeLocation();
         } else {
-            endLocation = eyeLoc.clone().add(direction.multiply(20));
+            endLoc = eyeLoc.clone().add(direction.multiply(20));
         }
 
-        // Efeito visual do raio de gelo
-        createFrostBeam(eyeLoc, endLocation, target);
+        createFrostBeam(eyeLoc, endLoc, target);
 
         // Se acertou um alvo, aplica dano e efeitos
         if (target != null) {
@@ -101,21 +98,20 @@ public class FrostRay extends Ability implements Listener {
                 Particle.DustOptions frostBlue = new Particle.DustOptions(Color.fromRGB(173, 216, 230), 1.2f);
                 Particle.DustOptions iceWhite = new Particle.DustOptions(Color.fromRGB(240, 248, 255), 1.5f);
 
+                // Partículas principais
                 current.getWorld().spawnParticle(Particle.DUST, current, 3, 0.1, 0.1, 0.1, 0, frostBlue);
-                current.getWorld().spawnParticle(Particle.DUST, current, 2, 0.15, 0.15, 0.15, 0, iceWhite);
-                current.getWorld().spawnParticle(Particle.SNOWFLAKE, current, 4, 0.15, 0.15, 0.15, 0);
-                current.getWorld().spawnParticle(Particle.CLOUD, current, 1, 0.05, 0.05, 0.05, 0.01);
+                current.getWorld().spawnParticle(Particle.DUST, current, 2, 0.12, 0.12, 0.12, 0, iceWhite);
+                current.getWorld().spawnParticle(Particle.SNOWFLAKE, current, 4, 0.1, 0.1, 0.1, 0);
 
-                // Efeito de cristais girando ao redor do raio
-                double radius = 0.3;
+                // Cristais girando
+                double radius = 0.25;
                 for (int i = 0; i < 3; i++) {
-                    double angle = (ticks * 0.5 + i * 120) * Math.PI / 180;
+                    double angle = (ticks * 8 + i * 120) * Math.PI / 180;
                     double x = radius * Math.cos(angle);
                     double z = radius * Math.sin(angle);
 
-                    Vector offset = new Vector(x, 0, z);
-                    Location spiralLoc = current.clone().add(offset);
-                    spiralLoc.getWorld().spawnParticle(Particle.DUST, spiralLoc, 1, 0, 0, 0, 0, iceWhite);
+                    Location spiral = current.clone().add(x, 0, z);
+                    spiral.getWorld().spawnParticle(Particle.DUST, spiral, 1, 0, 0, 0, 0, iceWhite);
                 }
 
                 // Som contínuo de gelo
@@ -123,7 +119,7 @@ public class FrostRay extends Ability implements Listener {
                     current.getWorld().playSound(current, Sound.BLOCK_GLASS_PLACE, 0.3f, 1.8f);
                 }
 
-                traveled += 1.0;
+                traveled += 0.7;
                 ticks++;
             }
         }.runTaskTimer(plugin, 0L, 1L);
@@ -143,11 +139,10 @@ public class FrostRay extends Ability implements Listener {
         loc.getWorld().spawnParticle(Particle.DUST, loc, 30, 0.4, 0.4, 0.4, 0, frostBlue);
         loc.getWorld().spawnParticle(Particle.DUST, loc, 20, 0.3, 0.3, 0.3, 0, iceWhite);
         loc.getWorld().spawnParticle(Particle.CLOUD, loc, 15, 0.3, 0.3, 0.3, 0.05);
-        loc.getWorld().spawnParticle(Particle.FIREWORK, loc, 10, 0.3, 0.3, 0.3, 0.1);
 
-        // Anel de cristais de gelo expandindo
+        // Anel de gelo
         new BukkitRunnable() {
-            double radius = 0.5;
+            double radius = 0.4;
             int tick = 0;
 
             @Override
@@ -157,37 +152,35 @@ public class FrostRay extends Ability implements Listener {
                     return;
                 }
 
-                for (int i = 0; i < 16; i++) {
-                    double angle = i * 22.5 * Math.PI / 180;
+                for (int i = 0; i < 18; i++) {
+                    double angle = i * 20 * Math.PI / 180;
                     double x = radius * Math.cos(angle);
                     double z = radius * Math.sin(angle);
 
-                    Location ringLoc = loc.clone().add(x, 0.1, z);
-                    ringLoc.getWorld().spawnParticle(Particle.DUST, ringLoc, 1, 0, 0, 0, 0, iceWhite);
-                    ringLoc.getWorld().spawnParticle(Particle.SNOWFLAKE, ringLoc, 1, 0, 0, 0, 0);
+                    Location ring = loc.clone().add(x, 0.1, z);
+                    ring.getWorld().spawnParticle(Particle.SNOWFLAKE, ring, 1, 0, 0, 0, 0);
                 }
 
-                radius += 0.2;
+                radius += 0.15;
                 tick++;
             }
         }.runTaskTimer(plugin, 0L, 1L);
     }
 
-    public void applyDamage(LivingEntity entity, double damage) {
-        entity.damage(damage);
+    public void applyDamage(LivingEntity target, double damage, Player caster) {
+        target.damage(damage, caster);
     }
 
     private void applyFrostEffect(RPGPlayer caster, LivingEntity target) {
-        applyDamage(target, damage);
+        // Dano creditado ao jogador
+        applyDamage(target, damage, caster.getPlayer());
 
         // Marca a entidade como congelada
         UUID targetId = target.getUniqueId();
         frozenEntities.put(targetId, System.currentTimeMillis());
 
         target.getPersistentDataContainer().set(
-                frostKey,
-                PersistentDataType.BOOLEAN,
-                true
+                frostKey, PersistentDataType.INTEGER, 1
         );
 
         // Aplica efeito de lentidão (Slowness II por 3 segundos)
@@ -222,16 +215,9 @@ public class FrostRay extends Ability implements Listener {
                 }
 
                 Location loc = target.getLocation().add(0, 1, 0);
-
-                // Partículas de gelo ao redor do alvo
                 Particle.DustOptions frostBlue = new Particle.DustOptions(Color.fromRGB(173, 216, 230), 1.0f);
                 loc.getWorld().spawnParticle(Particle.SNOWFLAKE, loc, 3, 0.3, 0.5, 0.3, 0.02);
                 loc.getWorld().spawnParticle(Particle.DUST, loc, 2, 0.3, 0.5, 0.3, 0, frostBlue);
-
-                // Cristais de gelo subindo
-                if (ticks % 5 == 0) {
-                    loc.getWorld().spawnParticle(Particle.CLOUD, loc, 2, 0.2, 0.3, 0.2, 0.01);
-                }
 
                 // Som de gelo ocasional
                 if (ticks % 20 == 0) {
@@ -244,23 +230,19 @@ public class FrostRay extends Ability implements Listener {
     }
 
     @EventHandler
-    public void onFrozenEntityDamage(EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof LivingEntity)) return;
+    public void onFrozenDamage(EntityDamageByEntityEvent e) {
 
-        LivingEntity target = (LivingEntity) event.getEntity();
+        if (!(e.getEntity() instanceof LivingEntity target)) return;
 
-        // Se a entidade está congelada, adiciona partículas extras ao receber dano
-        if (target.getPersistentDataContainer().has(frostKey, PersistentDataType.BOOLEAN)) {
-            Location loc = target.getLocation().add(0, 1, 0);
-            Particle.DustOptions iceWhite = new Particle.DustOptions(Color.fromRGB(240, 248, 255), 1.2f);
-            loc.getWorld().spawnParticle(Particle.SNOWFLAKE, loc, 10, 0.3, 0.5, 0.3, 0.05);
-            loc.getWorld().spawnParticle(Particle.DUST, loc, 5, 0.2, 0.4, 0.2, 0, iceWhite);
-            loc.getWorld().playSound(loc, Sound.BLOCK_GLASS_BREAK, 0.5f, 1.5f);
-        }
-    }
+        if (!target.getPersistentDataContainer().has(frostKey, PersistentDataType.INTEGER))
+            return;
 
-    public String getName() {
-        return "Raio Gélido";
+        Location loc = target.getLocation().add(0, 1, 0);
+        Particle.DustOptions iceWhite = new Particle.DustOptions(Color.fromRGB(240, 248, 255), 1.2f);
+
+        loc.getWorld().spawnParticle(Particle.SNOWFLAKE, loc, 10, 0.3, 0.5, 0.3, 0.05);
+        loc.getWorld().spawnParticle(Particle.DUST, loc, 5, 0.2, 0.4, 0.2, 0, iceWhite);
+        loc.getWorld().playSound(loc, Sound.BLOCK_GLASS_BREAK, 0.5f, 1.5f);
     }
 
     public int getManaCost() {
