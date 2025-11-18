@@ -22,7 +22,7 @@ public class MagicWandListener implements Listener {
 
     private final QuestWeaver plugin;
     private final Map<UUID, Integer> abilityIndex = new HashMap<>();
-    private final List<String> abilities = Arrays.asList("FIREBALL", "CURE");
+    private final List<String> abilities = Arrays.asList("FIREBALL", "FROST_RAY", "CURE");
 
     private final Map<String, Ability> abilityMap = new HashMap<>();
 
@@ -30,12 +30,15 @@ public class MagicWandListener implements Listener {
         this.plugin = plugin;
 
         Fireball fireball = new Fireball(plugin);
+        FrostRay frostRay = new FrostRay(plugin);
         Healing healing = new Healing();
 
         fireball.setCooldownListener(plugin.getCooldownListener());
+        frostRay.setCooldownListener(plugin.getCooldownListener());
         healing.setCooldownListener(plugin.getCooldownListener());
 
         abilityMap.put("FIREBALL", fireball);
+        abilityMap.put("FROST_RAY", frostRay);
         abilityMap.put("CURE", healing);
     }
 
@@ -92,6 +95,7 @@ public class MagicWandListener implements Listener {
     public String formatName(String nome) {
         return switch (nome.toUpperCase()) {
             case "FIREBALL" -> "Bola de Fogo 🔥";
+            case "FROST_RAY" -> "Raio Gélido ❄️";
             case "CURE" -> "Cura 💚";
             default -> nome;
         };
