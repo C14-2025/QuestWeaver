@@ -37,14 +37,13 @@ public class FrostRay extends Ability implements Listener {
     protected void onCast(RPGPlayer caster) {
         Player player = caster.getPlayer();
 
-        Location eyeLoc = caster.getEyeLocation();
+        Location eyeLoc = player.getEyeLocation(); // Usar player.getEyeLocation() em vez de caster.getEyeLocation()
         Vector direction = eyeLoc.getDirection();
 
         // Sons iniciais
-        caster.getWorld().playSound(eyeLoc, Sound.BLOCK_GLASS_BREAK, 1.2f, 0.8f);
-        caster.getWorld().playSound(eyeLoc, Sound.ENTITY_PLAYER_HURT_FREEZE, 1.0f, 1.2f);
+        player.getWorld().playSound(eyeLoc, Sound.BLOCK_GLASS_BREAK, 1.2f, 0.8f);
+        player.getWorld().playSound(eyeLoc, Sound.ENTITY_PLAYER_HURT_FREEZE, 1.0f, 1.2f);
 
-        // RayTrace melhorado
         RayTraceResult result = caster.getWorld().rayTrace(
                 eyeLoc,
                 direction,
@@ -52,7 +51,7 @@ public class FrostRay extends Ability implements Listener {
                 FluidCollisionMode.NEVER,
                 true,        // ignora blocos passáveis
                 0.2,
-                entity -> entity instanceof LivingEntity && entity != caster
+                entity -> entity instanceof LivingEntity && entity != player
         );
 
         LivingEntity target = null;
@@ -170,7 +169,9 @@ public class FrostRay extends Ability implements Listener {
     }
 
     public void applyDamage(LivingEntity target, double damage, Player caster) {
-        target.damage(damage, caster);
+        if (target != caster) {
+            target.damage(damage, caster);
+        }
     }
 
     private void applyFrostEffect(RPGPlayer caster, LivingEntity target) {
