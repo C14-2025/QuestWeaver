@@ -61,7 +61,7 @@ public class MagicWandListener implements Listener {
         // Proteção contra clique duplo no mesmo tick
         long now = System.currentTimeMillis();
         if (switchDelay.getOrDefault(player.getUniqueId(), 0L) > now) return;
-        switchDelay.put(player.getUniqueId(), now + 150);
+        switchDelay.put(player.getUniqueId(), now + 15);
 
         AbilityUtil.switchAbility(player, e, abilityIndex, abilities, this::formatName);
 
