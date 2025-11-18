@@ -7,10 +7,12 @@ import org.bukkit.entity.Arrow;
 import java.util.ArrayList;
 
 public class RangedCombatQuest extends HitQuest {
+    private static final double MIN_DISTANCE = 15.0; // Distância mínima em blocos
+
     public RangedCombatQuest(Location spawnLocation) {
         super("ranged_combat_quest",
                 "Combate a Distância",
-                "Acerte 5 flechas especiais (explosiva, knockback ou venenosa) em esqueletos",
+                "Acerte 5 flechas em esqueletos a uma distância de pelo menos " + (int)MIN_DISTANCE + " blocos",
                 100,
                 "SKELETON",
                 5,
@@ -21,14 +23,25 @@ public class RangedCombatQuest extends HitQuest {
 
     @Override
     protected boolean isValidProjectile(Arrow arrow) {
-        // Valida se a flecha tem uma das metadata das flechas especiais
-        return arrow.hasMetadata("explosive_arrow") ||
-                arrow.hasMetadata("knockback_arrow") ||
-                arrow.hasMetadata("poison_arrow");
+        // Agora valida pela distância, não por metadata
+        if (arrow.getShooter() instanceof org.bukkit.entity.Player shooter) {
+            Location shooterLoc = shooter.getLocation();
+            Location arrowLoc = arrow.getLocation();
+
+            double distance = shooterLoc.distance(arrowLoc);
+
+            return distance >= MIN_DISTANCE;
+        }
+        return false;
     }
 
     @Override
     public String getProgressText() {
-        return String.format("%d/%d acertos com flechas especiais", getCurrentCount(), getTargetCount());
+        return String.format("%d/%d acertos a longa distância (mín. %d blocos)",
+                getCurrentCount(), getTargetCount(), (int)MIN_DISTANCE);
+    }
+
+    public static double getMinDistance() {
+        return MIN_DISTANCE;
     }
 }
