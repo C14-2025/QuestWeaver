@@ -17,7 +17,7 @@ public class PrecisionHunterQuest extends HitQuest {
                 "Acerte 8 tiros críticos em zumbis (flechas devem ser críticas)",
                 200,
                 "ZOMBIE",
-                1,
+                8,
                 0,
                 spawnLocation,
                 new ArrayList<>());
