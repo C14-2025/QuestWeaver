@@ -35,6 +35,8 @@ public class FrostRay extends Ability implements Listener {
 
     @Override
     protected void onCast(RPGPlayer caster) {
+        Player player = caster.getPlayer();
+
         Location eyeLoc = caster.getEyeLocation();
         Vector direction = eyeLoc.getDirection();
 
