@@ -19,9 +19,9 @@ import java.util.UUID;
  */
 public class WindMasterQuest extends HitQuest {
 
-    private static final int MAX_COMBO = 10; // Precisa acertar 10 seguidos
-    private static final long COMBO_TIMEOUT = 5000; // 5 segundos para o próximo hit
-    private static final double MIN_DISTANCE = 12.0; // Distância mínima
+    private static final int MAX_COMBO = 1; // Precisa acertar 10 seguidos
+    private static final long COMBO_TIMEOUT = 1000000; // 5 segundos para o próximo hit
+    private static final double MIN_DISTANCE = 1.0; // Distância mínima
 
     // Controle de combo por jogador
     private final Map<UUID, Integer> playerCombos = new HashMap<>();
@@ -34,7 +34,7 @@ public class WindMasterQuest extends HitQuest {
                 "Acerte 10 flechas seguidas em creepers sem errar (dist. mín. 12 blocos, 5s entre tiros)",
                 350,
                 "CREEPER",
-                10,
+                1,
                 0,
                 spawnLocation,
                 new ArrayList<>());

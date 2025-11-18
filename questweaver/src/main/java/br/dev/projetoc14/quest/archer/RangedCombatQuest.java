@@ -7,7 +7,7 @@ import org.bukkit.entity.Arrow;
 import java.util.ArrayList;
 
 public class RangedCombatQuest extends HitQuest {
-    private static final double MIN_DISTANCE = 15.0; // Distância mínima em blocos
+    private static final double MIN_DISTANCE = 1.0; // Distância mínima em blocos
 
     public RangedCombatQuest(Location spawnLocation) {
         super("ranged_combat_quest",
@@ -15,7 +15,7 @@ public class RangedCombatQuest extends HitQuest {
                 "Acerte 5 flechas em esqueletos a uma distância de pelo menos " + (int)MIN_DISTANCE + " blocos",
                 100,
                 "SKELETON",
-                5,
+                1,
                 0,
                 spawnLocation,
                 new ArrayList<>()); // Lista vazia, não usamos validWeapons
