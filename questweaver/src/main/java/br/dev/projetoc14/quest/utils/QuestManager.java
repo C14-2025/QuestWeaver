@@ -7,6 +7,8 @@ package br.dev.projetoc14.quest.utils;
 
 import br.dev.projetoc14.quest.KillQuest;
 import br.dev.projetoc14.quest.Quest;
+import br.dev.projetoc14.quest.archer.PrecisionHunterQuest;
+import br.dev.projetoc14.quest.archer.WindMasterQuest;
 import br.dev.projetoc14.quest.mage.ElementalMaster;
 import br.dev.projetoc14.quest.warrior.FirstBlood;
 import br.dev.projetoc14.quest.archer.RangedCombatQuest;
@@ -95,8 +97,8 @@ public class QuestManager {
     private Quest createArcherQuest(int progress, Location playerLoc) {
         return switch (progress) {
             case 0 -> new RangedCombatQuest(playerLoc); // Primeira quest do arqueiro
-            case 1 -> new RangedCombatQuest(playerLoc);
-            case 2 -> new RangedCombatQuest(playerLoc);
+            case 1 -> new PrecisionHunterQuest(playerLoc);
+            case 2 -> new WindMasterQuest(playerLoc);
             default -> null;
         };
     }
