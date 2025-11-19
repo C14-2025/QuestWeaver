@@ -9,6 +9,9 @@ import br.dev.projetoc14.quest.KillQuest;
 import br.dev.projetoc14.quest.Quest;
 import br.dev.projetoc14.quest.archer.PrecisionHunterQuest;
 import br.dev.projetoc14.quest.archer.WindMasterQuest;
+import br.dev.projetoc14.quest.assassin.DeadlySpeedQuest;
+import br.dev.projetoc14.quest.assassin.PerfectAssassinationQuest;
+import br.dev.projetoc14.quest.assassin.SilentShadowsQuest;
 import br.dev.projetoc14.quest.mage.ElementalMaster;
 import br.dev.projetoc14.quest.warrior.FirstBlood;
 import br.dev.projetoc14.quest.archer.RangedCombatQuest;
@@ -104,8 +107,12 @@ public class QuestManager {
     }
 
     private Quest createAssassinQuest(int progress, Location playerLoc) {
-        // TODO: Implemente as quests do assassino
-        return null;
+        return switch (progress){
+            case 0 -> new SilentShadowsQuest(playerLoc);
+            case 1 -> new DeadlySpeedQuest(playerLoc);
+            case 2 -> new PerfectAssassinationQuest(playerLoc);
+            default -> null;
+        };
     }
 
     private void notifyNewQuest(Player player, Quest quest) {
