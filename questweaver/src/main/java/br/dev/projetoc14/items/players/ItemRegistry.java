@@ -1,13 +1,14 @@
-package br.dev.projetoc14.items;
+package br.dev.projetoc14.items.players;
 
 import br.dev.projetoc14.QuestWeaver;
+import br.dev.projetoc14.items.Item;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-public class ItemRegistry implements Item{
+public class ItemRegistry implements Item {
 
     public static final NamespacedKey ID_CHAVE = new NamespacedKey("questweaver", "item_id");
     private final QuestWeaver plugin;
@@ -16,6 +17,7 @@ public class ItemRegistry implements Item{
         this.plugin = plugin;
     }
 
+    @Override
     public ItemStack create() {
         ItemStack item = new ItemStack(Material.IRON_SWORD);
         ItemMeta meta = item.getItemMeta();
