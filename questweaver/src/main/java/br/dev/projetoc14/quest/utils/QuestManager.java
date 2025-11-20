@@ -15,6 +15,7 @@ import br.dev.projetoc14.quest.assassin.PerfectAssassinationQuest;
 import br.dev.projetoc14.quest.assassin.SilentShadowsQuest;
 import br.dev.projetoc14.quest.mage.ElementalMaster;
 import br.dev.projetoc14.quest.structures.ArcherTrainingGrounds;
+import br.dev.projetoc14.quest.structures.AssassinCrypt;
 import br.dev.projetoc14.quest.structures.QuestStructure;
 import br.dev.projetoc14.quest.warrior.FirstBlood;
 import br.dev.projetoc14.quest.archer.RangedCombatQuest;
@@ -122,10 +123,25 @@ public class QuestManager {
     }
 
     private Quest createAssassinQuest(int progress, Location playerLoc) {
-        return switch (progress){
-            case 0 -> new SilentShadowsQuest(playerLoc);
-            case 1 -> new DeadlySpeedQuest(playerLoc);
-            case 2 -> new PerfectAssassinationQuest(playerLoc);
+        return switch (progress) {
+            case 0 -> {
+                // ESCOLHA UMA:
+                // QuestStructure structure = new AssassinHideout();      // Ruínas
+                QuestStructure structure = new AssassinCrypt();        // Cripta
+                //QuestStructure structure = new AssassinDojo();         // Dojo
+
+                yield new ExplorationQuest(
+                        "find_assassin_location",
+                        "Nas Sombras",
+                        "Encontre o " + structure.getName(),
+                        50,
+                        structure,
+                        10.0
+                );
+            }
+            case 1 -> new SilentShadowsQuest(playerLoc);
+            case 2 -> new DeadlySpeedQuest(playerLoc);
+            case 3 -> new PerfectAssassinationQuest(playerLoc);
             default -> null;
         };
     }
