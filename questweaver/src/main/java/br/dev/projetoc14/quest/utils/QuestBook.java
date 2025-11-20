@@ -1,5 +1,6 @@
 package br.dev.projetoc14.quest.utils;
 
+import br.dev.projetoc14.quest.ExplorationQuest;
 import br.dev.projetoc14.quest.HitQuest;
 import br.dev.projetoc14.quest.KillQuest;
 import br.dev.projetoc14.quest.Quest;
@@ -93,11 +94,16 @@ public class QuestBook {
                     .color(TextColor.color(0x555555)));
         } else {
             for (Quest quest : activeQuests.values()) {
-                // Suporta KillQuest e HitQuest
+                // Suporta todos os tipos de quest
                 if (quest instanceof KillQuest killQuest) {
                     page.append(createKillQuestEntry(killQuest));
                 } else if (quest instanceof HitQuest hitQuest) {
                     page.append(createHitQuestEntry(hitQuest));
+                } else if (quest instanceof ExplorationQuest explorationQuest) {
+                    page.append(createExplorationQuestEntry(explorationQuest));
+                } else {
+                    // Fallback para outras quests
+                    page.append(createGenericQuestEntry(quest));
                 }
             }
         }
@@ -129,6 +135,31 @@ public class QuestBook {
                 .build();
     }
 
+    private Component createExplorationQuestEntry(ExplorationQuest quest) {
+        boolean isCompleted = quest.checkCompletion();
+
+        return Component.text()
+                .append(Component.text("✦ " + quest.getName() + "\n")
+                        .color(TextColor.color(0xFFAA00))
+                        .decoration(TextDecoration.BOLD, true))
+                .append(Component.text(quest.getDescription() + "\n")
+                        .color(TextColor.color(0xAAAAAA)))
+                .append(Component.text(quest.getProgressText() + "\n")
+                        .color(isCompleted ? TextColor.color(0x55FF55) : TextColor.color(0xAAAAAA)))
+                .append(Component.text("\n"))
+                .build();
+    }
+
+    private Component createGenericQuestEntry(Quest quest) {
+        return Component.text()
+                .append(Component.text("• " + quest.getName() + "\n")
+                        .color(TextColor.color(0xFFAA00)))
+                .append(Component.text(quest.getDescription() + "\n")
+                        .color(TextColor.color(0xAAAAAA)))
+                .append(Component.text("Status: " + (quest.checkCompletion() ? "Completa" : "Em andamento") + "\n\n")
+                        .color(TextColor.color(0xAAAAAA)))
+                .build();
+    }
 
     private Component createHitProgressBar(HitQuest quest) {
         int progress = quest.getCurrentCount();
@@ -167,10 +198,7 @@ public class QuestBook {
         final String EMPTY = "□";
         final String FILLED = "■";
 
-        // Um livro do Minecraft tem aproximadamente 14-16 caracteres por linha
         int maxBars = 16;
-
-        // Calcula quantas barras devem ser preenchidas
         int filledBars = Math.min(maxBars, (int) Math.round((double) progress / total * maxBars));
 
         TextComponent.Builder progressBar = Component.text();
@@ -206,8 +234,21 @@ public class QuestBook {
                     .color(TextColor.color(0x555555)));
         } else {
             for (Quest quest : completedQuests.values()) {
-                page.append(Component.text("✓ " + quest.getName() + "\n")
-                                .color(TextColor.color(0x55FF55)))
+                String questSymbol = "✓ ";
+                TextColor nameColor = TextColor.color(0x55FF55);
+
+                // Diferentes símbolos para diferentes tipos de quest
+                if (quest instanceof ExplorationQuest) {
+                    questSymbol = "✦ ";
+                    nameColor = TextColor.color(0xFFAA00);
+                } else if (quest instanceof KillQuest) {
+                    questSymbol = "⚔ ";
+                } else if (quest instanceof HitQuest) {
+                    questSymbol = "🎯 ";
+                }
+
+                page.append(Component.text(questSymbol + quest.getName() + "\n")
+                                .color(nameColor))
                         .append(Component.text(quest.getDescription() + "\n")
                                 .color(TextColor.color(0xAAAAAA)))
                         .append(Component.text("XP: +" + quest.getExperienceReward() + "\n\n")
@@ -225,6 +266,17 @@ public class QuestBook {
                 .mapToInt(Quest::getExperienceReward)
                 .sum();
 
+        // Conta tipos de quests completadas
+        long explorationQuests = questData.getCompletedQuests().values().stream()
+                .filter(q -> q instanceof ExplorationQuest)
+                .count();
+        long combatQuests = questData.getCompletedQuests().values().stream()
+                .filter(q -> q instanceof KillQuest)
+                .count();
+        long precisionQuests = questData.getCompletedQuests().values().stream()
+                .filter(q -> q instanceof HitQuest)
+                .count();
+
         return Component.text()
                 .append(Component.text("Estatísticas\n\n")
                         .decoration(TextDecoration.BOLD, true)
@@ -241,8 +293,18 @@ public class QuestBook {
                         .color(TextColor.color(0xAAAAAA))
                         .append(Component.text(totalXP + "\n")
                                 .color(TextColor.color(0xFFAA00))))
-                .append(Component.text("\nMais estatísticas em breve...")
-                        .color(TextColor.color(0x555555)))
+                .append(Component.text("Explorações: ")
+                        .color(TextColor.color(0xAAAAAA))
+                        .append(Component.text(explorationQuests + "\n")
+                                .color(TextColor.color(0xFFAA00))))
+                .append(Component.text("Combates: ")
+                        .color(TextColor.color(0xAAAAAA))
+                        .append(Component.text(combatQuests + "\n")
+                                .color(TextColor.color(0xFF5555))))
+                .append(Component.text("Precisão: ")
+                        .color(TextColor.color(0xAAAAAA))
+                        .append(Component.text(precisionQuests + "\n")
+                                .color(TextColor.color(0x55FFFF))))
                 .build();
     }
 
@@ -263,6 +325,6 @@ public class QuestBook {
         if (item == null || item.getType() != Material.WRITTEN_BOOK) return false;
         BookMeta meta = (BookMeta) item.getItemMeta();
         return meta != null && meta.title() != null &&
-                BOOK_TITLE.equals(meta.title().toString());
+                BOOK_TITLE.equals(((net.kyori.adventure.text.TextComponent) meta.title()).content());
     }
 }
