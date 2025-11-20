@@ -1,5 +1,6 @@
-package br.dev.projetoc14.items;
+package br.dev.projetoc14.items.players;
 
+import br.dev.projetoc14.items.Item;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
@@ -11,6 +12,7 @@ import java.util.List;
 public class MagicBow implements Item {
 
     // Arco mágico do arqueiro com habilidades especiais
+    @Override
     public ItemStack create() {
         ItemStack bow = new ItemStack(Material.BOW, 1);
         ItemMeta meta = bow.getItemMeta();

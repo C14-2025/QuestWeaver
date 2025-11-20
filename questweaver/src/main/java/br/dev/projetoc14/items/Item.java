@@ -4,7 +4,5 @@ import org.bukkit.inventory.ItemStack;
 
 public interface Item {
 
-    static ItemStack create() {
-        return null;
-    }
+    public ItemStack create();
 }
