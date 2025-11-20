@@ -48,11 +48,15 @@ public class QuestBook {
 
         List<Component> pages = new ArrayList<>();
 
-        // Adiciona as páginas
+        // Adiciona TODAS as páginas
         pages.add(createIndexPage());
         pages.add(createActiveQuestsPage(questData));
         pages.add(createCompletedQuestsPage(questData));
         pages.add(createStatsPage(questData));
+        pages.add(createCryptSecretsPage());    // Página 5
+        pages.add(createCryptSecretsPage2());   // Página 6
+        pages.add(createCryptSecretsPage3());   // Página 7
+        pages.add(createCryptSecretsPage4());   // Página 8
 
         meta.pages(pages);
         book.setItemMeta(meta);
@@ -70,6 +74,11 @@ public class QuestBook {
                 .append(createIndexButton("Quests Completadas", 3))
                 .append(Component.text("\n"))
                 .append(createIndexButton("Estatísticas", 4))
+                .append(Component.text("\n"))
+                .append(createIndexButton("Segredos da Cripta", 5))
+                .append(Component.text("\n\n"))
+                .append(Component.text("Dica: Explore cada canto!\n")
+                        .color(TextColor.color(0xFFAA00)))
                 .build();
     }
 
@@ -305,6 +314,166 @@ public class QuestBook {
                         .color(TextColor.color(0xAAAAAA))
                         .append(Component.text(precisionQuests + "\n")
                                 .color(TextColor.color(0x55FFFF))))
+                .build();
+    }
+
+    // PÁGINA 5: Segredos da Cripta - Parte 1
+    private Component createCryptSecretsPage() {
+        return Component.text()
+                .append(Component.text("Segredos da Cripta\n\n")
+                        .decoration(TextDecoration.BOLD, true)
+                        .decoration(TextDecoration.UNDERLINED, true)
+                        .color(TextColor.color(0xAA00AA)))
+                .append(Component.text("Tesouros Escondidos:\n\n")
+                        .color(TextColor.color(0xFFAA00)))
+
+                // Baú do Assassino
+                .append(Component.text("🗡️ Baú do Assassino\n")
+                        .color(TextColor.color(0x55FF55)))
+                .append(Component.text("Local: Parede do fundo\n")
+                        .color(TextColor.color(0xAAAAAA)))
+                .append(Component.text("Tesouro: Equipamento completo\n\n")
+                        .color(TextColor.color(0xAAAAAA)))
+
+                // Baú de Flechas
+                .append(Component.text("🏹 Baú de Flechas\n")
+                        .color(TextColor.color(0x55FF55)))
+                .append(Component.text("Local: Sob o piso NW\n")
+                        .color(TextColor.color(0xAAAAAA)))
+                .append(Component.text("Tesouro: Munição variada\n\n")
+                        .color(TextColor.color(0xAAAAAA)))
+
+                .append(Component.text("Próxima página →")
+                        .color(TextColor.color(0x5555FF))
+                        .clickEvent(ClickEvent.changePage(6))
+                        .hoverEvent(HoverEvent.showText(Component.text("Clique para continuar")
+                                .color(TextColor.color(0xAAAAAA)))))
+                .build();
+    }
+
+    // PÁGINA 6: Segredos da Cripta - Parte 2
+    private Component createCryptSecretsPage2() {
+        return Component.text()
+                .append(Component.text("Segredos da Cripta\n")
+                        .decoration(TextDecoration.BOLD, true)
+                        .decoration(TextDecoration.UNDERLINED, true)
+                        .color(TextColor.color(0xAA00AA)))
+                .append(Component.text("(Página 2)\n\n")
+                        .color(TextColor.color(0x555555)))
+
+                // Baú de Ferramentas
+                .append(Component.text("🛠️ Baú de Ferramentas\n")
+                        .color(TextColor.color(0x55FF55)))
+                .append(Component.text("Local: Pilar Noroeste\n")
+                        .color(TextColor.color(0xAAAAAA)))
+                .append(Component.text("Tesouro: Ferramentas úteis\n\n")
+                        .color(TextColor.color(0xAAAAAA)))
+
+                // Baú do Tesouro
+                .append(Component.text("💎 Baú do Tesouro\n")
+                        .color(TextColor.color(0x55FF55)))
+                .append(Component.text("Local: Dentro do Altar\n")
+                        .color(TextColor.color(0xAAAAAA)))
+                .append(Component.text("Tesouro: Gemas raras\n\n")
+                        .color(TextColor.color(0xAAAAAA)))
+
+                .append(Component.text("← Página anterior")
+                        .color(TextColor.color(0x5555FF))
+                        .clickEvent(ClickEvent.changePage(5))
+                        .hoverEvent(HoverEvent.showText(Component.text("Voltar para página 1")
+                                .color(TextColor.color(0xAAAAAA)))))
+                .append(Component.text(" | "))
+                .append(Component.text("Próxima →")
+                        .color(TextColor.color(0x5555FF))
+                        .clickEvent(ClickEvent.changePage(7))
+                        .hoverEvent(HoverEvent.showText(Component.text("Continuar para página 3")
+                                .color(TextColor.color(0xAAAAAA)))))
+                .build();
+    }
+
+    // PÁGINA 7: Segredos da Cripta - Parte 3
+    private Component createCryptSecretsPage3() {
+        return Component.text()
+                .append(Component.text("Segredos da Cripta\n")
+                        .decoration(TextDecoration.BOLD, true)
+                        .decoration(TextDecoration.UNDERLINED, true)
+                        .color(TextColor.color(0xAA00AA)))
+                .append(Component.text("(Página 3)\n\n")
+                        .color(TextColor.color(0x555555)))
+
+                // Baús dos Sarcófagos
+                .append(Component.text("⚰️ Baús dos Sarcófagos\n")
+                        .color(TextColor.color(0x55FF55)))
+                .append(Component.text("Local: Todos os 4\n")
+                        .color(TextColor.color(0xAAAAAA)))
+                .append(Component.text("Tesouro: Recursos diversos\n\n")
+                        .color(TextColor.color(0xAAAAAA)))
+
+                // Baú de Armas
+                .append(Component.text("⚔️ Baú de Armas\n")
+                        .color(TextColor.color(0x55FF55)))
+                .append(Component.text("Local: Sala secreta Leste\n")
+                        .color(TextColor.color(0xAAAAAA)))
+                .append(Component.text("Tesouro: Armas poderosas\n\n")
+                        .color(TextColor.color(0xAAAAAA)))
+
+                .append(Component.text("← Página anterior")
+                        .color(TextColor.color(0x5555FF))
+                        .clickEvent(ClickEvent.changePage(6))
+                        .hoverEvent(HoverEvent.showText(Component.text("Voltar para página 2")
+                                .color(TextColor.color(0xAAAAAA)))))
+                .append(Component.text(" | "))
+                .append(Component.text("Próxima →")
+                        .color(TextColor.color(0x5555FF))
+                        .clickEvent(ClickEvent.changePage(8))
+                        .hoverEvent(HoverEvent.showText(Component.text("Continuar para página 4")
+                                .color(TextColor.color(0xAAAAAA)))))
+                .build();
+    }
+
+    // PÁGINA 8: Segredos da Cripta - Parte 4
+    private Component createCryptSecretsPage4() {
+        return Component.text()
+                .append(Component.text("Segredos da Cripta\n")
+                        .decoration(TextDecoration.BOLD, true)
+                        .decoration(TextDecoration.UNDERLINED, true)
+                        .color(TextColor.color(0xAA00AA)))
+                .append(Component.text("(Página 4)\n\n")
+                        .color(TextColor.color(0x555555)))
+
+                // Baú Raro
+                .append(Component.text("🌟 Baú Raro\n")
+                        .color(TextColor.color(0x55FF55)))
+                .append(Component.text("Local: No teto central\n")
+                        .color(TextColor.color(0xAAAAAA)))
+                .append(Component.text("Tesouro: Itens lendários\n\n")
+                        .color(TextColor.color(0xAAAAAA)))
+
+                // Dicas Gerais
+                .append(Component.text("💡 Dicas de Exploração:\n")
+                        .color(TextColor.color(0xFFAA00)))
+                .append(Component.text("• Procure por padrões\n")
+                        .color(TextColor.color(0xAAAAAA)))
+                .append(Component.text("• Quebre blocos suspeitos\n")
+                        .color(TextColor.color(0xAAAAAA)))
+                .append(Component.text("• Verifique cada canto\n")
+                        .color(TextColor.color(0xAAAAAA)))
+                .append(Component.text("• Olhe para cima e baixo\n")
+                        .color(TextColor.color(0xAAAAAA)))
+                .append(Component.text("• Teste todas as paredes\n\n")
+                        .color(TextColor.color(0xAAAAAA)))
+
+                .append(Component.text("← Página anterior")
+                        .color(TextColor.color(0x5555FF))
+                        .clickEvent(ClickEvent.changePage(7))
+                        .hoverEvent(HoverEvent.showText(Component.text("Voltar para página 3")
+                                .color(TextColor.color(0xAAAAAA)))))
+                .append(Component.text(" | "))
+                .append(Component.text("Índice")
+                        .color(TextColor.color(0x5555FF))
+                        .clickEvent(ClickEvent.changePage(1))
+                        .hoverEvent(HoverEvent.showText(Component.text("Voltar ao índice")
+                                .color(TextColor.color(0xAAAAAA)))))
                 .build();
     }
 
