@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-public class ItemRegistry {
+public class ItemRegistry implements Item{
 
     public static final NamespacedKey ID_CHAVE = new NamespacedKey("questweaver", "item_id");
     private final QuestWeaver plugin;
@@ -16,7 +16,7 @@ public class ItemRegistry {
         this.plugin = plugin;
     }
 
-    public ItemStack createShadowDagger() {
+    public ItemStack create() {
         ItemStack item = new ItemStack(Material.IRON_SWORD);
         ItemMeta meta = item.getItemMeta();
 
