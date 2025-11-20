@@ -18,7 +18,7 @@ import java.util.UUID;
  */
 public class DeadlySpeedQuest extends KillQuest {
 
-    private static final long MAX_TIME_BETWEEN_KILLS = 6000; // 6 segundos
+    private static final long MAX_TIME_BETWEEN_KILLS = 5000; // 5 segundos
 
     // Rastreia o tempo do último kill por jogador
     private final Map<UUID, Long> lastKillTime = new HashMap<>();
@@ -27,10 +27,10 @@ public class DeadlySpeedQuest extends KillQuest {
     public DeadlySpeedQuest(Location spawnLocation) {
         super("deadly_speed_quest",
                 "Velocidade Mortal",
-                "Mate 8 esqueletos em sequência rápida (máx. 3s entre kills)",
+                "Mate 6 esqueletos em sequência rápida (máx. 5s entre kills)",
                 200,
                 "SKELETON",
-                2,
+                6,
                 0,
                 spawnLocation,
                 List.of(Material.IRON_SWORD, Material.DIAMOND_SWORD, Material.NETHERITE_SWORD));

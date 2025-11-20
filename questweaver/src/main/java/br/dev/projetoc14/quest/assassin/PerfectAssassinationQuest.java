@@ -25,10 +25,10 @@ public class PerfectAssassinationQuest extends KillQuest {
     public PerfectAssassinationQuest(Location spawnLocation) {
         super("perfect_assassination_quest",
                 "Assassinato Perfeito",
-                "Mate 5 creepers sem tomar dano e sem deixá-los explodir",
+                "Mate 4 creepers sem tomar dano e sem deixá-los explodir",
                 350,
                 "CREEPER",
-                1,
+                4,
                 0,
                 spawnLocation,
                 List.of(Material.IRON_SWORD, Material.DIAMOND_SWORD, Material.NETHERITE_SWORD));

@@ -17,10 +17,10 @@ public class SilentShadowsQuest extends KillQuest {
     public SilentShadowsQuest(Location spawnLocation) {
         super("silent_shadows_quest",
                 "Sombras Silenciosas",
-                "Mate 6 zumbis atacando pelas costas (backstab)",
+                "Mate 4 zumbis atacando pelas costas (backstab)",
                 100,
                 "ZOMBIE",
-                1,
+                4,
                 0,
                 spawnLocation,
                 List.of(Material.IRON_SWORD, Material.DIAMOND_SWORD, Material.NETHERITE_SWORD));
