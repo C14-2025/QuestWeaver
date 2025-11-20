@@ -14,7 +14,7 @@ import br.dev.projetoc14.quest.assassin.DeadlySpeedQuest;
 import br.dev.projetoc14.quest.assassin.PerfectAssassinationQuest;
 import br.dev.projetoc14.quest.assassin.SilentShadowsQuest;
 import br.dev.projetoc14.quest.mage.ElementalMaster;
-import br.dev.projetoc14.quest.structures.ArcherTrainingGrounds;
+import br.dev.projetoc14.quest.structures.*;
 import br.dev.projetoc14.quest.structures.AssassinCrypt;
 import br.dev.projetoc14.quest.structures.QuestStructure;
 import br.dev.projetoc14.quest.warrior.FirstBlood;
@@ -105,7 +105,7 @@ public class QuestManager {
         return switch (progress) {
             case 0 -> {
                 // Quest 0: Encontrar o campo de treinamento
-                QuestStructure structure = new ArcherTrainingGrounds();
+                QuestStructure structure = new ArcherTower();
                 yield new ExplorationQuest(
                         "find_archer_grounds",
                         "Em Busca do Campo de Treinamento",
