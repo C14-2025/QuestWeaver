@@ -1,7 +1,7 @@
 package br.dev.projetoc14.player;
 
 // fazer o import dos itens
-import br.dev.projetoc14.items.ClassSelector;
+import br.dev.projetoc14.items.players.ClassSelector;
 import org.bukkit.entity.Player;
 
 public class PlayerJoinItems {

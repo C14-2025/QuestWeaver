@@ -1,6 +1,6 @@
 package br.dev.projetoc14.player.classes;
 
-import br.dev.projetoc14.items.MagicBow;
+import br.dev.projetoc14.items.players.MagicBow;
 import br.dev.projetoc14.player.PlayerClass;
 import br.dev.projetoc14.player.RPGPlayer;
 import net.kyori.adventure.text.Component;
