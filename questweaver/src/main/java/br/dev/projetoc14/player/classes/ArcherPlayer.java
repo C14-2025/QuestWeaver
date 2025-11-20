@@ -47,7 +47,7 @@ public class ArcherPlayer extends RPGPlayer {
     public void getStartingEquipment() {
         // Cria o arco mágico
         MagicBow bow = new MagicBow();
-        ItemStack magicBow = bow.createMagicBow();
+        ItemStack magicBow = bow.create();
 
         ClassUtil.equipPlayer(this, magicBow, Color.fromRGB(0, 150, 0)); // Verde floresta
         // Adiciona flechas iniciais

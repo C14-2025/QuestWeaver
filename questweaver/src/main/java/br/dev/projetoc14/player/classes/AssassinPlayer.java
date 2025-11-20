@@ -54,7 +54,7 @@ public class AssassinPlayer extends RPGPlayer {
     public void getStartingEquipment() {
         // Cria a arma do assassino
         ItemRegistry registry = new ItemRegistry((QuestWeaver) QuestWeaver.getInstance());
-        ItemStack dagger = registry.createShadowDagger();
+        ItemStack dagger = registry.create();
         ItemMeta daggerMeta = dagger.getItemMeta();
 
         if (daggerMeta != null) {
