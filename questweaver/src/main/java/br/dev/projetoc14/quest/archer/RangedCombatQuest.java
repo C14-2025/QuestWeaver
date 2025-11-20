@@ -6,12 +6,11 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Skeleton;
 
 import java.util.ArrayList;
 
 /**
- * Quest Fácil: Arena de Treinamento Controlada - Adaptada para nova HitQuest
+ * Quest Fácil: Arena de Treinamento Controlada - CORRIGIDA
  */
 public class RangedCombatQuest extends HitQuest {
     private static final double MIN_DISTANCE = 15.0;
@@ -27,7 +26,8 @@ public class RangedCombatQuest extends HitQuest {
                 0,
                 spawnLocation,
                 new ArrayList<>());
-        this.arenaCenter = spawnLocation.clone().add(0, 0, 10); // Arena a 10 blocos de distância
+        // Arena a 20 blocos de distância para garantir os 15 blocos mínimos
+        this.arenaCenter = spawnLocation.clone().add(0, 0, 20);
     }
 
     @Override
@@ -46,42 +46,60 @@ public class RangedCombatQuest extends HitQuest {
         World world = player.getWorld();
         Location center = arenaCenter;
 
-        // Plataforma principal (15x15) - usando método seguro da superclasse
-        for (int x = -7; x <= 7; x++) {
-            for (int z = -7; z <= 7; z++) {
-                setBlockSafe(world, center.clone().add(x, -1, z), Material.OAK_PLANKS);
+        // **PLATAFORMA DOS ESQUELETOS - MAIOR E MAIS SEGURA**
+        // Plataforma principal (20x20) - maior para os esqueletos se moverem
+        for (int x = -10; x <= 10; x++) {
+            for (int z = -10; z <= 10; z++) {
+                // Cria uma plataforma elevada (2 blocos acima do chão)
+                setBlockSafe(world, center.clone().add(x, 1, z), Material.OAK_PLANKS);
+                // Garante que tem bloco sólido embaixo
+                setBlockSafe(world, center.clone().add(x, 0, z), Material.DIRT);
             }
         }
 
-        // Bordas da arena
-        for (int x = -8; x <= 8; x++) {
-            for (int z = -8; z <= 8; z++) {
-                if (Math.abs(x) == 8 || Math.abs(z) == 8) {
-                    setBlockSafe(world, center.clone().add(x, 0, z), Material.OAK_FENCE);
+        // **BORDAS SEGURAS** - impede que esqueletos caiam
+        for (int x = -11; x <= 11; x++) {
+            for (int z = -11; z <= 11; z++) {
+                if (Math.abs(x) == 11 || Math.abs(z) == 11) {
                     setBlockSafe(world, center.clone().add(x, 1, z), Material.OAK_FENCE);
+                    setBlockSafe(world, center.clone().add(x, 2, z), Material.OAK_FENCE);
                 }
             }
         }
 
-        // Plataforma do jogador (5x5)
+        // **PLATAFORMA DO JOGADOR MELHORADA**
         Location playerPlatform = player.getLocation().clone();
-        for (int x = -2; x <= 2; x++) {
-            for (int z = -2; z <= 2; z++) {
-                setBlockSafe(world, playerPlatform.clone().add(x, -1, z), Material.STONE_BRICKS);
-            }
-        }
 
-        // Parapeito de proteção
+        // Plataforma elevada (3 blocos de altura)
         for (int x = -3; x <= 3; x++) {
             for (int z = -3; z <= 3; z++) {
-                if (Math.abs(x) == 3 || Math.abs(z) == 3) {
-                    setBlockSafe(world, playerPlatform.clone().add(x, 0, z), Material.STONE_BRICK_WALL);
+                setBlockSafe(world, playerPlatform.clone().add(x, 2, z), Material.STONE_BRICKS);
+                setBlockSafe(world, playerPlatform.clone().add(x, 1, z), Material.STONE_BRICKS);
+                setBlockSafe(world, playerPlatform.clone().add(x, 0, z), Material.STONE_BRICKS);
+            }
+        }
+
+        // **PARAPEITO SEGURO** - com aberturas para atirar
+        for (int x = -4; x <= 4; x++) {
+            for (int z = -4; z <= 4; z++) {
+                if (Math.abs(x) == 4 || Math.abs(z) == 4) {
+                    // Deixa aberturas a cada 2 blocos para atirar
+                    if (!(Math.abs(x) == 4 && Math.abs(z) == 4) && // não nos cantos
+                            !(x % 2 == 0 && z % 2 == 0)) { // aberturas estratégicas
+                        setBlockSafe(world, playerPlatform.clone().add(x, 3, z), Material.STONE_BRICK_WALL);
+                    }
                 }
             }
         }
 
+        // **ESCADA para subir na plataforma**
+        setBlockSafe(world, playerPlatform.clone().add(3, 0, 0), Material.OAK_STAIRS);
+        setBlockSafe(world, playerPlatform.clone().add(3, 1, 0), Material.OAK_STAIRS);
+        setBlockSafe(world, playerPlatform.clone().add(3, 2, 0), Material.OAK_STAIRS);
+
         environmentBuilt = true;
-        player.sendMessage("§a⚔ Arena de treinamento construída! Use sua posição elevada para atirar!");
+        player.sendMessage("§a⚔ Arena de treinamento construída!");
+        player.sendMessage("§e💡 Suba na plataforma elevada para atirar nos esqueletos!");
     }
 
     private void spawnArenaSkeletons(Player player) {
@@ -89,19 +107,37 @@ public class RangedCombatQuest extends HitQuest {
 
         World world = player.getWorld();
 
-        // Spawna esqueletos DENTRO da arena usando o método da superclasse
-        for (int i = 0; i < getTargetCount(); i++) {
-            double angle = (2 * Math.PI * i) / getTargetCount();
-            double x = arenaCenter.getX() + 4 * Math.cos(angle);
-            double z = arenaCenter.getZ() + 4 * Math.sin(angle);
+        // **SPAWN ESTRATÉGICO** - esqueletos bem distribuídos na arena
+        int[] spawnDistances = {3, 5, 7}; // Distâncias variadas da arena
+        int skeletonsPerDistance = (int) Math.ceil((double) getTargetCount() / spawnDistances.length);
 
-            Location spawnLoc = new Location(world, x, arenaCenter.getY(), z);
+        int spawned = 0;
+        for (int distance : spawnDistances) {
+            for (int i = 0; i < skeletonsPerDistance && spawned < getTargetCount(); i++) {
+                double angle = (2 * Math.PI * i) / skeletonsPerDistance;
+                double x = arenaCenter.getX() + distance * Math.cos(angle);
+                double z = arenaCenter.getZ() + distance * Math.sin(angle);
 
-            // Usa o método utilitário da superclasse
-            spawnQuestEntity(world, spawnLoc, org.bukkit.entity.EntityType.SKELETON, "§7Alvo de Treinamento");
+                // **LOCAL SEGURO** - sempre no centro da plataforma, 2 blocos acima
+                Location spawnLoc = new Location(world, x, arenaCenter.getY() + 2, z);
+
+                // **VERIFICA SE O LOCAL É SEGURO** antes de spawnar
+                if (isSafeSpawnLocation(world, spawnLoc)) {
+                    spawnQuestEntity(world, spawnLoc, org.bukkit.entity.EntityType.SKELETON, "§7Alvo de Treinamento");
+                    spawned++;
+                }
+            }
         }
 
-        player.sendMessage("§e🎯 " + getTargetCount() + " esqueletos apareceram na arena!");
+        player.sendMessage("§e🎯 " + spawned + " esqueletos apareceram na arena!");
+        player.sendMessage("§6🎯 Acerte-os a pelo menos " + (int)MIN_DISTANCE + " blocos de distância!");
+    }
+
+    /** Verifica se o local de spawn é seguro (não dentro de blocos) */
+    private boolean isSafeSpawnLocation(World world, Location location) {
+        // Verifica se o bloco na posição é ar e o bloco abaixo é sólido
+        return world.getBlockAt(location).getType() == Material.AIR &&
+                world.getBlockAt(location.clone().add(0, -1, 0)).getType().isSolid();
     }
 
     @Override
@@ -115,6 +151,7 @@ public class RangedCombatQuest extends HitQuest {
         double distance = shooterLoc.distance(arrowLoc);
 
         if (distance >= MIN_DISTANCE) {
+            shooter.sendMessage(String.format("§a✓ Boa! %.1f blocos de distância!", distance));
             return true;
         } else {
             shooter.sendMessage(String.format("§c✗ Muito perto! (%.1f/%.0f blocos)", distance, MIN_DISTANCE));
@@ -123,38 +160,10 @@ public class RangedCombatQuest extends HitQuest {
     }
 
     @Override
-    public void updateProgress(Object... params) {
-        // Delega para a superclasse que já tem a lógica completa
-        super.updateProgress(params);
-
-        // Adiciona feedback específico para esta quest
-        if (params.length >= 3 && params[2] instanceof Player player) {
-            int current = getCurrentCount();
-            int target = getTargetCount();
-
-            if (current > 0 && current < target) {
-                // Feedback a cada acerto bem-sucedido
-                player.sendMessage("§a✓ " + getProgressText());
-            }
-        }
-    }
-
-    @Override
     public String getProgressText() {
-        return String.format("%d/%d esqueletos derrotados (mín. %d blocos)",
+        return String.format("%d/%d esqueletos (mín. %d blocos)",
                 getCurrentCount(), getTargetCount(), (int)MIN_DISTANCE);
     }
-
-    @Override
-    public void assignToPlayer(Player player) {
-        // Usa a implementação da superclasse que chama buildQuestEnvironment e spawnStrategicEntities
-        super.assignToPlayer(player);
-    }
-
-    // Método antigo - removido pois não é mais necessário
-    // private void setBlock(World world, Location location, Material material) {
-    //     world.getBlockAt(location).setType(material);
-    // }
 
     public static double getMinDistance() {
         return MIN_DISTANCE;
