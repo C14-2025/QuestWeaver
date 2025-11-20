@@ -13,7 +13,7 @@ import br.dev.projetoc14.player.abilities.archerSkills.ArchListener;
 import br.dev.projetoc14.player.abilities.assassinSkills.AbilityListener;
 import br.dev.projetoc14.quest.archer.ArcherQuestListener;
 import br.dev.projetoc14.quest.assassin.AssassinQuestListener;
-import br.dev.projetoc14.quest.listeners.QuestCompletionListener;
+import br.dev.projetoc14.quest.listeners.*;
 import br.dev.projetoc14.skilltree.ExperienceSystem;
 import br.dev.projetoc14.match.ClassReadyManager;
 import br.dev.projetoc14.match.PlayerFileManager;
@@ -23,10 +23,7 @@ import br.dev.projetoc14.skilltree.Texts;
 import br.dev.projetoc14.playerData.PlayerDataListener;
 import br.dev.projetoc14.quest.utils.QuestBook;
 import br.dev.projetoc14.quest.utils.QuestManager;
-import br.dev.projetoc14.quest.listeners.MobKillQuestListener;
-import br.dev.projetoc14.quest.listeners.PlayerQuestJoinListener;
 import br.dev.projetoc14.playerData.PlayerDataManager;
-import br.dev.projetoc14.quest.listeners.QuestBookInteractListener;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.World;
@@ -106,6 +103,9 @@ public class QuestWeaver extends JavaPlugin {
 
         AssassinQuestListener assassinQuestListener = new AssassinQuestListener(questmanager);
         getServer().getPluginManager().registerEvents(assassinQuestListener, this);
+
+        ExplorationQuestListener explorationQuestListener = new ExplorationQuestListener(questmanager, this);
+        getServer().getPluginManager().registerEvents(explorationQuestListener, this);
         //Termina aqui
 
         // Magic Wand Listener (Habilidades de Mago)

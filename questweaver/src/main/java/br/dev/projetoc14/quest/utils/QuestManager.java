@@ -5,6 +5,7 @@
 
 package br.dev.projetoc14.quest.utils;
 
+import br.dev.projetoc14.quest.ExplorationQuest;
 import br.dev.projetoc14.quest.KillQuest;
 import br.dev.projetoc14.quest.Quest;
 import br.dev.projetoc14.quest.archer.PrecisionHunterQuest;
@@ -13,6 +14,9 @@ import br.dev.projetoc14.quest.assassin.DeadlySpeedQuest;
 import br.dev.projetoc14.quest.assassin.PerfectAssassinationQuest;
 import br.dev.projetoc14.quest.assassin.SilentShadowsQuest;
 import br.dev.projetoc14.quest.mage.ElementalMaster;
+import br.dev.projetoc14.quest.structures.*;
+import br.dev.projetoc14.quest.structures.AssassinCrypt;
+import br.dev.projetoc14.quest.structures.QuestStructure;
 import br.dev.projetoc14.quest.warrior.FirstBlood;
 import br.dev.projetoc14.quest.archer.RangedCombatQuest;
 import org.bukkit.entity.Player;
@@ -99,18 +103,45 @@ public class QuestManager {
 
     private Quest createArcherQuest(int progress, Location playerLoc) {
         return switch (progress) {
-            case 0 -> new RangedCombatQuest(playerLoc); // Primeira quest do arqueiro
-            case 1 -> new PrecisionHunterQuest(playerLoc);
-            case 2 -> new WindMasterQuest(playerLoc);
+            case 0 -> {
+                // Quest 0: Encontrar o campo de treinamento
+                QuestStructure structure = new ArcherTower();
+                yield new ExplorationQuest(
+                        "find_archer_grounds",
+                        "Em Busca do Campo de Treinamento",
+                        "Encontre o lendário Campo de Treinamento de Arqueiros",
+                        50,
+                        structure,
+                        10.0 // raio de detecção: 10 blocos
+                );
+            }
+            case 1 -> new RangedCombatQuest(playerLoc);      // Quest 1: Combate a Distância
+            case 2 -> new PrecisionHunterQuest(playerLoc);   // Quest 2: Caçador Preciso
+            case 3 -> new WindMasterQuest(playerLoc);        // Quest 3: Mestre dos Ventos
             default -> null;
         };
     }
 
     private Quest createAssassinQuest(int progress, Location playerLoc) {
-        return switch (progress){
-            case 0 -> new SilentShadowsQuest(playerLoc);
-            case 1 -> new DeadlySpeedQuest(playerLoc);
-            case 2 -> new PerfectAssassinationQuest(playerLoc);
+        return switch (progress) {
+            case 0 -> {
+                // ESCOLHA UMA:
+                // QuestStructure structure = new AssassinHideout();      // Ruínas
+                QuestStructure structure = new AssassinCrypt();        // Cripta
+                //QuestStructure structure = new AssassinDojo();         // Dojo
+
+                yield new ExplorationQuest(
+                        "find_assassin_location",
+                        "Nas Sombras",
+                        "Encontre o " + structure.getName(),
+                        50,
+                        structure,
+                        10.0
+                );
+            }
+            case 1 -> new SilentShadowsQuest(playerLoc);
+            case 2 -> new DeadlySpeedQuest(playerLoc);
+            case 3 -> new PerfectAssassinationQuest(playerLoc);
             default -> null;
         };
     }
