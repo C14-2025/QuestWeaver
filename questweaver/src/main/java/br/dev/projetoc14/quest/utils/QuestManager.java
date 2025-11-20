@@ -5,6 +5,7 @@
 
 package br.dev.projetoc14.quest.utils;
 
+import br.dev.projetoc14.quest.ExplorationQuest;
 import br.dev.projetoc14.quest.KillQuest;
 import br.dev.projetoc14.quest.Quest;
 import br.dev.projetoc14.quest.archer.PrecisionHunterQuest;
@@ -13,6 +14,8 @@ import br.dev.projetoc14.quest.assassin.DeadlySpeedQuest;
 import br.dev.projetoc14.quest.assassin.PerfectAssassinationQuest;
 import br.dev.projetoc14.quest.assassin.SilentShadowsQuest;
 import br.dev.projetoc14.quest.mage.ElementalMaster;
+import br.dev.projetoc14.quest.structures.ArcherTrainingGrounds;
+import br.dev.projetoc14.quest.structures.QuestStructure;
 import br.dev.projetoc14.quest.warrior.FirstBlood;
 import br.dev.projetoc14.quest.archer.RangedCombatQuest;
 import org.bukkit.entity.Player;
@@ -99,9 +102,21 @@ public class QuestManager {
 
     private Quest createArcherQuest(int progress, Location playerLoc) {
         return switch (progress) {
-            case 0 -> new RangedCombatQuest(playerLoc); // Primeira quest do arqueiro
-            case 1 -> new PrecisionHunterQuest(playerLoc);
-            case 2 -> new WindMasterQuest(playerLoc);
+            case 0 -> {
+                // Quest 0: Encontrar o campo de treinamento
+                QuestStructure structure = new ArcherTrainingGrounds();
+                yield new ExplorationQuest(
+                        "find_archer_grounds",
+                        "Em Busca do Campo de Treinamento",
+                        "Encontre o lendário Campo de Treinamento de Arqueiros",
+                        50,
+                        structure,
+                        10.0 // raio de detecção: 10 blocos
+                );
+            }
+            case 1 -> new RangedCombatQuest(playerLoc);      // Quest 1: Combate a Distância
+            case 2 -> new PrecisionHunterQuest(playerLoc);   // Quest 2: Caçador Preciso
+            case 3 -> new WindMasterQuest(playerLoc);        // Quest 3: Mestre dos Ventos
             default -> null;
         };
     }
