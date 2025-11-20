@@ -6,7 +6,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
-public class SearchCompass {
+public class SearchCompass implements Item{
 
     private static final Material ITEM_MATERIAL = Material.COMPASS;
     private static final String DISPLAY_NAME = "§eTeleportar para jogador";
