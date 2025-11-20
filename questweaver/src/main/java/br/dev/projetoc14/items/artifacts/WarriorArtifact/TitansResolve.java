@@ -1,4 +1,4 @@
-package br.dev.projetoc14.items.artifacts.WarriorArtifacts;
+package br.dev.projetoc14.items.artifacts.WarriorArtifact;
 
 import br.dev.projetoc14.items.artifacts.ArtifactRarity;
 import br.dev.projetoc14.items.artifacts.ArtifactType;
