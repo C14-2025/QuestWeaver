@@ -12,7 +12,7 @@ import org.bukkit.inventory.Inventory;
 import java.util.Random;
 
 /**
- * Cripta abandonada para assassinos (versão compatível com 1.21.8)
+ * Cripta abandonada para assassinos - Versão Final Revisada
  */
 public class AssassinCrypt extends QuestStructure {
 
@@ -40,326 +40,63 @@ public class AssassinCrypt extends QuestStructure {
 
     @Override
     protected void build(Location center) {
-        buildExteriorStructure(center);
-        buildEntrance(center);
+        // ORDEM CORRIGIDA: Limpeza -> Cripta -> Exterior
+        clearArea(center);
         buildMainCrypt(center);
         buildPillars(center);
         buildSarcophagi(center);
         buildAltar(center);
         buildSecretAreas(center);
+        buildEntranceStructure(center);
         buildLighting(center);
         buildDecorations(center);
         buildTraps(center);
         buildStorage(center);
+        buildExteriorStructure(center);
+
+        debugStructure(center); // Remove depois de testar
     }
 
-    private void buildExteriorStructure(Location center) {
-        // Colina natural cobrindo a cripta
-        buildBurialMound(center);
-
-        // Ruínas antigas no exterior
-        buildExteriorRuins(center);
-
-        // Caminho sinuoso até a entrada
-        buildPathToEntrance(center);
-
-        // Árvores mortas e vegetação sombria
-        buildDeadVegetation(center);
-    }
-
-    private void buildBurialMound(Location center) {
-        // Cria uma colina natural sobre a cripta
-        for (int x = -9; x <= 9; x++) {
-            for (int z = -8; z <= 10; z++) {
-                // Forma ovalada da colina
-                double distance = Math.sqrt(x * x / 25.0 + z * z / 20.0);
-                if (distance <= 1.0) {
-                    int height = (int) ((1.0 - distance) * 4) + 1;
-                    for (int y = 1; y <= height; y++) {
-                        setBlock(center, x, y, z, Material.GRASS_BLOCK);
-                        if (y == height) {
-                            // Topo com terra e pedra
-                            setBlock(center, x, y, z, random.nextBoolean() ? Material.GRASS_BLOCK : Material.COARSE_DIRT);
-                        } else if (y == height - 1) {
-                            setBlock(center, x, y, z, Material.DIRT);
-                        } else {
-                            setBlock(center, x, y, z, Material.STONE);
-                        }
-                    }
+    private void clearArea(Location center) {
+        // Limpa uma área maior que a cripta
+        for (int x = -10; x <= 10; x++) {
+            for (int z = -10; z <= 12; z++) {
+                for (int y = -5; y <= 10; y++) {
+                    setBlock(center, x, y, z, Material.AIR);
                 }
+                // Base sólida
+                setBlock(center, x, -5, z, Material.STONE);
             }
         }
-    }
-
-    private void buildExteriorRuins(Location center) {
-        // Pilares caídos
-        buildFallenPillar(center, -12, 1, -5);
-        buildFallenPillar(center, 11, 1, 8);
-        buildFallenPillar(center, -8, 1, 12);
-
-        // Muros parcialmente destruídos
-        buildCrumblingWall(center, -10, 1, -7, 5, BlockFace.EAST);
-        buildCrumblingWall(center, 9, 1, 3, 4, BlockFace.WEST);
-
-        // Lápides e monumentos funerários
-        buildGravestones(center);
-    }
-
-    private void buildFallenPillar(Location center, int x, int y, int z) {
-        // Base do pilar
-        setBlock(center, x, y, z, PILLAR_MATERIAL);
-        setBlock(center, x, y+1, z, PILLAR_MATERIAL);
-
-        // Pilar caído
-        for (int i = 0; i < 3; i++) {
-            setBlock(center, x + i + 1, y, z + i, PILLAR_MATERIAL);
-        }
-    }
-
-    private void buildCrumblingWall(Location center, int startX, int startY, int startZ, int length, BlockFace direction) {
-        for (int i = 0; i < length; i++) {
-            if (random.nextDouble() > 0.3) { // 70% de chance de ter bloco (parede danificada)
-                int x = startX + (direction == BlockFace.EAST ? i : 0);
-                int z = startZ + (direction == BlockFace.SOUTH ? i : 0);
-                setBlock(center, x, startY, z, WALL_MATERIAL);
-                if (random.nextBoolean()) {
-                    setBlock(center, x, startY + 1, z, WALL_MATERIAL);
-                }
-            }
-        }
-    }
-
-    private void buildGravestones(Location center) {
-        int[][] graves = {
-                {-11, 1, -3}, {-9, 1, 11}, {8, 1, 11}, {10, 1, -4}
-        };
-
-        for (int[] grave : graves) {
-            setBlock(center, grave[0], grave[1], grave[2], Material.STONE_BRICK_WALL);
-            setBlock(center, grave[0], grave[1] + 1, grave[2], Material.SKELETON_SKULL);
-        }
-    }
-
-    private void buildPathToEntrance(Location center) {
-        // Caminho sinuoso de pedra quebrada
-        int[] pathZ = {-15, -14, -13, -12, -11, -10, -9, -8};
-        int[] pathX = {0, 1, 0, -1, 0, 1, 0, 0}; // Padrão sinuoso
-
-        for (int i = 0; i < pathZ.length; i++) {
-            int x = pathX[i];
-            int z = pathZ[i];
-
-            setBlock(center, x, 0, z, Material.COBBLESTONE);
-            setBlock(center, x-1, 0, z, Material.GRAVEL);
-            setBlock(center, x+1, 0, z, Material.GRAVEL);
-
-            // Postes de iluminação ao longo do caminho
-            if (i % 2 == 0) {
-                setBlock(center, x, 1, z, Material.COBBLESTONE_WALL);
-                setBlock(center, x, 2, z, LIGHT_SOURCE);
-            }
-        }
-    }
-
-    private void buildDeadVegetation(Location center) {
-        // Árvores mortas
-        buildDeadTree(center, -13, 1, -2);
-        buildDeadTree(center, 12, 1, -1);
-        buildDeadTree(center, -10, 1, 13);
-        buildDeadTree(center, 9, 1, 14);
-
-        // Arbustos e vegetação rasteira morta
-        for (int i = 0; i < 8; i++) {
-            int x = random.nextInt(20) - 10;
-            int z = random.nextInt(20) - 8;
-            if (Math.abs(x) > 8 || Math.abs(z) > 6) {
-                setBlock(center, x, 1, z, Material.DEAD_BUSH);
-            }
-        }
-    }
-
-    private void buildDeadTree(Location center, int x, int y, int z) {
-        // Tronco
-        for (int i = 0; i < 4; i++) {
-            setBlock(center, x, y + i, z, Material.STRIPPED_OAK_LOG);
-        }
-
-        // Galhos
-        setBlock(center, x+1, y+3, z, Material.STRIPPED_OAK_LOG);
-        setBlock(center, x-1, y+2, z, Material.STRIPPED_OAK_LOG);
-        setBlock(center, x, y+3, z+1, Material.STRIPPED_OAK_LOG);
-    }
-
-    private void buildEntrance(Location center) {
-        // Entrada reformulada - Templo subterrâneo em ruínas
-        buildGrandEntrance(center);
-        buildEntranceStairs(center);
-        buildEntranceGuardians(center);
-    }
-
-    private void buildGrandEntrance(Location center) {
-        // Estrutura monumental da entrada
-        int entranceWidth = 5;
-        int entranceHeight = 5;
-
-        // Pilares laterais maciços
-        for (int y = 0; y <= entranceHeight; y++) {
-            for (int x = -entranceWidth - 1; x <= entranceWidth + 1; x++) {
-                if (Math.abs(x) == entranceWidth + 1 || Math.abs(x) == entranceWidth) {
-                    setBlock(center, x, y, -7, Material.STONE_BRICKS);
-                }
-            }
-        }
-
-        // Arco de entrada elaborado
-        for (int x = -entranceWidth + 1; x <= entranceWidth - 1; x++) {
-            setBlock(center, x, entranceHeight, -7, Material.STONE_BRICK_SLAB);
-            setBlock(center, x, entranceHeight + 1, -7, Material.CHISELED_STONE_BRICKS);
-        }
-
-        // Portas duplas de madeira escura
-        setBlock(center, -1, 1, -7, Material.DARK_OAK_DOOR);
-        setBlock(center, -1, 2, -7, Material.DARK_OAK_DOOR);
-        setBlock(center, 1, 1, -7, Material.DARK_OAK_DOOR);
-        setBlock(center, 1, 2, -7, Material.DARK_OAK_DOOR);
-
-        // Detalhes decorativos na entrada
-        setBlock(center, -entranceWidth, 3, -7, Material.SKELETON_SKULL);
-        setBlock(center, entranceWidth, 3, -7, Material.SKELETON_SKULL);
-    }
-
-    private void buildEntranceStairs(Location center) {
-        // Escadaria descendente dramática
-        for (int z = -6; z >= -3; z++) {
-            int stepHeight = -6 + z; // -6, -5, -4, -3
-            for (int x = -4; x <= 4; x++) {
-                setBlock(center, x, stepHeight, z, Material.STONE_BRICKS);
-
-                // Corrimãos
-                if (Math.abs(x) == 4) {
-                    for (int y = stepHeight + 1; y <= stepHeight + 2; y++) {
-                        setBlock(center, x, y, z, Material.STONE_BRICK_WALL);
-                    }
-                }
-            }
-        }
-
-        // Iluminação dramática nas escadas
-        for (int z = -6; z <= -3; z += 2) {
-            setBlock(center, -3, -5, z, LIGHT_SOURCE);
-            setBlock(center, 3, -5, z, LIGHT_SOURCE);
-        }
-    }
-
-    private void buildEntranceGuardians(Location center) {
-        // Estátuas de guardiões na entrada
-        buildGuardianStatue(center, -6, 0, -5);
-        buildGuardianStatue(center, 6, 0, -5);
-    }
-
-    private void buildGuardianStatue(Location center, int x, int y, int z) {
-        // Base da estátua
-        setBlock(center, x, y, z, Material.POLISHED_BLACKSTONE_BRICKS);
-        setBlock(center, x, y+1, z, Material.POLISHED_BLACKSTONE);
-        setBlock(center, x, y+2, z, Material.POLISHED_BLACKSTONE);
-
-        // Detalhes da estátua
-        setBlock(center, x, y+3, z, Material.SKELETON_SKULL);
-        setBlock(center, x, y+2, z+1, Material.IRON_SWORD);
     }
 
     private void buildMainCrypt(Location center) {
         buildCryptFloor(center);
         buildCryptWalls(center);
         buildCryptCeiling(center);
-        addCryptDetails(center);
-    }
-
-    private void addCryptDetails(Location center) {
-        // Goteiras e umidade
-        for (int i = 0; i < 10; i++) {
-            int x = random.nextInt(14) - 7;
-            int z = random.nextInt(14) - 6;
-            setBlock(center, x, 5, z, Material.DRIPSTONE_BLOCK);
-            setBlock(center, x, 4, z, Material.POINTED_DRIPSTONE);
-        }
-
-        // Fungos e cogumelos
-        for (int i = 0; i < 8; i++) {
-            int x = random.nextInt(14) - 7;
-            int z = random.nextInt(14) - 6;
-            setBlock(center, x, 1, z, random.nextBoolean() ? Material.BROWN_MUSHROOM : Material.RED_MUSHROOM);
-        }
-
-        // Vasos quebrados
-        for (int i = 0; i < 5; i++) {
-            int x = random.nextInt(12) - 6;
-            int z = random.nextInt(12) - 6;
-            setBlock(center, x, 1, z, Material.FLOWER_POT);
-        }
-    }
-
-    private void buildDecorations(Location center) {
-        buildCobwebs(center);
-        buildSkulls(center);
-        buildWeaponRacks(center);
-        buildBloodStains(center);
-        buildChains(center);
-        buildCandles(center);
-    }
-
-    private void buildChains(Location center) {
-        // Correntes penduradas no teto
-        int[][] chainPositions = {
-                {-5, 5, -3}, {5, 5, -3}, {-5, 5, 6}, {5, 5, 6}
-        };
-
-        for (int[] pos : chainPositions) {
-            for (int y = pos[1]; y >= 3; y--) {
-                setBlock(center, pos[0], y, pos[2], Material.CHAIN);
-            }
-            setBlock(center, pos[0], 2, pos[2], LIGHT_SOURCE);
-        }
-    }
-
-    private void buildCandles(Location center) {
-        // Velas espalhadas pela cripta
-        int[][] candlePositions = {
-                {-3, 2, 0}, {3, 2, 0}, {0, 2, -4}, {0, 2, 7},
-                {-6, 2, 3}, {6, 2, 3}, {-6, 2, -2}, {6, 2, -2}
-        };
-
-        for (int[] pos : candlePositions) {
-            setBlock(center, pos[0], pos[1], pos[2], Material.CANDLE);
-            setBlock(center, pos[0], pos[1] - 1, pos[2], Material.BLACKSTONE_SLAB);
-        }
     }
 
     private void buildCryptFloor(Location center) {
         for (int x = -7; x <= 7; x++) {
             for (int z = -6; z <= 8; z++) {
-                // Limpa espaço subterrâneo
-                for (int y = -3; y <= -1; y++) {
-                    setBlock(center, x, y, z, Material.AIR);
-                }
+                // Base sólida
+                setBlock(center, x, -3, z, Material.STONE);
+                setBlock(center, x, -2, z, Material.STONE);
+                setBlock(center, x, -1, z, Material.STONE);
 
-                // Piso padronizado
+                // Piso decorativo
                 Material floorMat = (x + z) % 3 == 0 ? FLOOR_SECONDARY : FLOOR_PRIMARY;
                 setBlock(center, x, 0, z, floorMat);
-
-                // Adiciona detalhes de poças e manchas
-                if (random.nextDouble() < 0.1) {
-                    setBlock(center, x, 1, z, Material.WATER);
-                }
             }
         }
     }
 
     private void buildCryptWalls(Location center) {
+        // Paredes principais
         for (int y = 1; y <= 5; y++) {
             // Parede norte (com entrada)
             for (int x = -7; x <= 7; x++) {
-                if (x >= -1 && x <= 1 && y <= 3) continue; // Entrada maior
+                if (x >= -2 && x <= 2 && y <= 3) continue; // Entrada
                 setBlock(center, x, y, -6, WALL_MATERIAL);
             }
 
@@ -408,11 +145,6 @@ public class AssassinCrypt extends QuestStructure {
 
             // Base reforçada
             setBlock(center, x, 0, z, Material.POLISHED_BLACKSTONE_BRICKS);
-
-            // Correntes decorativas nos pilares
-            if (random.nextBoolean()) {
-                setBlock(center, x, 3, z, Material.CHAIN);
-            }
         }
     }
 
@@ -437,15 +169,12 @@ public class AssassinCrypt extends QuestStructure {
         // Tampa decorativa
         setBlock(center, x, 2, z, Material.STONE_BRICK_SLAB);
 
-        // Conteúdo dos sarcófagos
+        // Conteúdo
         setBlock(center, x, 0, z, Material.BARREL);
 
-        // Decoração ao redor
+        // Decoração
         if (random.nextBoolean()) {
             setBlock(center, x - 1, 1, z, Material.SKELETON_SKULL);
-        }
-        if (random.nextBoolean()) {
-            setBlock(center, x + 1, 1, z, Material.CANDLE);
         }
     }
 
@@ -457,7 +186,7 @@ public class AssassinCrypt extends QuestStructure {
             }
         }
 
-        // Centro do altar (spawn de mobs)
+        // Centro do altar
         setBlock(center, 0, 2, 3, Material.CRYING_OBSIDIAN);
 
         // Fogueiras rituais
@@ -466,19 +195,92 @@ public class AssassinCrypt extends QuestStructure {
         setBlock(center, -1, 2, 4, Material.SOUL_CAMPFIRE);
         setBlock(center, 1, 2, 4, Material.SOUL_CAMPFIRE);
 
-        // Oferecimentos no altar
+        // Oferecimentos
         setBlock(center, -1, 2, 3, Material.IRON_SWORD);
         setBlock(center, 1, 2, 3, Material.BOW);
 
-        // Velas ao redor do altar
+        // Velas
         setBlock(center, -2, 2, 2, Material.CANDLE);
         setBlock(center, 2, 2, 2, Material.CANDLE);
         setBlock(center, -2, 2, 4, Material.CANDLE);
         setBlock(center, 2, 2, 4, Material.CANDLE);
     }
 
+    private void buildEntranceStructure(Location center) {
+        // Escadaria de entrada
+        buildEntranceStairs(center);
+
+        // Portão de entrada
+        buildEntranceGate(center);
+
+        // Guardiões
+        buildEntranceGuardians(center);
+    }
+
+    private void buildEntranceStairs(Location center) {
+        // Escadas descendentes para a cripta
+        for (int z = -6; z <= -3; z++) {
+            int stepHeight = -2 - (-6 - z); // -2, -1, 0, 1
+
+            for (int x = -4; x <= 4; x++) {
+                setBlock(center, x, stepHeight, z, Material.STONE_BRICKS);
+
+                // Corrimãos
+                if (Math.abs(x) == 4) {
+                    setBlock(center, x, stepHeight + 1, z, Material.STONE_BRICK_WALL);
+                    setBlock(center, x, stepHeight + 2, z, Material.STONE_BRICK_WALL);
+                }
+            }
+
+            // Iluminação
+            if (z % 2 == 0) {
+                setBlock(center, -3, stepHeight + 1, z, LIGHT_SOURCE);
+                setBlock(center, 3, stepHeight + 1, z, LIGHT_SOURCE);
+            }
+        }
+    }
+
+    private void buildEntranceGate(Location center) {
+        // Pilares do portão
+        for (int y = -2; y <= 3; y++) {
+            setBlock(center, -3, y, -7, DECORATIVE_MATERIAL);
+            setBlock(center, 3, y, -7, DECORATIVE_MATERIAL);
+        }
+
+        // Arco
+        setBlock(center, -2, 3, -7, DECORATIVE_MATERIAL);
+        setBlock(center, -1, 3, -7, DECORATIVE_MATERIAL);
+        setBlock(center, 0, 3, -7, DECORATIVE_MATERIAL);
+        setBlock(center, 1, 3, -7, DECORATIVE_MATERIAL);
+        setBlock(center, 2, 3, -7, DECORATIVE_MATERIAL);
+
+        // Portas
+        setBlock(center, -1, 0, -7, Material.DARK_OAK_DOOR);
+        setBlock(center, -1, 1, -7, Material.DARK_OAK_DOOR);
+        setBlock(center, 1, 0, -7, Material.DARK_OAK_DOOR);
+        setBlock(center, 1, 1, -7, Material.DARK_OAK_DOOR);
+
+        // Decoração
+        setBlock(center, -3, 2, -7, Material.SKELETON_SKULL);
+        setBlock(center, 3, 2, -7, Material.SKELETON_SKULL);
+    }
+
+    private void buildEntranceGuardians(Location center) {
+        // Estátuas guardiãs
+        buildGuardianStatue(center, -6, -1, -5);
+        buildGuardianStatue(center, 6, -1, -5);
+    }
+
+    private void buildGuardianStatue(Location center, int x, int y, int z) {
+        setBlock(center, x, y, z, Material.POLISHED_BLACKSTONE_BRICKS);
+        setBlock(center, x, y + 1, z, Material.POLISHED_BLACKSTONE);
+        setBlock(center, x, y + 2, z, Material.POLISHED_BLACKSTONE);
+        setBlock(center, x, y + 3, z, Material.SKELETON_SKULL);
+        setBlock(center, x, y + 2, z + 1, Material.IRON_SWORD);
+    }
+
     private void buildSecretAreas(Location center) {
-        // Passagem secreta atrás da parede sul
+        // Passagem secreta sul
         setBlock(center, 0, 1, 8, Material.AIR);
         setBlock(center, 0, 2, 8, Material.AIR);
 
@@ -492,27 +294,25 @@ public class AssassinCrypt extends QuestStructure {
             }
         }
 
-        // Baú secreto
+        // Tesouro secreto
         setBlock(center, 0, 1, 10, Material.CHEST);
-
-        // Iluminação secreta
-        setBlock(center, 0, 3, 10, LIGHT_SOURCE);
-
-        // Decoração da sala secreta
         setBlock(center, -1, 1, 10, Material.ANVIL);
         setBlock(center, 1, 1, 10, Material.SMITHING_TABLE);
+        setBlock(center, 0, 3, 10, LIGHT_SOURCE);
     }
 
     private void buildLighting(Location center) {
+        // Iluminação principal
         int[][] lightPositions = {
-                {-6, -4}, {6, -4}, {-6, 1}, {6, 1}, {-6, 7}, {6, 7}
+                {-6, 3, -4}, {6, 3, -4}, {-6, 3, 1}, {6, 3, 1},
+                {-6, 3, 7}, {6, 3, 7}
         };
 
         for (int[] pos : lightPositions) {
-            setBlock(center, pos[0], 3, pos[1], LIGHT_SOURCE);
+            setBlock(center, pos[0], pos[1], pos[2], LIGHT_SOURCE);
         }
 
-        // Iluminação adicional no teto com correntes
+        // Iluminação do teto
         for (int x = -6; x <= 6; x += 4) {
             for (int z = -4; z <= 6; z += 3) {
                 setBlock(center, x, CRYPT_CEILING - 1, z, Material.CHAIN);
@@ -527,15 +327,24 @@ public class AssassinCrypt extends QuestStructure {
         }
     }
 
+    private void buildDecorations(Location center) {
+        buildCobwebs(center);
+        buildSkulls(center);
+        buildWeaponRacks(center);
+        buildBloodStains(center);
+        buildChains(center);
+        buildCandles(center);
+        addCryptDetails(center);
+    }
+
     private void buildCobwebs(Location center) {
         int[][] webPositions = {
                 {-7, 5, -3}, {7, 5, 3}, {-2, 5, 8}, {2, 5, -6},
-                {-5, 4, 1}, {5, 4, 5}, {0, 4, 0}, {0, 4, 6},
-                {-3, 3, -5}, {3, 3, -5}, {-6, 2, 2}, {6, 2, -3}
+                {-5, 4, 1}, {5, 4, 5}, {0, 4, 0}, {0, 4, 6}
         };
 
         for (int[] pos : webPositions) {
-            if (random.nextDouble() < 0.7) { // 70% de chance de ter teia
+            if (random.nextDouble() < 0.7) {
                 setBlock(center, pos[0], pos[1], pos[2], Material.COBWEB);
             }
         }
@@ -544,86 +353,91 @@ public class AssassinCrypt extends QuestStructure {
     private void buildSkulls(Location center) {
         int[][] skullPositions = {
                 {-6, 2, 0}, {6, 2, 0}, {-6, 2, 6}, {6, 2, 6},
-                {-3, 1, -5}, {3, 1, -5}, {0, 1, 7}, {-7, 3, 4},
-                {7, 3, -2}, {-4, 1, 7}, {4, 1, -4}
+                {-3, 1, -5}, {3, 1, -5}, {0, 1, 7}
         };
 
         for (int[] pos : skullPositions) {
-            if (random.nextDouble() < 0.8) { // 80% de chance de ter caveira
+            if (random.nextDouble() < 0.8) {
                 setBlock(center, pos[0], pos[1], pos[2], Material.SKELETON_SKULL);
             }
         }
     }
 
     private void buildWeaponRacks(Location center) {
-        // Suportes de armas nas paredes
         int[][] rackPositions = {
-                {-7, 2, -2}, {-7, 2, 3}, {7, 2, -2}, {7, 2, 3},
-                {-7, 3, 0}, {7, 3, 5}, {-5, 2, 8}, {5, 2, 8}
+                {-7, 2, -2}, {-7, 2, 3}, {7, 2, -2}, {7, 2, 3}
         };
 
         for (int[] pos : rackPositions) {
             setBlock(center, pos[0], pos[1], pos[2], Material.ITEM_FRAME);
             setBlock(center, pos[0], pos[1] - 1, pos[2], Material.STONE_BRICK_WALL);
-
-            // Adiciona armas decorativas próximas
-            if (random.nextBoolean()) {
-                setBlock(center, pos[0], pos[1] - 1, pos[2] + 1, Material.IRON_SWORD);
-            }
         }
     }
 
     private void buildBloodStains(Location center) {
-        // Manchas de "sangue" no chão
         int[][] bloodPositions = {
-                {-3, 0, 1}, {2, 0, -2}, {4, 0, 5}, {-5, 0, 3},
-                {1, 0, -4}, {-2, 0, 6}, {5, 0, 0}, {-4, 0, -1}
+                {-3, 0, 1}, {2, 0, -2}, {4, 0, 5}, {-5, 0, 3}
         };
 
         for (int[] pos : bloodPositions) {
-            if (random.nextDouble() < 0.6) { // 60% de chance de ter mancha
+            if (random.nextDouble() < 0.6) {
                 setBlock(center, pos[0], pos[1], pos[2], Material.REDSTONE_BLOCK);
-                // Redstone wire para efeito de respingo
-                if (random.nextBoolean()) {
-                    setBlock(center, pos[0] + 1, pos[1], pos[2], Material.REDSTONE_WIRE);
-                }
-                if (random.nextBoolean()) {
-                    setBlock(center, pos[0] - 1, pos[1], pos[2], Material.REDSTONE_WIRE);
-                }
             }
         }
     }
 
-    private void buildTraps(Location center) {
-        buildPressurePlateTrap(center, -3, 0, 4);
-        buildPressurePlateTrap(center, 3, 0, 4);
-        buildArrowTrap(center, 0, 3, -5);
-        buildPitTrap(center, 2, 0, 1);
-    }
+    private void buildChains(Location center) {
+        int[][] chainPositions = {
+                {-5, 5, -3}, {5, 5, -3}, {-5, 5, 6}, {5, 5, 6}
+        };
 
-    private void buildPressurePlateTrap(Location center, int x, int y, int z) {
-        setBlock(center, x, y, z, Material.STONE_PRESSURE_PLATE);
-        setBlock(center, x, y - 1, z, Material.REDSTONE_BLOCK);
-        // Armadilha conectada
-        setBlock(center, x, y, z + 1, Material.TRIPWIRE_HOOK);
-        setBlock(center, x + 1, y, z + 1, Material.TRIPWIRE);
-        setBlock(center, x - 1, y, z + 1, Material.TRIPWIRE);
-    }
-
-    private void buildArrowTrap(Location center, int x, int y, int z) {
-        // Dispenser escondido na parede
-        setBlock(center, x, y, z, Material.DISPENSER);
-        // Alvo no outro lado da sala
-        setBlock(center, x, 1, z + 8, Material.TARGET);
-    }
-
-    private void buildPitTrap(Location center, int x, int y, int z) {
-        // Poço com cactos no fundo
-        for (int pitY = y; pitY >= y - 3; pitY--) {
-            setBlock(center, x, pitY, z, Material.AIR);
+        for (int[] pos : chainPositions) {
+            for (int y = pos[1]; y >= 3; y--) {
+                setBlock(center, pos[0], y, pos[2], Material.CHAIN);
+            }
+            setBlock(center, pos[0], 2, pos[2], LIGHT_SOURCE);
         }
-        setBlock(center, x, y - 4, z, Material.CACTUS);
-        setBlock(center, x, y - 3, z, Material.COBWEB); // Para prender a vítima
+    }
+
+    private void buildCandles(Location center) {
+        int[][] candlePositions = {
+                {-3, 2, 0}, {3, 2, 0}, {0, 2, -4}, {0, 2, 7}
+        };
+
+        for (int[] pos : candlePositions) {
+            setBlock(center, pos[0], pos[1], pos[2], Material.CANDLE);
+            setBlock(center, pos[0], pos[1] - 1, pos[2], Material.BLACKSTONE_SLAB);
+        }
+    }
+
+    private void addCryptDetails(Location center) {
+        // Goteiras
+        for (int i = 0; i < 5; i++) {
+            int x = random.nextInt(14) - 7;
+            int z = random.nextInt(14) - 6;
+            setBlock(center, x, 5, z, Material.DRIPSTONE_BLOCK);
+            setBlock(center, x, 4, z, Material.POINTED_DRIPSTONE);
+        }
+
+        // Fungos
+        for (int i = 0; i < 6; i++) {
+            int x = random.nextInt(14) - 7;
+            int z = random.nextInt(14) - 6;
+            setBlock(center, x, 1, z, random.nextBoolean() ? Material.BROWN_MUSHROOM : Material.RED_MUSHROOM);
+        }
+    }
+
+    private void buildTraps(Location center) {
+        // Armadilha de pressão
+        setBlock(center, -3, 0, 4, Material.STONE_PRESSURE_PLATE);
+        setBlock(center, -3, -1, 4, Material.REDSTONE_BLOCK);
+
+        // Armadilha de poço
+        for (int y = 0; y >= -3; y--) {
+            setBlock(center, 2, y, 1, Material.AIR);
+        }
+        setBlock(center, 2, -4, 1, Material.CACTUS);
+        setBlock(center, 2, -3, 1, Material.COBWEB);
     }
 
     private void buildStorage(Location center) {
@@ -632,10 +446,10 @@ public class AssassinCrypt extends QuestStructure {
         buildArrowChest(center, -6, 1, -4);
         buildArrowChest(center, 6, 1, 7);
 
-        // Baú secreto adicional
+        // Baú secreto
         setBlock(center, -7, 1, 0, Material.ENDER_CHEST);
 
-        // Barris de suprimentos
+        // Barris
         setBlock(center, -5, 1, -4, Material.BARREL);
         setBlock(center, 5, 1, -4, Material.BARREL);
     }
@@ -643,7 +457,6 @@ public class AssassinCrypt extends QuestStructure {
     private void buildArrowChest(Location center, int x, int y, int z) {
         setBlock(center, x, y, z, Material.CHEST);
 
-        // Adiciona flechas aleatórias ao baú
         Location chestLocation = getRelativeLocation(center, x, y, z);
         BlockState blockState = chestLocation.getBlock().getState();
 
@@ -672,7 +485,7 @@ public class AssassinCrypt extends QuestStructure {
             }
         }
 
-        // Chance de adicionar outros itens de assassino
+        // Itens extras
         if (random.nextDouble() < 0.4) {
             ItemStack poisonPotion = new ItemStack(Material.POTION, 1);
             int slot = getRandomEmptySlot(inventory);
@@ -680,27 +493,14 @@ public class AssassinCrypt extends QuestStructure {
                 inventory.setItem(slot, poisonPotion);
             }
         }
-
-        if (random.nextDouble() < 0.3) {
-            ItemStack dagger = new ItemStack(Material.IRON_SWORD, 1);
-            int slot = getRandomEmptySlot(inventory);
-            if (slot != -1) {
-                inventory.setItem(slot, dagger);
-            }
-        }
     }
 
     private int getRandomArrowCount() {
         double chance = random.nextDouble();
-        if (chance < 0.5) {
-            return random.nextInt(9) + 8;
-        } else if (chance < 0.8) {
-            return random.nextInt(17) + 16;
-        } else if (chance < 0.95) {
-            return random.nextInt(17) + 32;
-        } else {
-            return random.nextInt(17) + 48;
-        }
+        if (chance < 0.5) return random.nextInt(9) + 8;
+        else if (chance < 0.8) return random.nextInt(17) + 16;
+        else if (chance < 0.95) return random.nextInt(17) + 32;
+        else return random.nextInt(17) + 48;
     }
 
     private int getRandomEmptySlot(Inventory inventory) {
@@ -713,7 +513,66 @@ public class AssassinCrypt extends QuestStructure {
         return -1;
     }
 
+    private void buildExteriorStructure(Location center) {
+        // Apenas decoração leve no exterior para não cobrir
+        buildGravestones(center);
+        buildDeadVegetation(center);
+    }
+
+    private void buildGravestones(Location center) {
+        int[][] graves = {
+                {-11, 1, -3}, {-9, 1, 11}, {8, 1, 11}, {10, 1, -4}
+        };
+
+        for (int[] grave : graves) {
+            setBlock(center, grave[0], grave[1], grave[2], Material.STONE_BRICK_WALL);
+            setBlock(center, grave[0], grave[1] + 1, grave[2], Material.SKELETON_SKULL);
+        }
+    }
+
+    private void buildDeadVegetation(Location center) {
+        // Árvores mortas
+        buildDeadTree(center, -13, 1, -2);
+        buildDeadTree(center, 12, 1, -1);
+
+        // Arbustos mortos
+        for (int i = 0; i < 6; i++) {
+            int x = random.nextInt(20) - 10;
+            int z = random.nextInt(20) - 8;
+            if (Math.abs(x) > 8 || Math.abs(z) > 6) {
+                setBlock(center, x, 1, z, Material.DEAD_BUSH);
+            }
+        }
+    }
+
+    private void buildDeadTree(Location center, int x, int y, int z) {
+        // Tronco
+        for (int i = 0; i < 4; i++) {
+            setBlock(center, x, y + i, z, Material.STRIPPED_OAK_LOG);
+        }
+        // Galhos
+        setBlock(center, x + 1, y + 3, z, Material.STRIPPED_OAK_LOG);
+        setBlock(center, x - 1, y + 2, z, Material.STRIPPED_OAK_LOG);
+    }
+
     private Location getRelativeLocation(Location center, int x, int y, int z) {
         return center.clone().add(x, y, z);
+    }
+
+    // Método de debug - REMOVA depois de testar
+    private void debugStructure(Location center) {
+        System.out.println("=== CRIPTA CONSTRUÍDA ===");
+        System.out.println("Center: " + center);
+        checkBlock(center, 0, 0, 0, "Centro da cripta");
+        checkBlock(center, 0, 2, 3, "Altar");
+        checkBlock(center, -5, 1, -1, "Sarcófago NW");
+        checkBlock(center, 0, 1, 7, "Baú central");
+        checkBlock(center, 0, 1, 10, "Baú secreto");
+    }
+
+    private void checkBlock(Location center, int x, int y, int z, String name) {
+        Location loc = center.clone().add(x, y, z);
+        Material material = loc.getBlock().getType();
+        System.out.println(name + " (" + x + "," + y + "," + z + "): " + material);
     }
 }

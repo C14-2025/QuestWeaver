@@ -147,51 +147,86 @@ public class ArcherTrainingGrounds extends QuestStructure {
     }
 
     private void buildImprovedInternalStairs(Location center) {
-        // Escada em espiral mais larga e confortável
-        int[][] stairPositions = {
-                // Nível 1-2
-                {-2, -2}, {-1, -2}, {0, -2}, {1, -2},
-                // Nível 3-4
-                {1, -1}, {1, 0}, {1, 1},
-                // Nível 5-6
-                {0, 1}, {-1, 1}, {-2, 1},
-                // Nível 7-8
-                {-2, 0}, {-2, -1}, {-2, -2},
-                // Nível 9-10 (nova escada para torre mais alta)
-                {-1, -2}, {0, -2}, {1, -2},
-                // Nível 11-12
-                {1, -1}, {1, 0}, {1, 1}
-        };
+        // Escada em espiral melhorada - agora subível
+        int currentX = -2;
+        int currentZ = -2;
+        int currentY = 1;
 
-        BlockFace[] stairDirections = {
-                BlockFace.EAST, BlockFace.EAST, BlockFace.EAST, BlockFace.EAST,
-                BlockFace.SOUTH, BlockFace.SOUTH, BlockFace.SOUTH,
-                BlockFace.WEST, BlockFace.WEST, BlockFace.WEST,
-                BlockFace.NORTH, BlockFace.NORTH, BlockFace.NORTH,
-                BlockFace.EAST, BlockFace.EAST, BlockFace.EAST,
-                BlockFace.SOUTH, BlockFace.SOUTH, BlockFace.SOUTH
-        };
+        // Direção inicial: subindo para leste
+        BlockFace currentDirection = BlockFace.EAST;
 
-        for (int i = 0; i < stairPositions.length; i++) {
-            int x = stairPositions[i][0];
-            int z = stairPositions[i][1];
-            int y = (i / 3) + 1; // 3 degraus por nível
+        // Padrão de escada em espiral: Leste -> Sul -> Oeste -> Norte -> repete
+        for (int level = 0; level < TOWER_HEIGHT - 1; level++) {
+            // Cada nível tem 4 degraus (um em cada direção)
+            BlockFace[] directions = {BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.NORTH};
 
-            // Escada
-            setBlock(center, x, y, z, STAIRS);
-            // Bloco de suporte abaixo
-            setBlock(center, x, y-1, z, Material.OAK_PLANKS);
+            for (BlockFace direction : directions) {
+                // Calcula a próxima posição baseada na direção
+                int nextX = currentX + getDirectionOffsetX(direction);
+                int nextZ = currentZ + getDirectionOffsetZ(direction);
 
-            // Corrimão nas laterais
-            if (i % 3 == 0) { // A cada 3 degraus, coloca corrimão
-                setBlock(center, x + 1, y, z, FENCE);
+                // Verifica se está dentro dos limites da torre (3x3 interno)
+                if (Math.abs(nextX) <= 2 && Math.abs(nextZ) <= 2) {
+                    // Coloca a escada
+                    setBlock(center, currentX, currentY, currentZ, STAIRS);
+
+                    // Configura a direção da escada (virada para a direção oposta ao movimento)
+                    // Ex: Se movendo para leste, escada virada para oeste
+                    BlockFace stairFacing = getOppositeFace(direction);
+                    // Aqui você precisaria setar a direção da escada usando BlockData
+                    // setBlockData(center, currentX, currentY, currentZ, STAIRS, stairFacing);
+
+                    // Bloco de suporte abaixo
+                    setBlock(center, currentX, currentY - 1, currentZ, Material.OAK_PLANKS);
+
+                    // Limpa o bloco acima para passagem
+                    setBlock(center, currentX, currentY + 1, currentZ, Material.AIR);
+
+                    // Move para a próxima posição
+                    currentX = nextX;
+                    currentZ = nextZ;
+                    currentY++; // Sobe um nível
+                }
+            }
+
+            // A cada 4 níveis, faz uma abertura para transição
+            if (level % 4 == 0 && level > 0) {
+                setBlock(center, currentX, currentY, currentZ, Material.AIR);
+                setBlock(center, currentX, currentY + 1, currentZ, Material.AIR);
             }
         }
 
-        // Aberturas entre os níveis
-        for (int y = 3; y <= TOWER_HEIGHT; y += 3) {
-            setBlock(center, -2, y, -2, Material.AIR);
-        }
+        // Abertura final no topo
+        setBlock(center, -2, TOWER_HEIGHT, -2, Material.AIR);
+        setBlock(center, -2, TOWER_HEIGHT + 1, -2, Material.AIR);
+    }
+
+    // Método auxiliar para offsets de direção
+    private int getDirectionOffsetX(BlockFace face) {
+        return switch (face) {
+            case EAST -> 1;
+            case WEST -> -1;
+            default -> 0;
+        };
+    }
+
+    private int getDirectionOffsetZ(BlockFace face) {
+        return switch (face) {
+            case SOUTH -> 1;
+            case NORTH -> -1;
+            default -> 0;
+        };
+    }
+
+    // Método auxiliar para direção oposta
+    private BlockFace getOppositeFace(BlockFace face) {
+        return switch (face) {
+            case EAST -> BlockFace.WEST;
+            case WEST -> BlockFace.EAST;
+            case SOUTH -> BlockFace.NORTH;
+            case NORTH -> BlockFace.SOUTH;
+            default -> face;
+        };
     }
 
     private void createArrowSlits(Location center) {
