@@ -8,10 +8,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
-public class MagicBow {
+public class MagicBow implements Item {
 
     // Arco mágico do arqueiro com habilidades especiais
-    public ItemStack createMagicBow() {
+    public ItemStack create() {
         ItemStack bow = new ItemStack(Material.BOW, 1);
         ItemMeta meta = bow.getItemMeta();
 
