@@ -6,9 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.data.type.Sign;
-import org.bukkit.block.data.type.WallSign;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +16,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Quest Difícil: Desafio do Mestre Flecheiro - COMPLETO E CORRIGIDO
+ * Quest Difícil: Desafio do Mestre Flecheiro - VERSÃO MESCLADA OTIMIZADA
  */
 public class WindMasterQuest extends HitQuest {
     private static final int MAX_COMBO = 10;
@@ -40,7 +37,7 @@ public class WindMasterQuest extends HitQuest {
                 0,
                 spawnLocation,
                 new ArrayList<>());
-        this.challengeArena = spawnLocation.clone().add(25, 0, 0); // Mais distante
+        this.challengeArena = spawnLocation.clone().add(25, 0, 0);
     }
 
     @Override
@@ -50,7 +47,7 @@ public class WindMasterQuest extends HitQuest {
 
     @Override
     public void spawnStrategicEntities(Player player) {
-        spawnChallengeCreepers(player);
+        spawnContainedCreepers(player);
     }
 
     private void buildChallengeArena(Player player) {
@@ -59,46 +56,48 @@ public class WindMasterQuest extends HitQuest {
         World world = player.getWorld();
         Location center = challengeArena;
 
-        // **ARENA DOS CREEPERS - PLANA E SEGURA**
-        // Plataforma grande e plana (25x25)
+        // **ARENA DOS CREEPERS - COMPLETAMENTE CERCADA**
+        // Plataforma grande (25x25)
         for (int x = -12; x <= 12; x++) {
             for (int z = -12; z <= 12; z++) {
                 setBlockSafe(world, center.clone().add(x, 0, z), Material.DARK_OAK_PLANKS);
             }
         }
 
-        // **BORDAS SEGURAS** - creepers não escapam
-        for (int x = -13; x <= 13; x++) {
-            for (int z = -13; z <= 13; z++) {
-                if (Math.abs(x) == 13 || Math.abs(z) == 13) {
-                    setBlockSafe(world, center.clone().add(x, 1, z), Material.DARK_OAK_FENCE);
+        // **PAREDES ALTAS** - creepers não escapam (4 blocos de altura)
+        for (int y = 1; y <= 4; y++) {
+            for (int x = -13; x <= 13; x++) {
+                for (int z = -13; z <= 13; z++) {
+                    if (Math.abs(x) == 13 || Math.abs(z) == 13) {
+                        setBlockSafe(world, center.clone().add(x, y, z), Material.DARK_OAK_FENCE);
+                    }
                 }
             }
         }
 
-        // **TORRES DE TIRO MELHORADAS** - sem buracos, com acesso fácil
-        buildSniperTower(world, player.getLocation().clone().add(-8, 0, 0), 8, "Torre Principal"); // Torre do jogador
-        buildSniperTower(world, center.clone().add(0, 0, -18), 6, "Torre Sul");
-        buildSniperTower(world, center.clone().add(-18, 0, 0), 4, "Torre Leste");
+        // **TORRES COM ACESSO FÁCIL** - rampas em vez de escadas
+        buildAccessibleTower(world, player.getLocation().clone().add(-8, 0, 0), 8, "Torre Principal");
+        buildAccessibleTower(world, center.clone().add(0, 0, -18), 6, "Torre Sul");
+        buildAccessibleTower(world, center.clone().add(-18, 0, 0), 4, "Torre Leste");
 
         // **OBSTÁCULOS ESTRATÉGICOS** - para os creepers se esconderem
         buildStrategicObstacles(world, center);
 
         environmentBuilt = true;
         player.sendMessage("§6⚡ Desafio do Mestre Flecheiro!");
-        player.sendMessage("§e🏹 Use as torres para obter vantagem sobre os creepers!");
+        player.sendMessage("§e🏹 Use as rampas para acessar as torres rapidamente!");
         player.sendMessage("§6🎯 Acerte 10 em sequência sem errar!");
     }
 
-    private void buildSniperTower(World world, Location base, int height, String name) {
-        // **BASE SÓLIDA** 5x5
+    private void buildAccessibleTower(World world, Location base, int height, String name) {
+        // **BASE DA TORRE** 5x5
         for (int x = -2; x <= 2; x++) {
             for (int z = -2; z <= 2; z++) {
                 setBlockSafe(world, base.clone().add(x, 0, z), Material.STONE_BRICKS);
             }
         }
 
-        // **TORRE SÓLIDA** 3x3 - sem buracos
+        // **TORRE SÓLIDA** 3x3
         for (int y = 1; y <= height; y++) {
             for (int x = -1; x <= 1; x++) {
                 for (int z = -1; z <= 1; z++) {
@@ -107,14 +106,14 @@ public class WindMasterQuest extends HitQuest {
             }
         }
 
-        // **PLATAFORMA NO TOPO** com parapeito
+        // **PLATAFORMA NO TOPO** com aberturas
         for (int x = -1; x <= 1; x++) {
             for (int z = -1; z <= 1; z++) {
                 setBlockSafe(world, base.clone().add(x, height + 1, z), Material.OAK_PLANKS);
             }
         }
 
-        // **PARAPEITO SEGURO** - com aberturas
+        // **PARAPEITO COM ABERTURAS**
         for (int x = -2; x <= 2; x++) {
             for (int z = -2; z <= 2; z++) {
                 if ((Math.abs(x) == 2 || Math.abs(z) == 2) && !(Math.abs(x) == 2 && Math.abs(z) == 2)) {
@@ -123,15 +122,27 @@ public class WindMasterQuest extends HitQuest {
             }
         }
 
-        // **ESCADA SEGURA** - sempre na mesma posição (leste)
-        for (int y = 0; y < height; y++) {
-            setBlockSafe(world, base.clone().add(2, y, 0), Material.LADDER);
+        // **RAMPA DE ACESSO** - muito mais fácil que escada
+        buildTowerRamp(world, base, height);
+    }
+
+    private void buildTowerRamp(World world, Location towerBase, int height) {
+        // Rampa suave que sobe até o topo
+        for (int i = 0; i < height * 2; i++) {
+            int rampHeight = i / 2;
+            for (int x = 0; x <= 2; x++) {
+                for (int z = 0; z <= 2; z++) {
+                    setBlockSafe(world, towerBase.clone().add(2 + i, rampHeight, z - 1), Material.STONE_BRICKS);
+                }
+            }
         }
 
-        // **PLATAFORMA DE ACESSO** na base da escada
-        setBlockSafe(world, base.clone().add(3, 0, 0), Material.OAK_PLANKS);
-        setBlockSafe(world, base.clone().add(3, 0, 1), Material.OAK_PLANKS);
-        setBlockSafe(world, base.clone().add(3, 0, -1), Material.OAK_PLANKS);
+        // Plataforma de chegada no topo
+        for (int x = 0; x <= 2; x++) {
+            for (int z = 0; z <= 2; z++) {
+                setBlockSafe(world, towerBase.clone().add(2 + height * 2, height, z - 1), Material.STONE_BRICKS);
+            }
+        }
     }
 
     private void buildStrategicObstacles(World world, Location center) {
@@ -157,30 +168,28 @@ public class WindMasterQuest extends HitQuest {
         }
     }
 
-    private void spawnChallengeCreepers(Player player) {
+    private void spawnContainedCreepers(Player player) {
         if (challengeArena == null) return;
 
         World world = player.getWorld();
 
-        // **SPAWN ESTRATÉGICO DE CREEPERS** - bem distribuídos
-        int totalCreepers = 12; // Pouco mais que o necessário
+        // **CREEPERS DENTRO DA ARENA CERCADA**
+        int totalCreepers = 12;
 
         for (int i = 0; i < totalCreepers; i++) {
             double angle = (2 * Math.PI * i) / totalCreepers;
-            double distance = 5 + (i % 6); // Distâncias variadas de 5 a 10 blocos
+            double distance = 3 + (i % 7); // Distâncias variadas mas contidas
             double x = challengeArena.getX() + distance * Math.cos(angle);
             double z = challengeArena.getZ() + distance * Math.sin(angle);
 
-            // **LOCAL SEGURO** - sempre no chão da arena
             Location spawnLoc = new Location(world, x, challengeArena.getY() + 1, z);
 
-            // **VERIFICA SEGURANÇA** antes de spawnar
             if (isSafeSpawnLocation(world, spawnLoc)) {
                 spawnQuestEntity(world, spawnLoc, org.bukkit.entity.EntityType.CREEPER, "§cDesafio Creeper");
             }
         }
 
-        player.sendMessage("§c💣 " + totalCreepers + " creepers apareceram no desafio!");
+        player.sendMessage("§c💣 " + totalCreepers + " creepers apareceram na arena cercada!");
         player.sendMessage("§6⚡ Use as torres para manter distância e acertar em sequência!");
     }
 
