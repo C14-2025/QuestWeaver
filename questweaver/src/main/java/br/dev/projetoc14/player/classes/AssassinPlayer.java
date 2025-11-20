@@ -1,7 +1,7 @@
 package br.dev.projetoc14.player.classes;
 
 import br.dev.projetoc14.QuestWeaver;
-import br.dev.projetoc14.items.ItemRegistry;
+import br.dev.projetoc14.items.players.ItemRegistry;
 import br.dev.projetoc14.player.PlayerClass;
 import br.dev.projetoc14.player.RPGPlayer;
 import net.kyori.adventure.text.Component;

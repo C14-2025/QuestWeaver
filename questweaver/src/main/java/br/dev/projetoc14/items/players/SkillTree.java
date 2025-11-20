@@ -1,4 +1,4 @@
-package br.dev.projetoc14.items;
+package br.dev.projetoc14.items.players;
 
 import br.dev.projetoc14.match.PlayerFileManager;
 import org.bukkit.Material;

@@ -1,4 +1,4 @@
-package br.dev.projetoc14.items;
+package br.dev.projetoc14.items.players;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

@@ -3,10 +3,7 @@ package br.dev.projetoc14.player.listeners;
 //import br.dev.sno0s.hgplugin.utils.PlayerJoinItems;
 
 import br.dev.projetoc14.QuestWeaver;
-import br.dev.projetoc14.items.ClassSelector;
-import br.dev.projetoc14.items.SearchCompass;
-import br.dev.projetoc14.match.EndMatch;
-import br.dev.projetoc14.match.MatchManager;
+import br.dev.projetoc14.items.players.SearchCompass;
 import br.dev.projetoc14.match.PlayerFileManager;
 import br.dev.projetoc14.player.PlayerJoinItems;
 import org.bukkit.Bukkit;
@@ -17,7 +14,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.Location;
-import org.bukkit.plugin.Plugin;
 
 import static br.dev.projetoc14.QuestWeaver.getServerName;
 import static br.dev.projetoc14.QuestWeaver.isMatchRunning;

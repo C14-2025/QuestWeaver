@@ -2,7 +2,7 @@ package br.dev.projetoc14.match;
 
 
 import br.dev.projetoc14.QuestWeaver;
-import br.dev.projetoc14.items.SkillTree;
+import br.dev.projetoc14.items.players.SkillTree;
 import br.dev.projetoc14.player.PlayerStatsManager;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;

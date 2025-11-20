@@ -3,7 +3,7 @@ package br.dev.projetoc14;
 import br.dev.projetoc14.commands.HelpCommand;
 import br.dev.projetoc14.commands.QuestsCommand;
 //import br.dev.projetoc14.items.ItemProtectionListener;
-import br.dev.projetoc14.items.SkillTree;
+import br.dev.projetoc14.items.players.SkillTree;
 import br.dev.projetoc14.match.*;
 import br.dev.projetoc14.player.abilities.cooldown.CooldownListener;
 import br.dev.projetoc14.player.abilities.cooldown.CooldownManager;
