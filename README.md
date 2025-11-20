@@ -11,7 +11,7 @@ Todos os progressos dos jogadores são salvos, garantindo uma experiência cont�
     - ⚔️ **Guerreiro:** combate corpo-a-corpo, com alta defesa e dano físico bruto.
     - 🔮 **Mago:** especialista em magias de longo alcance e controle de área.
     - 🏹 **Arqueiro:** ataque à distância com precisão e dano perfurante.
-    - 🗡️ **Assassino:** golpes rápidos e críticos corpo-a-corpo.
+    - 🗡️ **Assassino:** golpes rápidos e críticos corpo-a-corpo com foco em stealth.
 
 - 🌳 **Árvore de habilidades desbloqueável** via experiência.
 - 🎯 **Sistema de níveis e progressão** com recompensas dinâmicas.
@@ -111,17 +111,111 @@ Esta quest ensina o jogador a manter **consistência sob pressão**, combinando 
 
 ---
 
+## 🗡️ Quests do Assassino
+
+### 🌑 Quest 1: Sombras Silenciosas (Fácil)
+**Dificuldade:** ⭐  
+**Recompensa:** 100 XP
+
+**Objetivo:** Mate 6 zumbis atacando pelas costas (backstab).
+
+**Mecânicas:**
+- Spawna 6 zumbis que não queimam ao sol
+- Detecta se o ataque foi feito **pelas costas** do mob
+- Sistema usa cálculo vetorial (produto escalar) para determinar backstab
+- Ensina posicionamento estratégico e stealth
+
+**Como funciona:**
+- O sistema compara a direção que o mob está olhando com a direção do ataque
+- Se o ângulo for favorável (atacando por trás), conta como backstab
+- Posicione-se atrás do mob antes de atacar!
+
+**Mensagens de Feedback:**
+- ✓ Backstab: `§a✓ Backstab executado!`
+- ✗ Frontal: `§c✗ Ataque frontal não conta. Ataque pelas costas!`
+
+---
+
+### ⚡ Quest 2: Velocidade Mortal (Média)
+**Dificuldade:** ⭐⭐  
+**Recompensa:** 200 XP
+
+**Objetivo:** Mate 8 esqueletos em sequência rápida (máximo de 3 segundos entre kills).
+
+**Mecânicas Avançadas:**
+- **Sistema de streak:** Cada kill consecutivo aumenta o contador
+- **Tempo limite:** Máximo de 3 segundos entre cada kill
+- **Penalidade:** Demorar muito reseta o progresso
+- Spawna 8 esqueletos
+- Ensina combate rápido e agressivo
+
+**Condições de Falha:**
+- ✗ Demorar mais de 3 segundos entre kills
+- ✗ Streak é perdido e progresso reseta
+
+**Mensagens de Feedback:**
+- ✓ Streak: `§e⚡ STREAK x5! §7Mantenha a velocidade!`
+- ✗ Timeout: `§c✗ Muito lento! Streak perdido. (Era 5/8)`
+- ✓ Completa: `§6✦ §e§lSTREAK PERFEITO!`
+
+**Dicas:**
+- Mate os mobs rapidamente e em sequência
+- Não pare para curar ou recuperar
+- Use ataques rápidos e eficientes
+
+---
+
+### 💀 Quest 3: Assassinato Perfeito (Difícil)
+**Dificuldade:** ⭐⭐⭐  
+**Recompensa:** 350 XP
+
+**Objetivo:** Mate 5 creepers sem tomar dano e sem deixá-los explodir.
+
+**Mecânicas Extremamente Difíceis:**
+- **Zero dano:** Qualquer dano recebido reseta o progresso
+- **Sem explosões:** Se um creeper explodir, não conta
+- **Rastreamento de HP:** Sistema monitora sua vida constantemente
+- **Execução perfeita:** Requer timing e distância precisos
+- Spawna 5 creepers (que explodem quando se aproximam)
+
+**Condições de Falha:**
+- ✗ Tomar qualquer dano de qualquer fonte
+- ✗ Deixar um creeper explodir
+- ✗ Qualquer falha reseta o progresso para 0/5
+
+**Mensagens de Feedback:**
+- ✓ Perfeito: `§a✓ Execução Perfeita! §7(3/5)`
+- ⚠ Alerta: `§e⚠ Cuidado! Mantenha a distância dos creepers!`
+- ✗ Dano: `§c✗ FALHOU! Você tomou dano. Execuções perfeitas exigem que você não seja atingido.`
+- ✗ Explosão: `§c✗ O creeper explodiu! Isso não conta.`
+- ✓ Completa: `§6✦ §e§lASSASSINATO PERFEITO COMPLETO!`
+
+**Estratégia:**
+1. Ataque rapidamente antes do creeper começar a explodir
+2. Mantenha distância segura
+3. Use golpes rápidos e precisos
+4. Nunca deixe o creeper se aproximar demais
+5. Cuidado com outros mobs no ambiente
+
+**Progressão de Ensino:**
+Esta quest combina todas as habilidades do assassino:
+1. Posicionamento estratégico (Quest 1)
+2. Velocidade de execução (Quest 2)
+3. Perfeição sob pressão extrema (Quest 3)
+
+---
+
 ## 📖 Sistema de Livro de Quests
 
 Cada jogador recebe um **Livro de Quests** interativo que mostra:
 
 - 📋 **Quests Ativas:** Com barra de progresso visual
 ```
-  Mestre dos Ventos
-  Acerte 10 flechas seguidas em creepers...
+  Assassinato Perfeito
+  Mate 5 creepers sem tomar dano...
   
-  7/10 ■■■■■■■■■■■□□□□□ 70%
-  7/10 acertos em sequência perfeita
+  3/5 ■■■■■■■■■■■■□□□□ 60%
+  3/5 execuções perfeitas
 ```
 
 - ✅ **Quests Completadas:** Histórico de conquistas
@@ -138,7 +232,7 @@ Todos os dados são salvos automaticamente, incluindo:
 - Nível e experiência
 - Habilidades desbloqueadas
 - Quests em andamento e concluídas
-- Progresso individual de cada quest (incluindo combos da Quest 3)
+- Progresso individual de cada quest (incluindo combos, streaks e HP)
 
 > 💡 O salvamento é feito via **arquivos JSON**, por meio da dependência 'GSON'.
 
@@ -156,20 +250,32 @@ Todos os dados são salvos automaticamente, incluindo:
 
 ## 🎮 Mecânicas Técnicas
 
-### Sistema de Detecção de Hits
-- Usa `EntityDamageByEntityEvent` para detectar acertos em tempo real
-- Calcula distância euclidiana 3D entre atirador e alvo
-- Verifica propriedades das flechas (crítico, metadata, etc.)
+### Sistema de Detecção de Hits/Kills
+- Usa `EntityDamageByEntityEvent` para detectar ataques em tempo real
+- Usa `EntityDeathEvent` para detectar mortes de mobs
+- Calcula distância euclidiana 3D entre atacantes e alvos
+- Verifica propriedades das armas e projéteis
 
-### Sistema de Combo (Quest 3)
-- Rastreamento por UUID do jogador
-- Timestamp de último hit para timeout
-- Reset automático em caso de falha
-- Feedback visual progressivo
+### Sistema de Backstab (Assassino Quest 1)
+- Calcula vetores de direção do mob e do atacante
+- Usa produto escalar para determinar ângulo do ataque
+- Backstab válido quando `dotProduct > 0.5` (atacando por trás)
+
+### Sistema de Streak (Assassino Quest 2)
+- Rastreamento temporal entre kills usando `System.currentTimeMillis()`
+- Timeout de 3 segundos entre cada kill
+- Reset automático em caso de timeout
+- Feedback visual progressivo de combo
+
+### Sistema de Perfect Kill (Assassino Quest 3)
+- Rastreamento de HP do jogador por UUID
+- Detecção de explosões de creeper via `EntityExplodeEvent`
+- Comparação de HP antes/depois para validar "sem dano"
+- Integração com sistema de HP do RPGPlayer
 
 ### Spawn Inteligente de Mobs
 - Mobs marcados com `PersistentDataContainer`
-- Configurações especiais (não queimam ao sol)
+- Configurações especiais (não queimam ao sol, custom name, etc.)
 - Spawn em locações aleatórias próximas ao jogador
 - Nome customizado: "Quest Target"
 
@@ -184,13 +290,51 @@ Todos os dados são salvos automaticamente, incluindo:
 
 ---
 
+## 📝 Comandos Disponíveis
+
+- `/quests` - Abre o livro de quests interativo
+    - Aliases: `/quest`, `/q`
+
+- `/stats` - Mostra suas estatísticas completas (nível, XP, atributos)
+    - Aliases: `/status`, `/st`, `/profile`
+
+- `/help` - Mostra informações de ajuda do plugin
+    - Aliases: `/ajuda`
+
+---
+
 ## 🎯 Roadmap Futuro
 
-- [ ] Quests para Guerreiro, Mago e Assassino
+- [ ] Quests para Guerreiro e Mago
 - [ ] Sistema de recompensas de itens únicos
 - [ ] Leaderboards de quests completadas
 - [ ] Quests cooperativas para múltiplos jogadores
 - [ ] Boss fights como quests épicas
+- [ ] Sistema de conquistas (achievements)
+- [ ] Reputação e facções
+
+---
+
+## 📊 Progressão de XP
+
+### Sistema de Níveis
+- **Fórmula:** XP necessário = Nível × 100
+- **Nível 1 → 2:** 100 XP
+- **Nível 2 → 3:** 200 XP
+- **Nível 3 → 4:** 300 XP
+
+### Recompensas por Quest
+**Arqueiro:**
+- Quest 1: 100 XP
+- Quest 2: 200 XP
+- Quest 3: 350 XP
+- **Total:** 650 XP (Nível ~4-5)
+
+**Assassino:**
+- Quest 1: 100 XP
+- Quest 2: 200 XP
+- Quest 3: 350 XP
+- **Total:** 650 XP (Nível ~4-5)
 
 ---
 
