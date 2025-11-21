@@ -9,10 +9,12 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
 
@@ -75,8 +77,6 @@ public class AssassinPlayer extends RPGPlayer {
                             .decoration(TextDecoration.ITALIC, false)
             ));
 
-            daggerMeta.setCustomModelData(1001); // Modelo Modificado
-
             daggerMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
             dagger.setItemMeta(daggerMeta);
         }
@@ -86,6 +86,9 @@ public class AssassinPlayer extends RPGPlayer {
 
         // Adiciona a poção exclusiva do assassino
         player.getInventory().addItem(createAssassinPotion());
+
+        // Adiciona a Death Sickle exclusiva do assassino
+        player.getInventory().addItem(createDeathSickle());
     }
 
     // Cria a poção exclusiva das habilidades do assassino
@@ -122,5 +125,56 @@ public class AssassinPlayer extends RPGPlayer {
         }
 
         return potion;
+    }
+
+    private ItemStack createDeathSickle() {
+        QuestWeaver plugin = (QuestWeaver) QuestWeaver.getInstance();
+        ItemStack sickle = new ItemStack(Material.NETHERITE_HOE, 1);
+        ItemMeta meta = sickle.getItemMeta();
+
+        if (meta != null) {
+            meta.displayName(
+                    Component.text("Death Sickle")
+                            .color(NamedTextColor.DARK_PURPLE)
+                            .decoration(TextDecoration.ITALIC, false)
+            );
+            meta.lore(List.of(
+                    Component.text("Uma foice demoníaca que gira e atravessa inimigos.")
+                            .color(NamedTextColor.GRAY)
+                            .decoration(TextDecoration.ITALIC, false),
+                    Component.empty(),
+                    Component.text("Use enquanto agachado (Shift + botão direito)")
+                            .color(NamedTextColor.GRAY)
+                            .decoration(TextDecoration.ITALIC, false),
+                    Component.text("para alternar entre habilidades.")
+                            .color(NamedTextColor.GRAY)
+                            .decoration(TextDecoration.ITALIC, false),
+                    Component.text("Use normalmente para lançar projéteis.")
+                            .color(NamedTextColor.GRAY)
+                            .decoration(TextDecoration.ITALIC, false),
+                    Component.empty(),
+                    Component.text("🌙 Habilidade: ")
+                            .color(NamedTextColor.DARK_PURPLE)
+                            .append(Component.text("Demon Projectile").color(NamedTextColor.LIGHT_PURPLE))
+                            .decoration(TextDecoration.ITALIC, false),
+                    Component.empty(),
+                    Component.text("Classe: ")
+                            .color(NamedTextColor.DARK_GRAY)
+                            .append(Component.text("Assassino").color(NamedTextColor.LIGHT_PURPLE))
+                            .decoration(TextDecoration.ITALIC, false)
+            ));
+
+            NamespacedKey key = new NamespacedKey(plugin, "custom_item");
+            meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, "death_sickle");
+
+            // Esconder atributos
+            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+            meta.setUnbreakable(true);
+            meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+
+            sickle.setItemMeta(meta);
+        }
+
+        return sickle;
     }
 }
