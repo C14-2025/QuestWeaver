@@ -1,7 +1,9 @@
 package br.dev.projetoc14.items.players;
 
+import br.dev.projetoc14.QuestWeaver;
 import br.dev.projetoc14.match.PlayerFileManager;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,6 +12,8 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.plugin.Plugin;
 
 import java.util.List;
 
@@ -25,14 +29,6 @@ public class SkillTree implements Listener {
     private static final List<String> LORE = List.of("§7Clique para aumentar o nível de suas habilidades!");
     private PlayerFileManager fileManager;
 
-    /*
-        Cria e retorna o item configurado
-        DONE: fazer abrir uma tela diferente de habilidades para cada classe
-        TODO: change deprecated methods
-        TODO: fazer com que o player n possa trocar os itens de lugar dentro da interface
-        DONE: mudar a cor das descrições e titulos dos itens
-     */
-
     public static ItemStack create() {
         ItemStack item = new ItemStack(ITEM_MATERIAL);
         ItemMeta meta = item.getItemMeta();
@@ -46,8 +42,18 @@ public class SkillTree implements Listener {
         return item;
     }
 
+    private final Plugin plugin;
+
     public SkillTree(PlayerFileManager fileManager) {
         this.fileManager = fileManager;
+        this.plugin = QuestWeaver.getInstance();
+    }
+
+    private int getSkillLevel(Player player, String skillName) {
+        if (player.hasMetadata(skillName)) {
+            return player.getMetadata(skillName).get(0).asInt();
+        }
+        return 0;
     }
 
     @EventHandler
@@ -63,9 +69,9 @@ public class SkillTree implements Listener {
         ItemMeta meta = clicked.getItemMeta();
         String name = meta.getDisplayName();
 
-        // custo fixo por nível (pode variar depois)
         int cost = 25;
-        int playerXP = player.getTotalExperience();
+        int playerXP = 500;
+        // int playerXP = player.getTotalExperience();
 
         if (playerXP < cost) {
             player.sendMessage("§cXP insuficiente para melhorar essa habilidade!");
@@ -75,22 +81,28 @@ public class SkillTree implements Listener {
         List<String> lore = meta.getLore();
         if (lore == null || lore.isEmpty()) return;
 
-        int currentLevel = getCurrentLevel(lore);
+        int currentLevel = getSkillLevel(player, name);
+
         if (currentLevel >= 4) {
             player.sendMessage("§7Essa habilidade já está no nível máximo!");
             return;
         }
 
-        // desconta XP
         player.giveExp(-cost);
 
-        // aumenta nível
         currentLevel++;
         lore.set(0, "§7♦ Nível: " + currentLevel);
         meta.setLore(lore);
         clicked.setItemMeta(meta);
 
-        player.sendMessage("§a" + name + " melhorada para o nível " + currentLevel + "!");
+        player.setMetadata(name, new FixedMetadataValue(plugin, currentLevel));
+
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
+        player.sendMessage("§e[Skills] §a" + name + " agora está no nível §e" + currentLevel + "!");
+
+        if (name.toLowerCase().contains("armadura")) {
+            applyArmorUpgrade(player, currentLevel);
+        }
     }
 
     private int getCurrentLevel(List<String> lore) {
@@ -103,7 +115,6 @@ public class SkillTree implements Listener {
         }
         return 0;
     }
-
 
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent event) {
@@ -139,11 +150,48 @@ public class SkillTree implements Listener {
             }
             default -> {
                 player.sendMessage("§cErro: Sua classe não foi reconhecida.");
-                return;
             }
         }
     }
 
+    private void applyArmorUpgrade(Player player, int level) {
 
+        Material[][] armorTiers = {
+                { Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS },
+                { Material.IRON_HELMET, Material.IRON_CHESTPLATE, Material.IRON_LEGGINGS, Material.IRON_BOOTS },
+                { Material.GOLDEN_HELMET, Material.GOLDEN_CHESTPLATE, Material.GOLDEN_LEGGINGS, Material.GOLDEN_BOOTS },
+                { Material.DIAMOND_HELMET, Material.DIAMOND_CHESTPLATE, Material.DIAMOND_LEGGINGS, Material.DIAMOND_BOOTS },
+                { Material.NETHERITE_HELMET, Material.NETHERITE_CHESTPLATE, Material.NETHERITE_LEGGINGS, Material.NETHERITE_BOOTS }
+        };
 
+        if (level < 0) level = 0;
+        if (level > 4) level = 4;
+
+        Material[] selectedTier = armorTiers[level];
+
+        ItemStack helmet = new ItemStack(selectedTier[0]);
+        ItemStack chest  = new ItemStack(selectedTier[1]);
+        ItemStack legs   = new ItemStack(selectedTier[2]);
+        ItemStack boots  = new ItemStack(selectedTier[3]);
+
+        ItemStack[] pieces = {helmet, chest, legs, boots};
+
+        for (ItemStack piece : pieces) {
+            ItemMeta meta = piece.getItemMeta();
+            if (meta != null) {
+                meta.setUnbreakable(true);
+                meta.setDisplayName("§aArmadura Nível " + level);
+                piece.setItemMeta(meta);
+            }
+        }
+
+        player.getInventory().setHelmet(pieces[0]);
+        player.getInventory().setChestplate(pieces[1]);
+        player.getInventory().setLeggings(pieces[2]);
+        player.getInventory().setBoots(pieces[3]);
+
+        player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_DIAMOND, 1f, 1f);
+        player.sendMessage("§6[Upgrade] §fSua armadura evoluiu para §e" + selectedTier[1].name());
+    }
 }
+
