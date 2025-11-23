@@ -32,12 +32,19 @@ public class DemonProjectile extends Ability {
     private static final int MAX_DISTANCE = 25; // blocos
     private static final int MAX_HITS_PER_ENTITY = 2;
 
+    private JavaPlugin plugin;
+
     public DemonProjectile() {
         super("Demon Projectile", 25, 6); // nome, mana, cooldown
     }
 
+    // Setter para testes
+    public void setPlugin(JavaPlugin plugin) {
+        this.plugin = plugin;
+    }
+
     @Override
-    protected void onCast(RPGPlayer caster) {
+    public void onCast(RPGPlayer caster) {
         Player player = caster.getPlayer();
 
         // Criar e lançar a Death Sickle
@@ -83,7 +90,9 @@ public class DemonProjectile extends Ability {
     }
 
     private void createSickleLogic(ArmorStand sickle, Vector direction, Player shooter) {
-        JavaPlugin plugin = JavaPlugin.getProvidingPlugin(getClass());
+        // Obter plugin para testes
+        JavaPlugin pluginInstance = this.plugin != null ?
+                this.plugin : JavaPlugin.getProvidingPlugin(getClass());
 
         // Mapa para rastrear quantas vezes cada entidade foi atingida - máx 2
         Map<UUID, Integer> hitCount = new HashMap<>();
@@ -139,7 +148,7 @@ public class DemonProjectile extends Ability {
                             dealDamage(shooter, target);
                             hitCount.put(targetId, hits + 1);
 
-                            // Efeito visual no alvo
+                            // Efeito visual
                             target.getWorld().spawnParticle(
                                     Particle.DAMAGE_INDICATOR,
                                     target.getEyeLocation(),
@@ -160,7 +169,7 @@ public class DemonProjectile extends Ability {
                 distanceTraveled += SPEED;
                 ticks++;
             }
-        }.runTaskTimer(plugin, 0L, 1L);
+        }.runTaskTimer(pluginInstance, 0L, 1L);
     }
 
     private void dealDamage(Player attacker, LivingEntity target) {
