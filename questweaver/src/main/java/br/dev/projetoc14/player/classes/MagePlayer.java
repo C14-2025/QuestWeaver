@@ -1,5 +1,6 @@
 package br.dev.projetoc14.player.classes;
 
+import br.dev.projetoc14.items.ItemProtectionUtil;
 import br.dev.projetoc14.player.PlayerClass;
 import br.dev.projetoc14.player.RPGPlayer;
 import net.kyori.adventure.text.Component;
@@ -100,6 +101,6 @@ public class MagePlayer extends RPGPlayer {
         ClassUtil.equipPlayer(this, wand, mageColor);
 
         // Adiciona as poções extras
-        player.getInventory().addItem(potionItem);
+        player.getInventory().addItem(ItemProtectionUtil.makeUndroppable(potionItem));
     }
 }

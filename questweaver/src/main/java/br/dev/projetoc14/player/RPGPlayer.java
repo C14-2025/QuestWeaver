@@ -112,44 +112,6 @@ public abstract class RPGPlayer {
         // Lógica de level up pode ser adicionada aqui
     }
 
-    // ==== Utilitários ==== //
-    public ItemStack createQuestBook() {
-        ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
-        BookMeta meta = (BookMeta) book.getItemMeta();
-
-        TextColor classColor = getClassColor();
-        meta.title(Component.text("Livro de Quests")
-                .color(classColor)
-                .decoration(TextDecoration.BOLD, true));
-        meta.author(Component.text("QuestWeaver"));
-
-        Component firstPage = Component.text()
-                .append(Component.text("📖 Livro de Quests\n\n")
-                        .decoration(TextDecoration.BOLD, true)
-                        .color(classColor))
-                .append(Component.text("Clique com botão\ndireito para ver\nsuas quests!\n\n")
-                        .color(TextColor.color(0xAAAAAA)))
-                .append(Component.text("Ou use:\n")
-                        .color(TextColor.color(0xAAAAAA)))
-                .append(Component.text("/quests")
-                        .color(TextColor.color(0x5555FF))
-                        .decoration(TextDecoration.UNDERLINED, true))
-                .build();
-
-        meta.pages(List.of(firstPage));
-        book.setItemMeta(meta);
-        return book;
-    }
-
-    private TextColor getClassColor() {
-        return switch(playerClass) {
-            case WARRIOR -> TextColor.color(0xFF5555);
-            case MAGE -> TextColor.color(0x5555FF);
-            case ARCHER -> TextColor.color(0x55FF55);
-            case ASSASSIN -> TextColor.color(0x555555);
-        };
-    }
-
     // ==== Delegadores do Bukkit Player ==== //
     public UUID getUniqueId() { return player.getUniqueId(); }
     public Location getLocation() { return player.getLocation(); }

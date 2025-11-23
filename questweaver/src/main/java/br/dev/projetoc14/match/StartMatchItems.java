@@ -24,7 +24,7 @@ public class StartMatchItems {
     public void setItems(Player player) {
         RPGPlayer rpgPlayer;
 
-        // 1. Instancia o objeto RPGPlayer
+        // Instancia o objeto RPGPlayer
         switch(fileManager.getPlayerClassName(player))
         {
             case "Mago" -> rpgPlayer = new MagePlayer(player);
@@ -37,19 +37,19 @@ public class StartMatchItems {
             }
         }
 
-        // 2. Verifica e configura o jogador
+        // Verifica e configura o jogador
         rpgPlayer.setStatsManager(statsManager);
 
         // Registra o jogador no plugin
         plugin.addRPGPlayer(player.getUniqueId(), rpgPlayer);
 
-        // 3. Aplica as Stats e Itens
+        // Aplica as Stats e Itens
         statsManager.setStats(player, rpgPlayer.getStats());
         statsManager.applyStats(player);
         statsManager.createManaBar(player);
         rpgPlayer.getStartingEquipment();
 
-        // ✅ Feedback para o jogador
+        // Feedback para o jogador
         player.sendMessage("§a✔ Classe carregada: §e" + fileManager.getPlayerClassName(player));
     }
 }

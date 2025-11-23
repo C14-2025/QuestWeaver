@@ -1,5 +1,8 @@
 package br.dev.projetoc14.quest.utils;
 
+import br.dev.projetoc14.QuestWeaver;
+import br.dev.projetoc14.items.ItemProtectionListener;
+import br.dev.projetoc14.items.ItemProtectionUtil;
 import br.dev.projetoc14.quest.ExplorationQuest;
 import br.dev.projetoc14.quest.HitQuest;
 import br.dev.projetoc14.quest.KillQuest;
@@ -11,9 +14,11 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +32,7 @@ public class QuestBook {
         this.questManager = questManager;
     }
 
+
     public void showBook(Player player) {
         PlayerQuestData questData = questManager.getPlayerQuests(player);
         if (questData == null) {
@@ -35,11 +41,41 @@ public class QuestBook {
             return;
         }
 
-        ItemStack book = createQuestBook(questData);
+        // Apenas cria e abre o livro - SEM adicionar ao inventário
+        ItemStack book = createQuestBook(questData, player);
         player.openBook(book);
     }
 
-    private ItemStack createQuestBook(PlayerQuestData questData) {
+    // Metodo separado para DAR o livro fisico (usado apenas na seleção de classe)
+    public void giveQuestBookToPlayer(Player player) {
+        // Remove livros antigos primeiro
+        removeOldQuestBooks(player);
+
+        // Cria e da o novo livro
+        ItemStack book = createQuestBookForPlayer(player);
+        player.getInventory().addItem(book);
+    }
+
+    public ItemStack createQuestBookForPlayer(Player player) {
+        PlayerQuestData questData = questManager.getPlayerQuests(player);
+        if (questData == null) {
+            // Cria dados vazios se nao existir
+            questData = new PlayerQuestData(player);
+        }
+        return createQuestBook(questData, player);
+    }
+
+    private void removeOldQuestBooks(Player player) {
+        ItemStack[] contents = player.getInventory().getContents();
+        for (int i = 0; i < contents.length; i++) {
+            ItemStack item = contents[i];
+            if (isQuestBook(item)) {
+                player.getInventory().setItem(i, null);
+            }
+        }
+    }
+
+    private ItemStack createQuestBook(PlayerQuestData questData, Player player) {
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
         BookMeta meta = (BookMeta) book.getItemMeta();
 
@@ -60,7 +96,9 @@ public class QuestBook {
 
         meta.pages(pages);
         book.setItemMeta(meta);
-        return book;
+
+        // Marca o livro como não-dropável usando a classe utilitária
+        return ItemProtectionUtil.makeUndroppable(book);
     }
 
     private Component createIndexPage() {
@@ -483,8 +521,10 @@ public class QuestBook {
 
         for (ItemStack item : player.getInventory().getContents()) {
             if (isQuestBook(item)) {
-                ItemStack newBook = createQuestBook(questData);
+                player.sendMessage("§aDEBUG: Atualizando QuestBook...");
+                ItemStack newBook = createQuestBook(questData, player);
                 item.setItemMeta(newBook.getItemMeta());
+                player.sendMessage("§aDEBUG: QuestBook atualizado!");
                 break;
             }
         }

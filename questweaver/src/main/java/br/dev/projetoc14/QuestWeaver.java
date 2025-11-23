@@ -3,6 +3,7 @@ package br.dev.projetoc14;
 import br.dev.projetoc14.commands.HelpCommand;
 import br.dev.projetoc14.commands.QuestsCommand;
 //import br.dev.projetoc14.items.ItemProtectionListener;
+import br.dev.projetoc14.items.ItemProtectionListener;
 import br.dev.projetoc14.items.players.SkillTree;
 import br.dev.projetoc14.match.*;
 import br.dev.projetoc14.player.abilities.cooldown.CooldownListener;
@@ -140,7 +141,7 @@ public class QuestWeaver extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new SkillTree(playerFileManager), this);
 
         // item drop protection listener
-        //getServer().getPluginManager().registerEvents(new ItemProtectionListener(this), this);
+        getServer().getPluginManager().registerEvents(new ItemProtectionListener(this), this);
 
         // death listener
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(playerFileManager, this), this);

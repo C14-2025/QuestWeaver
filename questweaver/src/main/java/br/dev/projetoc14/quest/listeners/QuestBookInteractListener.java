@@ -1,12 +1,15 @@
+
 package br.dev.projetoc14.quest.listeners;
 
+import br.dev.projetoc14.items.ItemProtectionUtil;
 import br.dev.projetoc14.quest.utils.QuestBook;
 import br.dev.projetoc14.quest.utils.QuestManager;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
@@ -19,13 +22,23 @@ public class QuestBookInteractListener implements Listener {
         this.questManager = questManager;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onPlayerInteract(PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_AIR &&
+                event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+            return;
+        }
+
         Player player = event.getPlayer();
         ItemStack item = player.getInventory().getItemInMainHand();
 
         // Verifica se é um livro
         if (item.getType() != Material.WRITTEN_BOOK) {
+            return;
+        }
+
+        // Verifica se o item e protegido
+        if (!ItemProtectionUtil.isUndroppable(item)) {
             return;
         }
 
