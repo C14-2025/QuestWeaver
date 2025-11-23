@@ -27,8 +27,6 @@ public class ClassSelector {
             item.setItemMeta(meta);
         }
 
-        return item;
+        return ItemProtectionUtil.makeUndroppable(item);
     }
-
-    private ClassSelector() {}
 }

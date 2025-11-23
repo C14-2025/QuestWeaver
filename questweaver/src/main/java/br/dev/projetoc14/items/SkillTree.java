@@ -4,7 +4,9 @@ import br.dev.projetoc14.match.PlayerFileManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -25,14 +27,6 @@ public class SkillTree implements Listener {
     private static final List<String> LORE = List.of("§7Clique para aumentar o nível de suas habilidades!");
     private PlayerFileManager fileManager;
 
-    /*
-        Cria e retorna o item configurado
-        DONE: fazer abrir uma tela diferente de habilidades para cada classe
-        TODO: change deprecated methods
-        TODO: fazer com que o player n possa trocar os itens de lugar dentro da interface
-        DONE: mudar a cor das descrições e titulos dos itens
-     */
-
     public static ItemStack create() {
         ItemStack item = new ItemStack(ITEM_MATERIAL);
         ItemMeta meta = item.getItemMeta();
@@ -43,7 +37,8 @@ public class SkillTree implements Listener {
             item.setItemMeta(meta);
         }
 
-        return item;
+        // Protege o item
+        return ItemProtectionUtil.makeUndroppable(item);
     }
 
     public SkillTree(PlayerFileManager fileManager) {
@@ -104,7 +99,6 @@ public class SkillTree implements Listener {
         return 0;
     }
 
-
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent event) {
         if (event.getView().getTitle().equalsIgnoreCase("Árvore de Habilidades")) {
@@ -112,8 +106,13 @@ public class SkillTree implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onClick(PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_AIR &&
+                event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+            return;
+        }
+
         Player player = event.getPlayer();
         ItemStack item = event.getItem();
 
@@ -122,6 +121,14 @@ public class SkillTree implements Listener {
 
         if (!item.getItemMeta().getDisplayName().equalsIgnoreCase("§eÁrvore de habilidades"))
             return;
+
+        // Verifica se o item e protegido
+        if (!ItemProtectionUtil.isUndroppable(item)) {
+            return;
+        }
+
+        // Cancela o evento para evitar conflitos
+        event.setCancelled(true);
 
         switch(fileManager.getPlayerClassName(player))
         {
@@ -143,7 +150,4 @@ public class SkillTree implements Listener {
             }
         }
     }
-
-
-
 }

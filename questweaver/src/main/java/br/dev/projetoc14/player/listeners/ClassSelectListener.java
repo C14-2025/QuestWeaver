@@ -1,5 +1,7 @@
+
 package br.dev.projetoc14.player.listeners;
 
+import br.dev.projetoc14.items.ItemProtectionUtil;
 import br.dev.projetoc14.match.ClassReadyManager;
 import br.dev.projetoc14.match.PlayerFileManager;
 import br.dev.projetoc14.player.PlayerStatsManager;
@@ -10,14 +12,13 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-
-// Import de classes:
 
 import java.util.Arrays;
 
@@ -28,7 +29,6 @@ public class ClassSelectListener implements Listener {
     private final PlayerFileManager fileManager;
     private final ClassReadyManager readyManager;
     private final QuestManager questManager;
-
 
     public ClassSelectListener(PlayerStatsManager statsManager, PlayerFileManager fileManager, JavaPlugin plugin, ClassReadyManager readyManager, QuestManager questManager) {
         this.statsManager = statsManager;
@@ -45,6 +45,11 @@ public class ClassSelectListener implements Listener {
      */
     @EventHandler
     public void onJoin(PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_AIR &&
+                event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+            return;
+        }
+
         Player player = event.getPlayer();
         ItemStack item = event.getItem();
 
@@ -53,6 +58,14 @@ public class ClassSelectListener implements Listener {
 
         if (!item.getItemMeta().getDisplayName().equalsIgnoreCase("§eSeletor de Classe"))
             return;
+
+        // Verifica se o item e protegido
+        if (!ItemProtectionUtil.isUndroppable(item)) {
+            return;
+        }
+
+        // Cancela o evento para evitar conflitos
+        event.setCancelled(true);
 
         plugin.getLogger().info("[ClassSelect] Jogador " + player.getName() + " entrou");
         plugin.getLogger().info("[ClassSelect] hasStats? " + statsManager.hasStats(player));
@@ -63,7 +76,6 @@ public class ClassSelectListener implements Listener {
         } else {
             plugin.getLogger().info("[ClassSelect] Jogador já tem stats, pulando seleção");
         }
-
     }
 
     /**
@@ -122,11 +134,9 @@ public class ClassSelectListener implements Listener {
         plugin.getLogger().info("[ClassSelect] Inventário aberto para " + player.getName());
     }
 
-
     /**
      * Mudei o metodo para ele apenas escrever no arquivo do jogador qual classe ele escolheu
      * Agora os itens sao setados quando a partida começa, não imediatamente quando ele seleciona :)
-     * @param event
      */
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {

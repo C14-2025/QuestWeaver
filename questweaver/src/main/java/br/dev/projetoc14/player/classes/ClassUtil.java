@@ -1,7 +1,9 @@
 package br.dev.projetoc14.player.classes;
 
 import br.dev.projetoc14.QuestWeaver;
+import br.dev.projetoc14.items.ItemProtectionUtil;
 import br.dev.projetoc14.player.RPGPlayer;
+import br.dev.projetoc14.quest.utils.QuestBook;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -22,33 +24,36 @@ public class ClassUtil {
         // Limpa inventário antes de equipar
         inv.clear();
 
-        // Adiciona a arma principal
+        // Protege a arma principal
+        ItemProtectionUtil.makeUndroppable(weapon);
         inv.addItem(weapon);
 
-        // Cria e equipa armadura colorida
-        inv.setHelmet(coloredArmor(Material.LEATHER_HELMET, color));
-        inv.setChestplate(coloredArmor(Material.LEATHER_CHESTPLATE, color));
-        inv.setLeggings(coloredArmor(Material.LEATHER_LEGGINGS, color));
-        inv.setBoots(coloredArmor(Material.LEATHER_BOOTS, color));
+        // Cria armadura colorida e protege
+        ItemStack helmet = ItemProtectionUtil.makeUndroppable(coloredArmor(Material.LEATHER_HELMET, color));
+        ItemStack chestplate = ItemProtectionUtil.makeUndroppable(coloredArmor(Material.LEATHER_CHESTPLATE, color));
+        ItemStack leggings = ItemProtectionUtil.makeUndroppable(coloredArmor(Material.LEATHER_LEGGINGS, color));
+        ItemStack boots = ItemProtectionUtil.makeUndroppable(coloredArmor(Material.LEATHER_BOOTS, color));
 
-        // Adiciona o livro de quests
-        inv.addItem(rpgPlayer.createQuestBook());
+        inv.setHelmet(helmet);
+        inv.setChestplate(chestplate);
+        inv.setLeggings(leggings);
+        inv.setBoots(boots);
 
-        // Atualiza vida com delay para garantir aplicação
+        // Adiciona o livro de quests (já é protegido internamente)
+        QuestWeaver plugin = (QuestWeaver) QuestWeaver.getInstance();
+        QuestBook questBook = plugin.getQuestBook();
+        questBook.giveQuestBookToPlayer(player);
+
+        // resto do código permanece igual...
         Bukkit.getScheduler().runTaskLater(QuestWeaver.getInstance(), () -> {
-            // Define vida máxima do Bukkit
             int maxHealth = rpgPlayer.getMaxHealth();
             Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(maxHealth);
-
-            // Define vida atual - cheia
             player.setHealth(maxHealth);
             rpgPlayer.setCurrentHealth(maxHealth);
-
-            // Garante fome e saturação
             player.setFoodLevel(20);
             player.setSaturation(20f);
             player.setExhaustion(0f);
-        }, 2L); // 2 ticks de delay (0.1 segundo)
+        }, 2L);
     }
 
     private static ItemStack coloredArmor(Material material, Color color) {
