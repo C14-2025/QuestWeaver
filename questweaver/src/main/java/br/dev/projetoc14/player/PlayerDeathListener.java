@@ -1,7 +1,7 @@
 package br.dev.projetoc14.player;
 
 import br.dev.projetoc14.QuestWeaver;
-import br.dev.projetoc14.items.SearchCompass;
+import br.dev.projetoc14.items.players.SearchCompass;
 import br.dev.projetoc14.match.PlayerFileManager;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 import static br.dev.projetoc14.QuestWeaver.getServerName;

@@ -28,16 +28,32 @@ public class AbilityListener implements Listener {
 
     private final Map<UUID, Integer> potionAbilityIndex = new HashMap<>();
     private final Map<UUID, Integer> swordAbilityIndex = new HashMap<>();
+    private final Map<UUID, Integer> sickleAbilityIndex = new HashMap<>();
 
     private final List<String> potionAbilities = List.of("ShadowMove");
     private final List<String> swordAbilities = List.of("VampireKnives");
+    private final List<String> sickleAbilities = List.of("DemonProjectile");
 
     private final Map<String, Ability> abilityMap = new HashMap<>();
 
     public AbilityListener(QuestWeaver plugin) {
         this.plugin = plugin;
-        abilityMap.put("ShadowMove", new ShadowMove());
-        abilityMap.put("VampireKnives", new VampireKnives());
+
+        ShadowMove shadowMove = new ShadowMove();
+        VampireKnives vampireKnives = new VampireKnives();
+        DemonProjectile demonProjectile = new DemonProjectile();
+
+        shadowMove.setCooldownListener(plugin.getCooldownListener());
+        vampireKnives.setCooldownListener(plugin.getCooldownListener());
+        demonProjectile.setCooldownListener(plugin.getCooldownListener());
+
+        abilityMap.put("ShadowMove", shadowMove);
+        abilityMap.put("VampireKnives", vampireKnives);
+        abilityMap.put("DemonProjectile", demonProjectile);
+
+        plugin.getServer().getPluginManager().registerEvents(shadowMove, plugin);
+        plugin.getServer().getPluginManager().registerEvents(vampireKnives, plugin);
+        // DemonProjectile não precisa ser listener - Projétil Simples
     }
 
     @EventHandler
@@ -56,6 +72,8 @@ public class AbilityListener implements Listener {
             AbilityUtil.switchAbility(player, e, potionAbilityIndex, potionAbilities, this::formatName);
         } else if (isSword(item)) {
             AbilityUtil.switchAbility(player, e, swordAbilityIndex, swordAbilities, this::formatName);
+        } else if (isSickle(item)) {
+            AbilityUtil.switchAbility(player, e, sickleAbilityIndex, sickleAbilities, this::formatName);
         }
     }
 
@@ -68,11 +86,11 @@ public class AbilityListener implements Listener {
         if (p.isSneaking()) return;
 
         ItemStack item = p.getInventory().getItemInMainHand();
-        if (!isPotion(item) && !isSword(item)) return;
+        if (!isPotion(item) && !isSword(item) && !isSickle(item)) return;
 
         AssassinPlayer assassin = getAssassinPlayer(p);
         if (assassin == null) {
-            p.sendActionBar(Component.text("❌ Apenas assassinos podem usar esta habilidade!")
+            p.sendActionBar(Component.text("❌ Apenas assassinos podem usar esta habilidade! ❌")
                     .color(NamedTextColor.RED));
             return;
         }
@@ -81,6 +99,8 @@ public class AbilityListener implements Listener {
             AbilityUtil.executeAbility(p, e, potionAbilityIndex, potionAbilities, abilityMap, assassin);
         } else if (isSword(item)) {
             AbilityUtil.executeAbility(p, e, swordAbilityIndex, swordAbilities, abilityMap, assassin);
+        } else if (isSickle(item)) {
+            AbilityUtil.executeAbility(p, e, sickleAbilityIndex, sickleAbilities, abilityMap, assassin);
         }
     }
 
@@ -103,7 +123,6 @@ public class AbilityListener implements Listener {
             return "shadow_potion".equals(id);
         }
 
-        // fallback: compatibilidade com itens antigos
         if (meta.displayName() == null) return false;
         String displayName = PlainTextComponentSerializer.plainText()
                 .serialize(Objects.requireNonNull(meta.displayName()));
@@ -123,17 +142,36 @@ public class AbilityListener implements Listener {
             return "shadow_dagger".equals(id);
         }
 
-        // fallback: compatibilidade com itens antigos
         if (meta.displayName() == null) return false;
         String displayName = PlainTextComponentSerializer.plainText()
                 .serialize(Objects.requireNonNull(meta.displayName()));
         return displayName.equalsIgnoreCase("Punhal Sombrio");
     }
 
+    private boolean isSickle(ItemStack item) {
+        if (item == null || item.getType() != Material.NETHERITE_HOE) return false;
+        if (!item.hasItemMeta()) return false;
+
+        ItemMeta meta = item.getItemMeta();
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        NamespacedKey key = new NamespacedKey(plugin, "custom_item");
+
+        if (data.has(key, PersistentDataType.STRING)) {
+            String id = data.get(key, PersistentDataType.STRING);
+            return "death_sickle".equals(id);
+        }
+
+        if (meta.displayName() == null) return false;
+        String displayName = PlainTextComponentSerializer.plainText()
+                .serialize(Objects.requireNonNull(meta.displayName()));
+        return displayName.equalsIgnoreCase("Death Sickle");
+    }
+
     public String formatName(String nome) {
         return switch (nome.toUpperCase()) {
             case "SHADOWMOVE" -> "Passos Sombrios";
             case "VAMPIREKNIVES" -> "Vampire Knives";
+            case "DEMONPROJECTILE" -> "Demon Projectile";
             default -> nome;
         };
     }

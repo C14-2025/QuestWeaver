@@ -38,7 +38,7 @@ public class BloodBlade extends Ability implements Listener {
     }
 
     @Override
-    protected void onCast(RPGPlayer caster) {
+    public void onCast(RPGPlayer caster) {
         Player player = caster.getPlayer();
 
         if (player.getInventory().getItemInMainHand().getType() != Material.IRON_AXE) {

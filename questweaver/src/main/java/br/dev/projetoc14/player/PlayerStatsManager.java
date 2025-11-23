@@ -38,19 +38,19 @@ public class PlayerStatsManager {
         PlayerStats stats = getStats(player);
 
         // Manager de vida:
-        Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(stats.getHealth());
+        Objects.requireNonNull(player.getAttribute(Attribute.MAX_HEALTH)).setBaseValue(stats.getHealth());
         double currentHealth = Math.min(player.getHealth(), stats.getHealth());
         player.setHealth(currentHealth);
 
         // Manager de dano físico:
-        Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)).setBaseValue(stats.getStrength());
+        Objects.requireNonNull(player.getAttribute(Attribute.ATTACK_DAMAGE)).setBaseValue(stats.getStrength());
 
         // Manager de defesa/armadura:
-        Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ARMOR)).setBaseValue(stats.getDefense());
+        Objects.requireNonNull(player.getAttribute(Attribute.ARMOR)).setBaseValue(stats.getDefense());
 
         // Manager de agilidade/velocidade de movimento:
         double baseSpeed = 0.1; // default do Minecraft
-        Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)).setBaseValue(baseSpeed + (stats.getAgility() * 0.001));
+        Objects.requireNonNull(player.getAttribute(Attribute.MOVEMENT_SPEED)).setBaseValue(baseSpeed + (stats.getAgility() * 0.001));
     }
 
     public boolean hasStats(Player player) {

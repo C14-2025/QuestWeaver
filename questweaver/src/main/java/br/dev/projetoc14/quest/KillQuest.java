@@ -110,7 +110,12 @@ public class KillQuest extends Quest {
         return String.format("%d/%d %s eliminados", currentCount, targetCount, targetMob);
     }
 
-    private boolean isValidWeapon(Material weapon) {
+    protected boolean isValidWeapon(Material weapon) {
         return validWeapons.isEmpty() || validWeapons.contains(weapon);
+    }
+
+    protected boolean isValidSpecialArrow(Arrow arrow) {
+        // Aqui é o comportamento padrão (aceita qualquer flecha)
+        return true;
     }
 }

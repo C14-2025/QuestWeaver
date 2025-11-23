@@ -1,7 +1,7 @@
 package br.dev.projetoc14.player.classes;
 
 import br.dev.projetoc14.items.ItemProtectionUtil;
-import br.dev.projetoc14.items.MagicBow;
+import br.dev.projetoc14.items.players.MagicBow;
 import br.dev.projetoc14.player.PlayerClass;
 import br.dev.projetoc14.player.RPGPlayer;
 import net.kyori.adventure.text.Component;
@@ -48,7 +48,7 @@ public class ArcherPlayer extends RPGPlayer {
     public void getStartingEquipment() {
         // Cria o arco mágico
         MagicBow bow = new MagicBow();
-        ItemStack magicBow = ItemProtectionUtil.makeUndroppable(bow.createMagicBow());
+        ItemStack magicBow = ItemProtectionUtil.makeUndroppable(bow.create());
 
         ClassUtil.equipPlayer(this, magicBow, Color.fromRGB(0, 150, 0)); // Verde floresta
 

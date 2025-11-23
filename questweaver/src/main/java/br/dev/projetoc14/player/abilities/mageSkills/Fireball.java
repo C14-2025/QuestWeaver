@@ -20,7 +20,7 @@ public class Fireball extends Ability implements Listener {
 
     public Fireball(QuestWeaver plugin) {
         super("Bola de Fogo", 15, 5); // nome, custo de mana, cooldown em segundos
-        this.magicDamageKey = new NamespacedKey(plugin, "magic_damage");
+        this.magicDamageKey = new NamespacedKey("questweaver", "magic_damage");
         // Registra o listener
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
