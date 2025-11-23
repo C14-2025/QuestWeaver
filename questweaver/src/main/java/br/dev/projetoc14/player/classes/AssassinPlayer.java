@@ -1,6 +1,7 @@
 package br.dev.projetoc14.player.classes;
 
 import br.dev.projetoc14.QuestWeaver;
+import br.dev.projetoc14.items.ItemProtectionUtil;
 import br.dev.projetoc14.items.players.ItemRegistry;
 import br.dev.projetoc14.player.PlayerClass;
 import br.dev.projetoc14.player.RPGPlayer;
@@ -85,10 +86,11 @@ public class AssassinPlayer extends RPGPlayer {
         ClassUtil.equipPlayer(this, dagger, Color.fromRGB(25, 25, 25)); // Preto escuro
 
         // Adiciona a poção exclusiva do assassino
-        player.getInventory().addItem(createAssassinPotion());
+        player.getInventory().addItem(ItemProtectionUtil.makeUndroppable(createAssassinPotion()));
+        player.getInventory().addItem(ItemProtectionUtil.makeUndroppable(createAssassinPotion()));
 
         // Adiciona a Death Sickle exclusiva do assassino
-        player.getInventory().addItem(createDeathSickle());
+        player.getInventory().addItem(ItemProtectionUtil.makeUndroppable(createDeathSickle()));
     }
 
     // Cria a poção exclusiva das habilidades do assassino

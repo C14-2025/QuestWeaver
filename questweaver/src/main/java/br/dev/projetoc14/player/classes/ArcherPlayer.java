@@ -1,5 +1,6 @@
 package br.dev.projetoc14.player.classes;
 
+import br.dev.projetoc14.items.ItemProtectionUtil;
 import br.dev.projetoc14.items.players.MagicBow;
 import br.dev.projetoc14.player.PlayerClass;
 import br.dev.projetoc14.player.RPGPlayer;
@@ -47,10 +48,12 @@ public class ArcherPlayer extends RPGPlayer {
     public void getStartingEquipment() {
         // Cria o arco mágico
         MagicBow bow = new MagicBow();
-        ItemStack magicBow = bow.create();
+        ItemStack magicBow = ItemProtectionUtil.makeUndroppable(bow.create());
 
         ClassUtil.equipPlayer(this, magicBow, Color.fromRGB(0, 150, 0)); // Verde floresta
-        // Adiciona flechas iniciais
-        player.getInventory().addItem(new ItemStack(Material.ARROW, 16));
+
+        // Adiciona flechas iniciais protegidas
+        ItemStack arrows = ItemProtectionUtil.makeUndroppable(new ItemStack(Material.ARROW, 16));
+        player.getInventory().addItem(arrows);
     }
 }

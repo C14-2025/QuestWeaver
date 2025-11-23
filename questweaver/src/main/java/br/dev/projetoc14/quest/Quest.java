@@ -1,6 +1,7 @@
 package br.dev.projetoc14.quest;
 
 import br.dev.projetoc14.QuestWeaver;
+import br.dev.projetoc14.items.ItemProtectionUtil;
 import br.dev.projetoc14.player.RPGPlayer;
 import br.dev.projetoc14.quest.utils.QuestCompletedEvent;
 import org.bukkit.Bukkit;
@@ -53,7 +54,7 @@ public abstract class Quest {
         }
 
         // Dá os itens
-        ItemStack[] rewards = getRewardItems();
+        ItemStack[] rewards = ItemProtectionUtil.makeUndroppable(getRewardItems());
         if (rewards != null && rewards.length > 0) {
             HashMap<Integer, ItemStack> leftover = player.getInventory().addItem(rewards);
 

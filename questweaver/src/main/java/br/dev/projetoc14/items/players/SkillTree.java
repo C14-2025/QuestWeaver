@@ -1,12 +1,15 @@
 package br.dev.projetoc14.items.players;
 
 import br.dev.projetoc14.QuestWeaver;
+import br.dev.projetoc14.items.ItemProtectionUtil;
 import br.dev.projetoc14.match.PlayerFileManager;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -39,7 +42,8 @@ public class SkillTree implements Listener {
             item.setItemMeta(meta);
         }
 
-        return item;
+        // Protege o item
+        return ItemProtectionUtil.makeUndroppable(item);
     }
 
     private final Plugin plugin;
@@ -123,8 +127,13 @@ public class SkillTree implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onClick(PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_AIR &&
+                event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+            return;
+        }
+
         Player player = event.getPlayer();
         ItemStack item = event.getItem();
 
@@ -133,6 +142,14 @@ public class SkillTree implements Listener {
 
         if (!item.getItemMeta().getDisplayName().equalsIgnoreCase("§eÁrvore de habilidades"))
             return;
+
+        // Verifica se o item e protegido
+        if (!ItemProtectionUtil.isUndroppable(item)) {
+            return;
+        }
+
+        // Cancela o evento para evitar conflitos
+        event.setCancelled(true);
 
         switch(fileManager.getPlayerClassName(player))
         {
