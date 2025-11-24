@@ -44,23 +44,23 @@ public class AssassinQuestListener implements Listener {
         // Procura por qualquer quest de assassino ativa
         for (Quest quest : questData.getActiveQuests().values()) {
 
-            // ===== QUEST 1: Sombras Silenciosas (Backstabs) =====
-            if (quest instanceof SilentShadowsQuest shadowQuest) {
+            // ===== QUEST 1: ASSASSINATO LIMPO (Fácil) =====
+            if (quest instanceof CleanKillQuest cleanQuest) {
                 if (!mobType.equalsIgnoreCase("ZOMBIE")) continue;
 
-                shadowQuest.updateProgress(mobType, weapon, killer, entity);
+                cleanQuest.updateProgress(mobType, weapon, killer);
 
-                int current = shadowQuest.getCurrentCount();
-                int target = shadowQuest.getTargetCount();
+                int current = cleanQuest.getCurrentCount();
+                int target = cleanQuest.getTargetCount();
 
                 if (current <= target) {
-                    killer.sendMessage("§aProgresso: " + shadowQuest.getProgressText());
+                    // O feedback já é dado no updateProgress da quest
                     questBook.updateBook(killer);
                 }
                 break;
             }
 
-            // ===== QUEST 2: Velocidade Mortal (Speed Kills) =====
+            // ===== QUEST 2: VELOCIDADE MORTAL (Média) =====
             else if (quest instanceof DeadlySpeedQuest speedQuest) {
                 if (!mobType.equalsIgnoreCase("SKELETON")) continue;
 
@@ -82,7 +82,7 @@ public class AssassinQuestListener implements Listener {
                 break;
             }
 
-            // ===== QUEST 3: Assassinato Perfeito (Perfect Kills) =====
+            // ===== QUEST 3: ASSASSINATO PERFEITO (Difícil) =====
             else if (quest instanceof PerfectAssassinationQuest perfectQuest) {
                 if (!mobType.equalsIgnoreCase("CREEPER")) continue;
 
@@ -101,7 +101,7 @@ public class AssassinQuestListener implements Listener {
     }
 
     /**
-     * Detecta quando o jogador toma dano (para PerfectAssassinationQuest)
+     * Detecta quando o jogador toma dano (para CleanKillQuest e PerfectAssassinationQuest)
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerDamaged(EntityDamageByEntityEvent event) {
@@ -112,9 +112,16 @@ public class AssassinQuestListener implements Listener {
         PlayerQuestData questData = questManager.getPlayerQuests(player);
         if (questData == null) return;
 
-        // Verifica se tem a quest de assassinato perfeito ativa
+        // Verifica todas as quests de assassino ativas
         for (Quest quest : questData.getActiveQuests().values()) {
-            if (quest instanceof PerfectAssassinationQuest perfectQuest) {
+
+            // ===== ASSASSINATO LIMPO (Fácil) =====
+            if (quest instanceof CleanKillQuest cleanQuest) {
+                cleanQuest.onPlayerDamaged(player);
+            }
+
+            // ===== ASSASSINATO PERFEITO (Difícil) =====
+            else if (quest instanceof PerfectAssassinationQuest perfectQuest) {
                 perfectQuest.onPlayerDamaged(player);
                 questBook.updateBook(player);
                 break;
