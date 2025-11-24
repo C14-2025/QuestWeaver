@@ -1,72 +1,104 @@
 package com.GrupoC14.questweaver.models;
 
-import br.dev.projetoc14.skilltree.SkillTree;
+import br.dev.projetoc14.items.players.SkillTree;
+import br.dev.projetoc14.match.PlayerFileManager;
+import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.InventoryView;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import org.mockbukkit.mockbukkit.MockBukkit;
+import org.mockbukkit.mockbukkit.ServerMock;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.Mockito.*;
 
 class SkillTreeTest {
 
-    // testes positivos
-    @Test
-    void testAdicionarHabilidade() {
-        SkillTree arvore = new SkillTree();
-        arvore.adicionarHabilidade("Bola de Fogo", 50);
+    private ServerMock server;
+    private Player mockPlayer;
+    private PlayerFileManager fileManager;
+    private SkillTree skillTree;
+    private PlayerInventory mockInventory;
 
-        assertEquals(50, arvore.getCusto("Bola de Fogo"));
-        assertTrue(arvore.getTodasHabilidades().contains("Bola de Fogo"));
+    @BeforeEach
+    void setup() {
+        // Inicializa o MockBukkit server para evitar NullPointerException
+        server = MockBukkit.mock();
+
+        mockPlayer = mock(Player.class);
+        fileManager = mock(PlayerFileManager.class);
+        skillTree = new SkillTree(fileManager);
+
+        // mock inventário inteiro
+        mockInventory = mock(PlayerInventory.class);
+        when(mockPlayer.getInventory()).thenReturn(mockInventory);
+
+        // player sempre tem XP suficiente
+        when(mockPlayer.getTotalExperience()).thenReturn(9999);
     }
 
     @Test
-    void testDesbloquearComXpSuficiente() {
-        SkillTree arvore = new SkillTree();
-        arvore.adicionarHabilidade("Raio Congelante", 80);
+    void testUpgradeVida() {
+        // mock do atributo MAX_HEALTH
+        AttributeInstance att = mock(AttributeInstance.class);
+        when(mockPlayer.getAttribute(Attribute.MAX_HEALTH)).thenReturn(att);
 
-        assertTrue(arvore.desbloquear("Raio Congelante", 100));
-        assertTrue(arvore.possui("Raio Congelante"));
+        // Simula valor base inicial de 20.0 (saúde padrão do Minecraft)
+        when(att.getBaseValue()).thenReturn(20.0);
+
+        // Aplica upgrade de nível 2 (adiciona +4 vida)
+        skillTree.applyHealthUpgrade(mockPlayer, 2);
+
+        // Verifica se foi chamado setBaseValue com o valor correto
+        // O código real chama: setBaseValue(baseValue + (level * 2))
+        // baseValue = 20.0, level = 2, então: 20.0 + (2 * 2) = 24.0
+        verify(att).setBaseValue(24.0);
     }
 
     @Test
-    void testNaoDesbloquearSemXp() {
-        SkillTree arvore = new SkillTree();
-        arvore.adicionarHabilidade("Cura", 60);
+    void testUpgradeArmadura() {
+        // mock de capacete / peitoral
+        doNothing().when(mockInventory).setHelmet(any(ItemStack.class));
+        doNothing().when(mockInventory).setChestplate(any(ItemStack.class));
 
-        assertFalse(arvore.desbloquear("Cura", 40));
-        assertFalse(arvore.possui("Cura"));
+        skillTree.applyArmorUpgrade(mockPlayer, 1); // level 1 = Iron
+
+        verify(mockInventory).setHelmet(argThat(i -> i != null && i.getType() == Material.IRON_HELMET));
+        verify(mockInventory).setChestplate(argThat(i -> i != null && i.getType() == Material.IRON_CHESTPLATE));
     }
 
     @Test
-    void testListarDesbloqueadas() {
-        SkillTree arvore = new SkillTree();
-        arvore.adicionarHabilidade("Teleportar", 100);
-        arvore.desbloquear("Teleportar", 150);
+    void testInventoryClick() {
+        // Teste simplificado - verifica apenas que o método não lança exceção
+        // quando o título não corresponde à árvore de habilidades
+        InventoryClickEvent event = mock(InventoryClickEvent.class);
+        InventoryView view = mock(InventoryView.class);
 
-        assertEquals(1, arvore.getDesbloqueadas().size());
-        assertTrue(arvore.getDesbloqueadas().contains("Teleportar"));
+        when(event.getView()).thenReturn(view);
+        // Usa um título diferente para que o método retorne cedo sem executar a lógica complexa
+        when(view.getTitle()).thenReturn("Outro Inventário");
+        when(event.getWhoClicked()).thenReturn(mockPlayer);
+
+        // Executa o método - não deve fazer nada pois o título não corresponde
+        skillTree.onInventoryClick(event);
+
+        // Verifica que o evento NÃO foi cancelado (pois não é a árvore de habilidades)
+        verify(event, never()).setCancelled(true);
     }
 
-    // testes negativos
-    @Test
-    void testCustoDeHabilidadeInexistente() {
-        SkillTree arvore = new SkillTree();
-        assertEquals(-1, arvore.getCusto("Invisibilidade")); // deve retornar -1
-    }
-
-    @Test
-    void testNaoDesbloquearHabilidadeInexistente() {
-        SkillTree arvore = new SkillTree();
-        // tentar desbloquear sem nem ter adicionado
-        assertFalse(arvore.desbloquear("Meteoro", 500));
-        assertFalse(arvore.possui("Meteoro"));
-    }
-
-    @Test
-    void testAdicionarHabilidadeDuplicadaSubstituiCusto() {
-        SkillTree arvore = new SkillTree();
-        arvore.adicionarHabilidade("Bola de Fogo", 50);
-        arvore.adicionarHabilidade("Bola de Fogo", 100);
-
-        // custo deve ser atualizado para 100
-        assertEquals(100, arvore.getCusto("Bola de Fogo"));
+    @AfterEach
+    void tearDown() {
+        // Limpa o MockBukkit após cada teste
+        MockBukkit.unmock();
     }
 }
-

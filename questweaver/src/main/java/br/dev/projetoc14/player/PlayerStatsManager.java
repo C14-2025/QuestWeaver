@@ -93,6 +93,7 @@ public class PlayerStatsManager {
     public void setStats(@NotNull Player player, @NotNull PlayerStats stats) {
         statsMap.put(player.getUniqueId(), stats);
 
+        stats.setBaseHealth(stats.getHealth());
         // Aplica imediatamente os stats carregados no Player
         applyStats(player);
 

@@ -8,6 +8,8 @@ public class PlayerStats {
     private int health;        // Vida máxima
     private int mana;          // Mana máxima
     private int currentMana;   // Mana atual
+    private int baseHealth;
+
 
 
     public PlayerStats() {
@@ -19,6 +21,8 @@ public class PlayerStats {
         this.health = 20;
         this.mana = 20;
         this.currentMana = this.mana;
+        this.baseHealth = this.health;
+
     }
 
     // Construtor com valores personalizados
@@ -30,6 +34,8 @@ public class PlayerStats {
         this.health = health;
         this.mana = mana;
         this.currentMana = mana;
+        this.baseHealth = this.health;
+
     }
 
     // Getters
@@ -60,6 +66,8 @@ public class PlayerStats {
     public int getCurrentMana() {
         return currentMana;
     }
+
+    public int getBaseHealth() { return baseHealth; }
 
     // Setters
     public void setStrength(int strength) {
@@ -93,6 +101,8 @@ public class PlayerStats {
     public void setCurrentMana(int currentMana) {
         this.currentMana = Math.max(0, Math.min(currentMana, mana));
     }
+
+    public void setBaseHealth(int baseHealth) { this.baseHealth = baseHealth; }
 
     // Métodos utilitários
     public void restoreMana(int amount) {

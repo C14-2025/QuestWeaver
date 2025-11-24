@@ -5,6 +5,7 @@ import br.dev.projetoc14.items.ItemProtectionUtil;
 import br.dev.projetoc14.match.PlayerFileManager;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -75,7 +76,7 @@ public class SkillTree implements Listener {
 
         int cost = 25;
         int playerXP = 500;
-        // int playerXP = player.getTotalExperience();
+        // TODO: int playerXP = player.getTotalExperience();
 
         if (playerXP < cost) {
             player.sendMessage("§cXP insuficiente para melhorar essa habilidade!");
@@ -87,7 +88,7 @@ public class SkillTree implements Listener {
 
         int currentLevel = getSkillLevel(player, name);
 
-        if (currentLevel >= 4) {
+        if (currentLevel >= 5) {
             player.sendMessage("§7Essa habilidade já está no nível máximo!");
             return;
         }
@@ -107,6 +108,10 @@ public class SkillTree implements Listener {
         if (name.toLowerCase().contains("armadura")) {
             applyArmorUpgrade(player, currentLevel);
         }
+        if (name.toLowerCase().contains("vida")) {
+            applyHealthUpgrade(player, currentLevel);
+        }
+
     }
 
     private int getCurrentLevel(List<String> lore) {
@@ -171,7 +176,7 @@ public class SkillTree implements Listener {
         }
     }
 
-    private void applyArmorUpgrade(Player player, int level) {
+    public void applyArmorUpgrade(Player player, int level) {
 
         Material[][] armorTiers = {
                 { Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS },
@@ -210,5 +215,29 @@ public class SkillTree implements Listener {
         player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_DIAMOND, 1f, 1f);
         player.sendMessage("§6[Upgrade] §fSua armadura evoluiu para §e" + selectedTier[1].name());
     }
+
+    private double getBaseClassHealth(Player player) {
+        if (player.hasMetadata("base_class_health")) {
+            return player.getMetadata("base_class_health").get(0).asDouble();
+        }
+        return player.getAttribute(Attribute.MAX_HEALTH).getBaseValue();
+    }
+
+
+    public void applyHealthUpgrade(Player player, int level) {
+
+        double base = getBaseClassHealth(player);   // vida original da classe
+        double bonus = level * 2.0;                 // +1 coração por nível
+        double total = base + bonus;
+
+        player.getAttribute(Attribute.MAX_HEALTH).setBaseValue(total);
+
+        // cura o player até o novo máximo
+        player.setHealth(player.getAttribute(Attribute.MAX_HEALTH).getBaseValue());
+
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
+        player.sendMessage("§6[Upgrade] §fSua vida aumentou em §c+1 coração!");
+    }
+
 }
 
