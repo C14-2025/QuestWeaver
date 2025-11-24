@@ -5,6 +5,7 @@ import br.dev.projetoc14.quest.utils.QuestCompletedEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -55,7 +56,7 @@ public class CleanKillQuest extends KillQuest {
             if (mobType.equalsIgnoreCase(targetMob) && isValidWeapon(weapon)) {
                 UUID playerId = player.getUniqueId();
 
-                // Verifica se o jogador tomou dano
+                // **CORREÇÃO: Verifica se o jogador tomou dano desde o último kill**
                 int currentHP = getCurrentHealth(player);
                 int startHP = initialHealth.getOrDefault(playerId, currentHP);
 
@@ -63,13 +64,16 @@ public class CleanKillQuest extends KillQuest {
                     // Tomou dano - não conta
                     player.sendMessage("§c✗ Você tomou dano! Este kill não conta.");
 
-                    // Atualiza a saúde base para a próxima tentativa
+                    // **CORREÇÃO: Atualiza a saúde base para a próxima tentativa**
                     initialHealth.put(playerId, currentHP);
                     return;
                 }
 
                 // Kill limpo - conta!
                 currentCount++;
+
+                // **CORREÇÃO: Atualiza a saúde base para o próximo kill**
+                initialHealth.put(playerId, currentHP);
 
                 // Feedback positivo
                 switch (currentCount) {
@@ -104,12 +108,12 @@ public class CleanKillQuest extends KillQuest {
     public void onPlayerDamaged(Player player) {
         UUID playerId = player.getUniqueId();
 
-        // Apenas dá feedback, não reseta o progresso
+        // **CORREÇÃO: Apenas dá feedback, não reseta o progresso**
         if (currentCount > 0 && currentCount < targetCount) {
             player.sendMessage("§c💥 Você foi atingido! Cuidado com os próximos ataques.");
         }
 
-        // Atualiza a saúde base
+        // **CORREÇÃO: Atualiza a saúde base para a próxima verificação**
         initialHealth.put(playerId, getCurrentHealth(player));
     }
 
