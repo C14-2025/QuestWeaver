@@ -81,11 +81,14 @@ public class PerfectAssassinationQuest extends KillQuest {
                 currentCount++;
 
                 // Feedback positivo
-                player.sendMessage(String.format("§a✓ Execução Perfeita! §7(%d/5)", currentCount));
+                player.sendMessage(String.format("§a✓ Execução Perfeita! §7(%d/4)", currentCount));
 
                 if (currentCount >= 3) {
                     player.sendMessage("§e⚠ Cuidado! Mantenha a distância dos creepers!");
                 }
+
+                // Atualiza saúde base para próximo kill
+                initialHealth.put(playerId, currentHP);
 
                 if (checkCompletion()) {
                     player.sendMessage("§6✦ §e§lASSASSINATO PERFEITO COMPLETO!");
@@ -116,14 +119,16 @@ public class PerfectAssassinationQuest extends KillQuest {
 
     private int getCurrentHealth(Player player) {
         // Tenta pegar do RPGPlayer, senão usa HP do Minecraft
-        br.dev.projetoc14.QuestWeaver plugin =
-                (br.dev.projetoc14.QuestWeaver) br.dev.projetoc14.QuestWeaver.getInstance();
-
-        if (plugin != null) {
-            br.dev.projetoc14.player.RPGPlayer rpgPlayer = plugin.getRPGPlayer(player);
-            if (rpgPlayer != null) {
-                return rpgPlayer.getCurrentHealth();
+        try {
+            br.dev.projetoc14.QuestWeaver plugin = (br.dev.projetoc14.QuestWeaver) br.dev.projetoc14.QuestWeaver.getInstance();
+            if (plugin != null) {
+                br.dev.projetoc14.player.RPGPlayer rpgPlayer = plugin.getRPGPlayer(player);
+                if (rpgPlayer != null) {
+                    return rpgPlayer.getCurrentHealth();
+                }
             }
+        } catch (Exception e) {
+            // Fallback para sistema vanilla
         }
 
         return (int) player.getHealth();
