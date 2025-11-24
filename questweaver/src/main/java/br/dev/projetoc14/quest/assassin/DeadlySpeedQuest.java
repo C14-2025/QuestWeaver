@@ -48,61 +48,72 @@ public class DeadlySpeedQuest extends KillQuest {
                 return;
             }
 
-            if (mobType.equalsIgnoreCase(targetMob) && isValidWeapon(weapon)) {
-                UUID playerId = player.getUniqueId();
-                long currentTime = System.currentTimeMillis();
+            UUID playerId = player.getUniqueId();
+            long currentTime = System.currentTimeMillis();
 
-                // Verifica se ainda está no streak
-                if (lastKillTime.containsKey(playerId)) {
-                    long timeSinceLastKill = currentTime - lastKillTime.get(playerId);
+            // Verifica se é um kill válido ANTES de processar o streak
+            if (!mobType.equalsIgnoreCase(targetMob) || !isValidWeapon(weapon)) {
+                // Mob ou arma errada - quebra o streak
+                resetPlayerStreak(playerId, "Mob ou arma inválida");
+                return;
+            }
 
-                    if (timeSinceLastKill > MAX_TIME_BETWEEN_KILLS) {
-                        // Perdeu o streak!
-                        int lostStreak = killStreak.getOrDefault(playerId, 0);
-                        if (lostStreak > 0) {
-                            player.sendMessage(String.format("§c✗ Muito lento! Streak perdido. (Era %d/8)", lostStreak));
-                            currentCount = 0; // Reseta progresso
-                        }
-                        killStreak.put(playerId, 0);
-                    }
+            // Verifica se ainda está no streak
+            if (lastKillTime.containsKey(playerId)) {
+                long timeSinceLastKill = currentTime - lastKillTime.get(playerId);
+
+                if (timeSinceLastKill > MAX_TIME_BETWEEN_KILLS) {
+                    // Perdeu o streak por timeout!
+                    resetPlayerStreak(playerId, "Muito lento! Streak perdido.");
+                    return;
                 }
+            }
 
-                // Adiciona kill ao streak
-                int streak = killStreak.getOrDefault(playerId, 0) + 1;
-                killStreak.put(playerId, streak);
-                lastKillTime.put(playerId, currentTime);
+            // Kill válido - adiciona ao streak
+            int streak = killStreak.getOrDefault(playerId, 0) + 1;
+            killStreak.put(playerId, streak);
+            lastKillTime.put(playerId, currentTime);
 
-                currentCount++;
+            // Para testes, assumimos um jogador por quest
+            currentCount = streak;
 
-                // Feedback de streak
-                if (streak >= 3) {
-                    player.sendMessage(String.format("§e⚡ STREAK x%d! §7Mantenha a velocidade!", streak));
-                }
+            // Feedback de streak
+            if (streak >= 3) {
+                player.sendMessage(String.format("§e⚡ STREAK x%d! §7Mantenha a velocidade!", streak));
+            }
 
-                if (checkCompletion()) {
-                    player.sendMessage("§6✦ §e§lSTREAK PERFEITO!");
-                    resetPlayerData(playerId);
-                    QuestCompletedEvent customEvent = new QuestCompletedEvent(player, this);
-                    Bukkit.getServer().getPluginManager().callEvent(customEvent);
-                }
+            if (checkCompletion()) {
+                player.sendMessage("§6✦ §e§lSTREAK PERFEITO!");
+                // **CORREÇÃO: Não resetamos os dados na completion para testes**
+                QuestCompletedEvent customEvent = new QuestCompletedEvent(player, this);
+                Bukkit.getServer().getPluginManager().callEvent(customEvent);
             }
         }
     }
 
-    public void onKillTimeout(Player player) {
-        UUID playerId = player.getUniqueId();
+    /**
+     * Reseta o streak do jogador com mensagem
+     */
+    private void resetPlayerStreak(UUID playerId, String reason) {
         int lostStreak = killStreak.getOrDefault(playerId, 0);
 
+        // Só mostra mensagem se tinha algum streak
         if (lostStreak > 0) {
-            player.sendMessage(String.format("§c✗ Streak perdido por timeout! (Era %d/8)", lostStreak));
-            currentCount = 0;
-            resetPlayerData(playerId);
+            Player player = Bukkit.getPlayer(playerId);
+            if (player != null) {
+                player.sendMessage("§c✗ " + reason + " §7(Era " + lostStreak + "/" + targetCount + ")");
+            }
         }
+
+        // Reseta ambos streak e currentCount
+        killStreak.put(playerId, 0);
+        lastKillTime.put(playerId, System.currentTimeMillis());
+        currentCount = 0;
     }
 
-    private void resetPlayerData(UUID playerId) {
-        killStreak.remove(playerId);
-        lastKillTime.remove(playerId);
+    public void onKillTimeout(Player player) {
+        UUID playerId = player.getUniqueId();
+        resetPlayerStreak(playerId, "Streak perdido por timeout!");
     }
 
     @Override

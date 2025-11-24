@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class KillQuest extends Quest {
-    protected final String targetMob;
+    public final String targetMob;
     protected final int targetCount;
     protected int currentCount;
     protected final Location spawnLocation;
@@ -110,7 +110,7 @@ public class KillQuest extends Quest {
         return String.format("%d/%d %s eliminados", currentCount, targetCount, targetMob);
     }
 
-    protected boolean isValidWeapon(Material weapon) {
+    public boolean isValidWeapon(Material weapon) {
         return validWeapons.isEmpty() || validWeapons.contains(weapon);
     }
 
