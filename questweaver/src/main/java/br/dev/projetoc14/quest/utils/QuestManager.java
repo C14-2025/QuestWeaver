@@ -12,7 +12,7 @@ import br.dev.projetoc14.quest.archer.PrecisionHunterQuest;
 import br.dev.projetoc14.quest.archer.WindMasterQuest;
 import br.dev.projetoc14.quest.assassin.DeadlySpeedQuest;
 import br.dev.projetoc14.quest.assassin.PerfectAssassinationQuest;
-import br.dev.projetoc14.quest.assassin.SilentShadowsQuest;
+import br.dev.projetoc14.quest.assassin.CleanKillQuest;
 import br.dev.projetoc14.quest.mage.ElementalMaster;
 import br.dev.projetoc14.quest.structures.*;
 import br.dev.projetoc14.quest.structures.AssassinCrypt;
@@ -139,7 +139,7 @@ public class QuestManager {
                         10.0
                 );
             }
-            case 1 -> new SilentShadowsQuest(playerLoc);
+            case 1 -> new CleanKillQuest(playerLoc);
             case 2 -> new DeadlySpeedQuest(playerLoc);
             case 3 -> new PerfectAssassinationQuest(playerLoc);
             default -> null;
