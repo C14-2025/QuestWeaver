@@ -1,26 +1,27 @@
 // =============================================
-// ARQUIVO 3: br/dev/projetoc14/quests/QuestManager.java
+// ARQUIRVO 3: br/dev/projetoc14/quests/QuestManager.java
 // Gerenciador central de todas as quests
 // =============================================
 
 package br.dev.projetoc14.quest.utils;
 
 import br.dev.projetoc14.quest.ExplorationQuest;
+import br.dev.projetoc14.quest.HitQuest;
 import br.dev.projetoc14.quest.KillQuest;
 import br.dev.projetoc14.quest.Quest;
 import br.dev.projetoc14.quest.archer.PrecisionHunterQuest;
+import br.dev.projetoc14.quest.archer.RangedCombatQuest;
 import br.dev.projetoc14.quest.archer.WindMasterQuest;
 import br.dev.projetoc14.quest.assassin.DeadlySpeedQuest;
 import br.dev.projetoc14.quest.assassin.PerfectAssassinationQuest;
 import br.dev.projetoc14.quest.assassin.CleanKillQuest;
 import br.dev.projetoc14.quest.mage.ElementalMaster;
-import br.dev.projetoc14.quest.structures.*;
+import br.dev.projetoc14.quest.structures.ArcherTrainingGrounds;
 import br.dev.projetoc14.quest.structures.AssassinCrypt;
 import br.dev.projetoc14.quest.structures.QuestStructure;
 import br.dev.projetoc14.quest.warrior.FirstBlood;
-import br.dev.projetoc14.quest.archer.RangedCombatQuest;
-import org.bukkit.entity.Player;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,6 +41,14 @@ public class QuestManager {
     }
 
     public void startClassQuestLine(Player player, String className) {
+        UUID playerId = player.getUniqueId();
+
+        // Verifica se já tem uma linha de quests ativa
+        if (playerQuestLines.containsKey(playerId)) {
+            player.sendMessage("§cVocê já tem uma linha de quests ativa!");
+            return;
+        }
+
         QuestLineType questLine = switch (className.toLowerCase()) {
             case "guerreiro" -> QuestLineType.WARRIOR;
             case "mago" -> QuestLineType.MAGE;
@@ -49,10 +58,12 @@ public class QuestManager {
         };
 
         if (questLine == null) {
+            player.sendMessage("§cClasse inválida: " + className);
             return;
         }
 
-        playerQuestLines.put(player.getUniqueId(), questLine);
+        playerQuestLines.put(playerId, questLine);
+        player.sendMessage("§a✦ Linha de quests de " + className + " iniciada!");
         giveNextQuest(player);
     }
 
@@ -61,41 +72,50 @@ public class QuestManager {
         QuestLineType questLine = playerQuestLines.get(playerId);
         PlayerQuestData questData = getOrCreatePlayerQuestData(player);
 
-        if (questLine == null || questData == null) return;
+        if (questLine == null || questData == null) {
+            player.sendMessage("§cErro: Não foi possível encontrar sua linha de quests.");
+            return;
+        }
 
         // Verifica quantas quests já foram completadas
         int completedQuests = questData.getCompletedQuests().size();
 
-        // Cria a proxima quest baseada na classe e progresso
+        // Cria a próxima quest baseada na classe e progresso
         Quest nextQuest = createQuestForClass(questLine, completedQuests, player.getLocation());
         if (nextQuest != null) {
             questData.addQuest(nextQuest);
             notifyNewQuest(player, nextQuest);
             nextQuest.assignToPlayer(player);
+        } else {
+            player.sendMessage("§6✨ Parabéns! Você completou todas as quests de " + questLine.getDisplayName() + "!");
         }
     }
 
     private Quest createQuestForClass(QuestLineType type, int questProgress, Location playerLoc) {
-        return switch (type) {
-            case WARRIOR -> createWarriorQuest(questProgress, playerLoc);
-            case MAGE -> createMageQuest(questProgress, playerLoc);
-            case ARCHER -> createArcherQuest(questProgress, playerLoc);
-            case ASSASSIN -> createAssassinQuest(questProgress, playerLoc);
-        };
+        try {
+            return switch (type) {
+                case WARRIOR -> createWarriorQuest(questProgress, playerLoc);
+                case MAGE -> createMageQuest(questProgress, playerLoc);
+                case ARCHER -> createArcherQuest(questProgress, playerLoc);
+                case ASSASSIN -> createAssassinQuest(questProgress, playerLoc);
+            };
+        } catch (Exception e) {
+            System.err.println("Erro ao criar quest para " + type + " progresso " + questProgress + ": " + e.getMessage());
+            return null;
+        }
     }
 
     private Quest createWarriorQuest(int progress, Location playerLoc) {
         return switch (progress) {
-            case 0 -> new FirstBlood(playerLoc); // Primeira quest do guerreiro
+            case 0 -> new FirstBlood(playerLoc);
             // TODO: Adicione mais quests aqui...
             default -> null;
         };
     }
 
-
     private Quest createMageQuest(int progress, Location playerLoc) {
         return switch (progress) {
-            case 0 -> new ElementalMaster(playerLoc); // Primeira quest do mago
+            case 0 -> new ElementalMaster(playerLoc);
             // TODO: Adicione mais quests aqui...
             default -> null;
         };
@@ -105,14 +125,14 @@ public class QuestManager {
         return switch (progress) {
             case 0 -> {
                 // Quest 0: Encontrar o campo de treinamento
-                QuestStructure structure = new ArcherTower();
+                QuestStructure structure = new ArcherTrainingGrounds();
                 yield new ExplorationQuest(
                         "find_archer_grounds",
                         "Em Busca do Campo de Treinamento",
                         "Encontre o lendário Campo de Treinamento de Arqueiros",
                         50,
                         structure,
-                        10.0 // raio de detecção: 10 blocos
+                        10.0
                 );
             }
             case 1 -> new RangedCombatQuest(playerLoc);      // Quest 1: Combate a Distância
@@ -125,15 +145,11 @@ public class QuestManager {
     private Quest createAssassinQuest(int progress, Location playerLoc) {
         return switch (progress) {
             case 0 -> {
-                // ESCOLHA UMA:
-                // QuestStructure structure = new AssassinHideout();      // Ruínas
-                QuestStructure structure = new AssassinCrypt();        // Cripta
-                //QuestStructure structure = new AssassinDojo();         // Dojo
-
+                QuestStructure structure = new AssassinCrypt();
                 yield new ExplorationQuest(
                         "find_assassin_location",
                         "Nas Sombras",
-                        "Encontre o " + structure.getName(),
+                        "Encontre a " + structure.getName(),
                         50,
                         structure,
                         10.0
@@ -151,6 +167,7 @@ public class QuestManager {
         player.sendMessage("§e✦ §6Nova Quest Recebida!");
         player.sendMessage("§f" + quest.getName());
         player.sendMessage("§7" + quest.getDescription());
+        player.sendMessage("§aRecompensa: §e" + quest.getExperienceReward() + " XP");
         player.sendMessage("§6═══════════════════════════");
     }
 
@@ -162,9 +179,16 @@ public class QuestManager {
     public void onQuestComplete(Player player, Quest quest) {
         PlayerQuestData questData = getPlayerQuests(player);
         if (questData != null) {
+            // Dá as recompensas primeiro
             quest.giveRewards(player);
+
+            // Marca como completada
             questData.completeQuest(quest.getId());
-            // Da a proxima quest da linha
+
+            // Mensagem de conclusão
+            player.sendMessage("§6🎉 Quest \"" + quest.getName() + "\" completada!");
+
+            // Dá a próxima quest da linha
             giveNextQuest(player);
         }
     }
@@ -184,7 +208,7 @@ public class QuestManager {
     }
 
     /*
-     * Mostra as quests ativas do jogador
+     * Mostra as quests ativas do jogador - CORRIGIDO
      */
     public void showActiveQuests(Player player) {
         PlayerQuestData questData = getPlayerQuests(player);
@@ -196,11 +220,47 @@ public class QuestManager {
 
         player.sendMessage("§6═══ §eSuas Quests Ativas §6═══");
         for (Quest quest : questData.getActiveQuests().values()) {
+            player.sendMessage("§e• §f" + quest.getName());
+            player.sendMessage("  §7" + quest.getDescription());
+
+            // Suporte para diferentes tipos de quest
             if (quest instanceof KillQuest killQuest) {
-                player.sendMessage("§e• §f" + quest.getName());
-                player.sendMessage("  §7" + quest.getDescription());
                 player.sendMessage("  §aProgresso: " + killQuest.getProgressText());
+            } else if (quest instanceof HitQuest hitQuest) {
+                player.sendMessage("  §aProgresso: " + hitQuest.getProgressText());
+            } else if (quest instanceof ExplorationQuest explorationQuest) {
+                player.sendMessage("  §aStatus: " +
+                        (explorationQuest.checkCompletion() ? "§2✓ Concluída" : "§e⌛ Em andamento"));
+            } else {
+                player.sendMessage("  §aStatus: " +
+                        (quest.checkCompletion() ? "§2✓ Concluída" : "§e⌛ Em andamento"));
             }
+
+            player.sendMessage("  §6Recompensa: §e" + quest.getExperienceReward() + " XP");
+            player.sendMessage("");
         }
+    }
+
+    /**
+     * Remove um jogador do sistema de quests (logout, etc)
+     */
+    public void removePlayer(Player player) {
+        UUID playerId = player.getUniqueId();
+        playerQuests.remove(playerId);
+        // Não remove a linha de quests para manter o progresso
+    }
+
+    /**
+     * Verifica se o jogador tem uma linha de quests ativa
+     */
+    public boolean hasQuestLine(Player player) {
+        return playerQuestLines.containsKey(player.getUniqueId());
+    }
+
+    /**
+     * Pega o tipo de linha de quests do jogador
+     */
+    public QuestLineType getPlayerQuestLine(Player player) {
+        return playerQuestLines.get(player.getUniqueId());
     }
 }
