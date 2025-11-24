@@ -60,6 +60,8 @@ public class CrimsonBladeListener implements Listener {
 
         if (a != Action.RIGHT_CLICK_AIR && a != Action.RIGHT_CLICK_BLOCK) return;
         if (!isAxe(p.getInventory().getItemInMainHand())) return;
+
+        // Se estiver agachado, é para trocar de habilidade (tratado no onItemSwitch)
         if (p.isSneaking()) return;
 
         WarriorPlayer warrior = getWarriorPlayer(p);
@@ -69,6 +71,14 @@ public class CrimsonBladeListener implements Listener {
             return;
         }
 
+        // === CORREÇÃO: PRIORIDADE AO ESCUDO ===
+        ItemStack offHandItem = p.getInventory().getItemInOffHand();
+        if (offHandItem != null && offHandItem.getType() == Material.SHIELD) {
+            // Retorna sem cancelar o evento -> Permite o bloqueio
+            return;
+        }
+
+        // Se não tiver escudo, executa a habilidade normalmente
         AbilityUtil.executeAbility(p, e, abilityIndex, abilities, abilityMap, warrior);
     }
 

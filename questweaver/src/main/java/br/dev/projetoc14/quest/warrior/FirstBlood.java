@@ -34,11 +34,13 @@ public final class FirstBlood extends KillQuest {
 
     @Override
     public ItemStack[] getRewardItems() {
-        ItemStack sword = new ItemStack(Material.IRON_AXE);
-        sword.addEnchantment(Enchantment.SHARPNESS, 1);
+        ItemStack axe = new ItemStack(Material.IRON_AXE);
+        axe.addEnchantment(Enchantment.SHARPNESS, 1);
 
         ItemStack chestplate = new ItemStack(Material.IRON_CHESTPLATE);
 
-        return new ItemStack[]{sword, chestplate};
+        ItemStack shield = new ItemStack(Material.SHIELD);
+
+        return new ItemStack[]{axe, chestplate, shield};
     }
 }
