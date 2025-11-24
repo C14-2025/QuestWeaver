@@ -24,7 +24,7 @@ public class ArcherPlayer extends RPGPlayer {
         stats.setStrength(1);
         stats.setAgility(1);
         stats.setIntelligence(7);
-        stats.setHealth(30);
+        stats.setHealth(22);
         stats.setMana(60);
     }
 

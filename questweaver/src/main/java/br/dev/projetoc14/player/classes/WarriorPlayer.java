@@ -21,7 +21,7 @@ public class WarriorPlayer extends RPGPlayer {
         stats.setStrength(1);
         stats.setAgility(1);
         stats.setIntelligence(5);
-        stats.setHealth(40);
+        stats.setHealth(24);
         stats.setMana(40);
     }
 
