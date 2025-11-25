@@ -16,10 +16,12 @@ import br.dev.projetoc14.quest.assassin.DeadlySpeedQuest;
 import br.dev.projetoc14.quest.assassin.PerfectAssassinationQuest;
 import br.dev.projetoc14.quest.assassin.CleanKillQuest;
 import br.dev.projetoc14.quest.mage.ElementalMaster;
-import br.dev.projetoc14.quest.structures.ArcherTrainingGrounds;
-import br.dev.projetoc14.quest.structures.AssassinCrypt;
-import br.dev.projetoc14.quest.structures.QuestStructure;
+import br.dev.projetoc14.quest.mage.FrostbiteQuest;
+import br.dev.projetoc14.quest.mage.PyromancerQuest;
+import br.dev.projetoc14.quest.structures.*;
+import br.dev.projetoc14.quest.warrior.BerserkerRageQuest;
 import br.dev.projetoc14.quest.warrior.FirstBlood;
+import br.dev.projetoc14.quest.warrior.IronWillQuest;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -107,16 +109,42 @@ public class QuestManager {
 
     private Quest createWarriorQuest(int progress, Location playerLoc) {
         return switch (progress) {
-            case 0 -> new FirstBlood(playerLoc);
-            // TODO: Adicione mais quests aqui...
+            case 0 -> {
+                // Quest 0: Encontrar a Arena
+                QuestStructure structure = new WarriorArena();
+                yield new ExplorationQuest(
+                        "find_warrior_arena",
+                        "O Chamado da Arena",
+                        "Encontre a Arena de Ferro para provar seu valor",
+                        50,
+                        structure,
+                        10.0
+                );
+            }
+            case 1 -> new FirstBlood(playerLoc);
+            case 2 -> new IronWillQuest(playerLoc);
+            case 3 -> new BerserkerRageQuest(playerLoc);
             default -> null;
         };
     }
 
     private Quest createMageQuest(int progress, Location playerLoc) {
         return switch (progress) {
-            case 0 -> new ElementalMaster(playerLoc);
-            // TODO: Adicione mais quests aqui...
+            case 0 -> {
+                // Quest 0: Encontrar a Torre
+                QuestStructure structure = new MageTower();
+                yield new ExplorationQuest(
+                        "find_mage_tower",
+                        "Peregrinação Arcana",
+                        "Encontre a antiga Torre Arcana onde o conhecimento reside",
+                        50,
+                        structure,
+                        10.0
+                );
+            }
+            case 1 -> new ElementalMaster(playerLoc);
+            case 2 -> new FrostbiteQuest(playerLoc);
+            case 3 -> new PyromancerQuest(playerLoc);
             default -> null;
         };
     }
@@ -224,16 +252,13 @@ public class QuestManager {
             player.sendMessage("  §7" + quest.getDescription());
 
             // Suporte para diferentes tipos de quest
-            if (quest instanceof KillQuest killQuest) {
-                player.sendMessage("  §aProgresso: " + killQuest.getProgressText());
-            } else if (quest instanceof HitQuest hitQuest) {
-                player.sendMessage("  §aProgresso: " + hitQuest.getProgressText());
-            } else if (quest instanceof ExplorationQuest explorationQuest) {
-                player.sendMessage("  §aStatus: " +
-                        (explorationQuest.checkCompletion() ? "§2✓ Concluída" : "§e⌛ Em andamento"));
-            } else {
-                player.sendMessage("  §aStatus: " +
-                        (quest.checkCompletion() ? "§2✓ Concluída" : "§e⌛ Em andamento"));
+            switch (quest) {
+                case KillQuest killQuest -> player.sendMessage("  §aProgresso: " + killQuest.getProgressText());
+                case HitQuest hitQuest -> player.sendMessage("  §aProgresso: " + hitQuest.getProgressText());
+                case ExplorationQuest explorationQuest -> player.sendMessage("  §aStatus: " +
+                        (explorationQuest.checkCompletion() ? "§2✓ Concluída" : "§e Em andamento"));
+                default -> player.sendMessage("  §aStatus: " +
+                        (quest.checkCompletion() ? "§2✓ Concluída" : "§e Em andamento"));
             }
 
             player.sendMessage("  §6Recompensa: §e" + quest.getExperienceReward() + " XP");
