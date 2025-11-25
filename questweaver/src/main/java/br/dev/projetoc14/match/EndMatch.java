@@ -10,6 +10,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +20,7 @@ public class EndMatch implements Listener {
 
     private final QuestWeaver plugin;
     private MatchManager matchManager;
+    private File pasta = new File("worlds");
 
     public EndMatch(QuestWeaver plugin, MatchManager matchManager) {
         this.plugin = plugin;
@@ -63,7 +65,7 @@ public class EndMatch implements Listener {
         winner.sendTitle("§6🏆 VITÓRIA!", "§eVocê é o último sobrevivente!", 10, 70, 20);
 
         world.spawnParticle(Particle.FIREWORK, teleportLoc, 100, 2, 2, 2, 0.1);
-
+        deleteFolder(pasta);
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -99,5 +101,22 @@ public class EndMatch implements Listener {
             matchManager.removePlayer(e.getPlayer());
             checkForWinner();
         }
+    }
+
+    public static void deleteFolder(File folder) {
+        if (!folder.exists()) return;
+
+        File[] files = folder.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    deleteFolder(file); // apaga subpastas
+                } else {
+                    file.delete(); // apaga arquivos
+                }
+            }
+        }
+
+        folder.delete(); // apaga a própria pasta
     }
 }

@@ -3,6 +3,7 @@ package br.dev.projetoc14.items.players;
 import br.dev.projetoc14.QuestWeaver;
 import br.dev.projetoc14.items.ItemProtectionUtil;
 import br.dev.projetoc14.match.PlayerFileManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
@@ -225,18 +226,19 @@ public class SkillTree implements Listener {
 
 
     public void applyHealthUpgrade(Player player, int level) {
-
-        double base = getBaseClassHealth(player);   // vida original da classe
-        double bonus = level * 2.0;                 // +1 coração por nível
+        double base = getBaseClassHealth(player);
+        double bonus = level * 2.0;
         double total = base + bonus;
 
         player.getAttribute(Attribute.MAX_HEALTH).setBaseValue(total);
 
-        // cura o player até o novo máximo
-        player.setHealth(player.getAttribute(Attribute.MAX_HEALTH).getBaseValue());
+        // Atualiza a vida na tick seguinte (importante!)
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            player.setHealth(player.getAttribute(Attribute.MAX_HEALTH).getBaseValue());
+        });
 
-        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
         player.sendMessage("§6[Upgrade] §fSua vida aumentou em §c+1 coração!");
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
     }
 
 }
