@@ -190,7 +190,7 @@ pipeline {
             - Faça upload para GitHub Releases
             - Atualize server.properties
             """,
-                to: ""
+                to: "matheus.maciel@gec.inatel.br"
             )
         }
         
